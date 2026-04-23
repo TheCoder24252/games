@@ -267,7 +267,7 @@ yesterday.setDate(yesterday.getDate() - 1);
 console.log(yesterday.toDateString()); 
    if(customImgData) customImg.src = customImgData;
 	if (lastBonus != todayDate) {
-		if (lastBonus != yesterday) {
+		if (lastBonus != yesterday.toDateString()) {
 			streak = 1;
 		}
 		let bonus = streak * 5;
