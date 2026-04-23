@@ -220,7 +220,7 @@
    }
    let intervalID;
    let gameData;
-   fetchData().then(res => gameData = res[0]);
+   fetchData().then(res => {gameData = res[0]; updateCredits()});
  let minSteps = 0;
    let limitSteps = false;
    let step1Limit = 250;
@@ -231,20 +231,19 @@
    let isRaceMode = false, isDaily = false;
    let p1 = { pos: 0, steps: 0, name: "P1" }, p2 = { pos: 0, steps: 0, name: "P2" };
    let btime = parseInt(localStorage.getItem('btime')) || 5000;
-   fetchData().then(res => btime = res[0].Time);
-	btime = gameData.Time
+	btime = gameData.Time;
    let credits = parseInt(localStorage.getItem('mazeCredits')) || 0;
-   fetchData().then(res => credits = res[0].credits);
+    credits = gameData.credits;
    let mazeComp = parseInt(localStorage.getItem('mazeComp')) || 0;
-   fetchData().then(res => mazeComp = res[0].maze_complete);
+    mazeComp = gameData.maze_complete;
    let unlockedSkins = JSON.parse(localStorage.getItem('unlockedSkins')) || ['Square'];
-   fetchData().then(res => unlockedSkins = res[0].unlocked_skins);
+    unlockedSkins = gameData.unlocked_skins;
    let activeSkin = localStorage.getItem('activeSkin') || 'Square';
-   fetchData().then(res => activeSkin = res[0].active_skin);
+    activeSkin = gameData.active_skin;
    let lastDailyDate = localStorage.getItem('lastDailyDate') || "";
-   fetchData().then(res => lastDailyDate = res[0].last_daily);
+    lastDailyDate = gameData.last_daily;
    let customImgData = localStorage.getItem('customIcon') || null;
-   fetchData().then(res => customImgData = res[0].custom_icon);
+    customImgData = gameData.custom_icon;
    let customImg = new Image();
    if(customImgData) customImg.src = customImgData;
 
@@ -266,9 +265,9 @@
 
 
    let activeTrail = localStorage.getItem('activeTrail') || 'None';
-   fetchData().then(res => activeTrail = res[0].active_trail);
+    activeTrail = gameData.active_trail;
    let unlockedTrails = JSON.parse(localStorage.getItem('unlockedTrails')) || ['None'];
-   fetchData().then(res => {unlockedTrails = res[0].unlocked_trails; updateCredits()});
+    btime = gameData.Time;
    let p1History = [];
    let p2History = [];
    const slider = document.querySelector('#shopContainer');
