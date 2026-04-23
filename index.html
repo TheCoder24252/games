@@ -263,7 +263,7 @@
 	let todayDate = new Date().toDateString();
    if(customImgData) customImg.src = customImgData;
 	if (lastBonus != todayDate) {
-		const bonus = streak * 5;
+		let bonus = streak * 5;
 		bonus += 5;
 		document.getElementById("bonusText").innerHTML = '+' + bonus;
 		document.getElementById("dailyModal").style.display = "flex";
