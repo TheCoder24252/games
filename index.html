@@ -90,6 +90,7 @@
    <div class="modal-content">
      <h2>Daily Bonus:</h2>
      <p id="bonusText" style="color:#ffc107; font-weight:bold;">+10 CREDITS</p>
+	<button onclick="document.getElementById('dailyModal').style.display = 'none'" id="okbButton" class="btn btn-gen">Ok</button>
    </div>
  </div>
  <div id="loseModal" class="modal-overlay">
@@ -239,13 +240,16 @@
    let limitSteps = false;
    let step1Limit = 250;
    let step2Limit = 250;
+	 let lastBonus;
+	 let streak;
 	let customImg = new Image();
    const canvas = document.getElementById('mazeCanvas');
    const ctx = canvas.getContext('2d', { alpha: false });
    let currentLayout = null, gameActive = false, startTime = null, timerInterval = null;
    let isRaceMode = false, isDaily = false;
    let p1 = { pos: 0, steps: 0, name: "P1" }, p2 = { pos: 0, steps: 0, name: "P2" };
-   fetchData().then(res => {gameData = res[0]; 
+   fetchData().then(res => {gameData = res[0];
+	lastBonus = gameData.last_bonus;
 	btime = gameData.Time;
     credits = gameData.credits;
     mazeComp = gameData.maze_complete;
@@ -254,8 +258,16 @@
     lastDailyDate = gameData.last_daily;
     customImgData = gameData.custom_icon;
     activeTrail = gameData.active_trail;
+	streak = gameData.streak;
     unlockedTrails = gameData.unlocked_trails;
    if(customImgData) customImg.src = customImgData;
+	if (lastBonus != new Date().toDateString();) {
+		const bonus = 5;
+		const bonuss = streak * 5;
+		document.getElementById("bonusText").innerHTML = ;
+		document.getElementById("dailyModal").style.display = flex;
+		lastBonus = new Date().toDateString();
+	}
 	updateCredits()});
 	const skins = [
      { name: 'Square', price: 0, desc: 'Classic block.' },
@@ -698,7 +710,9 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
      active_trail: activeTrail,
      last_daily: lastDailyDate,
      maze_complete: mazeComp,
-     Time: btime
+     Time: btime,
+	 streak: streak,
+	 last_bonus: lastBonus
    })
  });
 
