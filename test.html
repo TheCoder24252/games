@@ -17,7 +17,8 @@ const channel = supabase
     config: { private: true },
   })
   .on('broadcast', { event: 'fr1' }, (msg) => {
-    console.log('Realtime received:', msg)
+    alert(msg.payload.request);
+    console.log('Realtime received:', msg);
   })
 
 channel.subscribe((status, err) => {
