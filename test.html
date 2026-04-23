@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body>
+    <script>
+      import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+const SUPABASE_URL = 'https://oqapjpayxyrlwmatreep.supabase.co'
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+const channel = supabase
+  .channel('maze-game-main-1694', {
+    config: { private: true },
+  })
+  .on('broadcast', { event: 'fr1' }, (msg) => {
+    console.log('Realtime received:', msg)
+  })
+
+channel.subscribe((status, err) => {
+  if (status === 'SUBSCRIBED') console.log('Subscribed!')
+  else console.error('Subscribe error:', err)
+})
+
+    </script>
+  </body>
+</html>
