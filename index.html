@@ -374,8 +374,10 @@ function showLeaderboard(by, force = false) {
  const container = document.getElementById('leaderboard');
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
+	if (gameData[hi].Usernames != "TheCoderPageTestingAccount") {
    container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].maze_complete}</label></li>`;
- }
+	}
+	}
 })
  }
  if (by == 'time') {
@@ -385,8 +387,10 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
    if (gameData[hi].Time != 5000) {
+	   if (gameData[hi].Usernames != "TheCoderPageTestingAccount") {
    container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].Time}s</label></li>`;
-   }
+	   }
+	   }
  }
 })
  }
@@ -396,8 +400,10 @@ function showLeaderboard(by, force = false) {
  const container = document.getElementById('leaderboard');
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
+	 if (gameData[hi].Usernames != "TheCoderPageTestingAccount") {
    container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].credits}</label></li>`;
- }
+	 }
+	 }
  })};
 if (force == false) {if (!document.getElementById("leaderPanel").classList[1]) {togglePanel('leaderPanel');}} else {togglePanel('leaderPanel');}
 }
