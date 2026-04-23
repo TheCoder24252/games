@@ -229,16 +229,17 @@
 	 let customImgData = localStorage.getItem('customIcon') || null;
    let activeTrail = localStorage.getItem('activeTrail') || 'None';
 	 let unlockedTrails = JSON.parse(localStorage.getItem('unlockedTrails')) || ['None'];
-   fetchData().then(res => {gameData = res[0]; 
- let minSteps = 0;
+	 let minSteps = 0;
    let limitSteps = false;
    let step1Limit = 250;
    let step2Limit = 250;
+	let customImg = new Image();
    const canvas = document.getElementById('mazeCanvas');
    const ctx = canvas.getContext('2d', { alpha: false });
    let currentLayout = null, gameActive = false, startTime = null, timerInterval = null;
    let isRaceMode = false, isDaily = false;
    let p1 = { pos: 0, steps: 0, name: "P1" }, p2 = { pos: 0, steps: 0, name: "P2" };
+   fetchData().then(res => {gameData = res[0]; 
 	btime = gameData.Time;
     credits = gameData.credits;
     mazeComp = gameData.maze_complete;
@@ -248,7 +249,6 @@
     customImgData = gameData.custom_icon;
     activeTrail = gameData.active_trail;
     unlockedTrails = gameData.unlocked_trails;
-	 let customImg = new Image();
    if(customImgData) customImg.src = customImgData;
 	updateCredits()});
 	const skins = [
