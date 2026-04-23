@@ -1080,8 +1080,6 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
    function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); }
    document.getElementById('generate').onclick = () => { isRaceMode = false; document.getElementById('p2Stats').style.display = 'none'; generate(false); };
    document.getElementById('raceBtn').onclick = () => { isRaceMode = true; document.getElementById('p2Stats').style.display = 'block'; generate(false); };
-      
-   updateCredits();
    updateDailyStatus();
    window.onload = () => generate();
  </script>
