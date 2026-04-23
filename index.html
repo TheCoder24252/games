@@ -90,6 +90,7 @@
    <div class="modal-content">
      <h2>Daily Bonus:</h2>
      <p id="bonusText" style="color:#ffc107; font-weight:bold;">+10 CREDITS</p>
+	<p id="streakText" style="color:#ffc107; font-weight:bold;"></p>
 	<button onclick="document.getElementById('dailyModal').style.display = 'none'" id="okbButton" class="btn btn-gen">Ok</button>
    </div>
  </div>
@@ -261,11 +262,18 @@
 	streak = gameData.streak;
     unlockedTrails = gameData.unlocked_trails;
 	let todayDate = new Date().toDateString();
+	const yesterday = new Date();
+yesterday.setDate(yesterday.getDate() - 1);
+console.log(yesterday.toDateString()); 
    if(customImgData) customImg.src = customImgData;
 	if (lastBonus != todayDate) {
+		if (lastBonus != yesterday) {
+			streak = 1;
+		}
 		let bonus = streak * 5;
 		bonus += 5;
-		document.getElementById("bonusText").innerHTML = '+' + bonus;
+		document.getElementById("streakText").innerHTML = "Online streak: " + streak;
+		document.getElementById("bonusText").innerHTML = `+${bonus} credits`;
 		document.getElementById("dailyModal").style.display = "flex";
 		lastBonus = new Date().toDateString();
 		streak++;
