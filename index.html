@@ -636,7 +636,8 @@ function fetchData(leader = false, by) {
      document.getElementById("accData").innerHTML = `<li><label class='username'>Username:</label><label class='credits'>${Username}</label></li>
      <br><li><label class='username'>Credits:</label><label class='credits'>${credits}</label></li>
      <br><li><label class='username'>Best Time:</label><label class='credits'>${btime}s</label></li>
-     <br><li><label class='username'>Mazes Completed:</label><label class='credits'>${mazeComp}</label></li>`;
+     <br><li><label class='username'>Mazes Completed:</label><label class='credits'>${mazeComp}</label></li>
+	 <br><li><label class='username'>Online Streak:</label><label class='credits'>${streak} days</label></li>`;
      document.getElementById("accoModal").style.display = "flex";
    }
    function openDeleteModal() { document.getElementById('deleteModal').style.display = 'flex'; }
