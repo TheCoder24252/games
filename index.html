@@ -260,8 +260,9 @@
     activeTrail = gameData.active_trail;
 	streak = gameData.streak;
     unlockedTrails = gameData.unlocked_trails;
+	let todayDate = new Date().toDateString();
    if(customImgData) customImg.src = customImgData;
-	if (lastBonus != Date().toDateString()) {
+	if (lastBonus != todayDate) {
 		const bonus = streak * 5;
 		document.getElementById("bonusText").innerHTML = bonus + 5;
 		document.getElementById("dailyModal").style.display = flex;
