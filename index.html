@@ -232,6 +232,7 @@
    let p1 = { pos: 0, steps: 0, name: "P1" }, p2 = { pos: 0, steps: 0, name: "P2" };
    let btime = parseInt(localStorage.getItem('btime')) || 5000;
    fetchData().then(res => btime = res[0].Time);
+	btime = gameData.Time
    let credits = parseInt(localStorage.getItem('mazeCredits')) || 0;
    fetchData().then(res => credits = res[0].credits);
    let mazeComp = parseInt(localStorage.getItem('mazeComp')) || 0;
