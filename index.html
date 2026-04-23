@@ -220,7 +220,16 @@
    }
    let intervalID;
    let gameData;
-   fetchData().then(res => {gameData = res[0]; updateCredits()});
+	let btime = parseInt(localStorage.getItem('btime')) || 5000;
+	let credits = parseInt(localStorage.getItem('mazeCredits')) || 0;
+	 let mazeComp = parseInt(localStorage.getItem('mazeComp')) || 0;
+	 let unlockedSkins = JSON.parse(localStorage.getItem('unlockedSkins')) || ['Square'];
+	 let activeSkin = localStorage.getItem('activeSkin') || 'Square';
+	 let lastDailyDate = localStorage.getItem('lastDailyDate') || "";
+	 let customImgData = localStorage.getItem('customIcon') || null;
+   let activeTrail = localStorage.getItem('activeTrail') || 'None';
+	 let unlockedTrails = JSON.parse(localStorage.getItem('unlockedTrails')) || ['None'];
+   fetchData().then(res => {gameData = res[0]; 
  let minSteps = 0;
    let limitSteps = false;
    let step1Limit = 250;
@@ -230,44 +239,30 @@
    let currentLayout = null, gameActive = false, startTime = null, timerInterval = null;
    let isRaceMode = false, isDaily = false;
    let p1 = { pos: 0, steps: 0, name: "P1" }, p2 = { pos: 0, steps: 0, name: "P2" };
-   let btime = parseInt(localStorage.getItem('btime')) || 5000;
 	btime = gameData.Time;
-   let credits = parseInt(localStorage.getItem('mazeCredits')) || 0;
     credits = gameData.credits;
-   let mazeComp = parseInt(localStorage.getItem('mazeComp')) || 0;
     mazeComp = gameData.maze_complete;
-   let unlockedSkins = JSON.parse(localStorage.getItem('unlockedSkins')) || ['Square'];
     unlockedSkins = gameData.unlocked_skins;
-   let activeSkin = localStorage.getItem('activeSkin') || 'Square';
     activeSkin = gameData.active_skin;
-   let lastDailyDate = localStorage.getItem('lastDailyDate') || "";
     lastDailyDate = gameData.last_daily;
-   let customImgData = localStorage.getItem('customIcon') || null;
     customImgData = gameData.custom_icon;
-   let customImg = new Image();
+    activeTrail = gameData.active_trail;
+    unlockedTrails = gameData.unlocked_trails;
+	 let customImg = new Image();
    if(customImgData) customImg.src = customImgData;
-
-
-   const skins = [
+	updateCredits()});
+	const skins = [
      { name: 'Square', price: 0, desc: 'Classic block.' },
      { name: 'Circle', price: 750, desc: 'Smooth sphere.' },
      { name: 'Diamond', price: 1000, desc: 'Sharp edges.' },
      { name: 'Custom', price: 2500, desc: 'Upload your own image!' }
    ];
-
-
    const trails = [
      { name: 'None', price: 0, desc: 'No trail.' },
      { name: 'Neon Blue', color: '#00f2ff', price: 500, desc: 'A glowing blue path.' },
      { name: 'Lava', color: '#ff4500', price: 1000, desc: 'Hot molten trail.' },
      { name: 'Rainbow', color: 'rainbow', price: 2000, desc: 'Cycles through colors.' }
    ];
-
-
-   let activeTrail = localStorage.getItem('activeTrail') || 'None';
-    activeTrail = gameData.active_trail;
-   let unlockedTrails = JSON.parse(localStorage.getItem('unlockedTrails')) || ['None'];
-    btime = gameData.Time;
    let p1History = [];
    let p2History = [];
    const slider = document.querySelector('#shopContainer');
