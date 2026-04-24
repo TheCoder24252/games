@@ -719,7 +719,33 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
    function setSkin(n) { activeSkin = n; save(); updateCredits(); draw(); }
    function buyTrail(n, p) { if(credits >= p) { credits -= p; unlockedTrails.push(n); save(); updateCredits(); }  else {document.getElementById('amountText').innerHTML=`You need ${p - credits} more credits to buy the ${n} trail`;document.getElementById('creditModal').style.display = 'flex';} }
    function setTrail(n) { activeTrail = n; save(); updateCredits(); draw(); }
+async function fttes(fseed, fw, fh, ftlimit, al, bl, fto) {
+let fbody = {Message: fseed, w: fw, h: fh, ls: ftlimit, al: al, bl: bl, from: Username, to: fto};
+const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
+ const urL = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username} `;
+ const response = await fetch(urL, {
+   method: 'PATCH',
+   headers: {
+     'apikey': anonkey,
+     'Authorization': `Bearer ${anonkey}`,
+     'Content-Type': 'application/json',
+     'Prefer': 'return=representation'
+   },
+   body: JSON.stringify({
+     request: "Invite",
+	  body: fbody
+   })
+ });
 
+
+ if (response.ok) {
+   const updatedRow = await response.json();
+   console.log('Sent Request:', updatedRow);
+ } else {
+   const errorData = await response.json();
+   console.error('Error:', errorData);
+ }
+}
 async function ftte(coords) {
 let fbody = {Message: coords}
 const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
