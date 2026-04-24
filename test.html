@@ -229,7 +229,7 @@ const channel = supabase
 	if (msg.payload.id != Username) {
   console.log(`Message Recieved with a request type of "${msg.payload.request}"; PAYLOAD.REQUEST ==> (${msg.payload.body.Message})`);
 	window.P2Payloadpos = msg.payload.body.Message;
-	if (isRaceMode) drawPlayer(msg.payload.body.Message, document.getElementById('player2Color').value);
+	draw();
 	}
   })
 
