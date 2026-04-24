@@ -227,7 +227,8 @@ const channel = supabase
   })
   .on('broadcast', { event: 'fr1' }, (msg) => {
 	if (msg.payload.id != Username) {
-  console.log(`Message Recieved with a request type of "${msg.payload.request}"; PAYLOAD.REQUEST ==> (${msg.payload.body.Message})`)
+  console.log(`Message Recieved with a request type of "${msg.payload.request}"; PAYLOAD.REQUEST ==> (${msg.payload.body.Message})`);
+	window.P2Payloadpos = value;
 	}
   })
 
@@ -993,7 +994,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
      ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);
     
      drawPlayer(p1.pos, document.getElementById('playerColor').value);
-     if (isRaceMode) drawPlayer(p2.pos, document.getElementById('player2Color').value);
+     if (isRaceMode) drawPlayer(P2Payloadpos, document.getElementById('player2Color').value);
      if (limitSteps == true) {
        if (step1Limit != false && step2Limit != false) {
          if (p1.steps < step1Limit) {
