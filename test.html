@@ -229,7 +229,9 @@ const channel = supabase
 	if (msg.payload.id != Username) {
   console.log(`Message Recieved with a request type of "${msg.payload.request}"; PAYLOAD.REQUEST ==> (${msg.payload.body})`);
 	if (msg.payload.request == "Invite") {
+		console.log(1);
 	if (msg.payload.body.to == Username) {
+		console.log(2)
 		generate(false, false, false, msg.payload.body.Message)
 	}
 	} else {
