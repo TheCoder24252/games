@@ -226,40 +226,15 @@ const channel = supabase
     config: { private: true },
   })
   .on('broadcast', { event: 'fr1' }, (msg) => {
+	if (msg.payload.id != Username) {
   console.log(`Message Recieved from the user "${msg.payload.request}"; PAYLOAD.REQUEST ==> (${msg.payload.body.Message})`)
+	}
   })
 
 channel.subscribe((status, err) => {
   if (status === 'SUBSCRIBED') console.log('Subscribed!')
   else console.error('Subscribe error:', err)
 })
-async function ftte() {
-let fbody = {Message: "Hello  World"}
-const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
- const urL = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.TheCoderPageTestingAccount `;
- const response = await fetch(urL, {
-   method: 'PATCH',
-   headers: {
-     'apikey': anonkey,
-     'Authorization': `Bearer ${anonkey}`,
-     'Content-Type': 'application/json',
-     'Prefer': 'return=representation'
-   },
-   body: JSON.stringify({
-     request: "TheCodergamessss",
-	  body: fbody
-   })
- });
-
-
- if (response.ok) {
-   const updatedRow = await response.json();
-   console.log('Sent Request:', updatedRow);
- } else {
-   const errorData = await response.json();
-   console.error('Error:', errorData);
- }
-}
     </script>
  <script>
    let wins;
