@@ -832,7 +832,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
    function seededRandom() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
 
 
-   function generate(isDailyChallenge = false, force = false, tutorial = false, seed) {
+   function generate(isDailyChallenge = false, force = false, tutorial = false, ftseed) {
      if(!force) {
      if(isDailyChallenge && lastDailyDate === new Date().toDateString()) return;}
      isDaily = isDailyChallenge;
@@ -863,7 +863,11 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 
 
      } else {
+		 if (ftseed) {
+			 seed = ftseed;
+		 } else {
          seed = Math.floor(Math.random() * 2147483647);
+		 }	 
          if (document.getElementById("wallColor").value == '#28a745'){
            document.getElementById('wallColor').value = '#ff3e3e';
            document.getElementById('titletext').style.color = "#ff3e3e";
