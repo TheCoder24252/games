@@ -230,7 +230,7 @@ const channel = supabase
   console.log(`Message Recieved with a request type of "${msg.payload.request}"; PAYLOAD.REQUEST ==> (${msg.payload.body})`);
 	if (msg.payload.request == "Invite") {
 	if (msg.payload.body.to == Username) {
-		alert("it worked");
+		alert("it worked" + msg.payload);
 	}
 	} else {
 	window.P2Payloadpos = msg.payload.body.Message;
