@@ -374,7 +374,7 @@ function showLeaderboard(by, force = false) {
  const container = document.getElementById('leaderboard');
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
-	if (gameData[hi].Usernames != "TheCoderPageTestingAccount") {
+	if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
    container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].maze_complete}</label></li>`;
 	}
 	}
@@ -387,7 +387,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
    if (gameData[hi].Time != 5000) {
-	   if (gameData[hi].Usernames != "TheCoderPageTestingAccount") {
+	   if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
    container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].Time}s</label></li>`;
 	   }
 	   }
@@ -400,7 +400,7 @@ function showLeaderboard(by, force = false) {
  const container = document.getElementById('leaderboard');
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
-	 if (gameData[hi].Usernames != "TheCoderPageTestingAccount") {
+	 if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
    container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].credits}</label></li>`;
 	 }
 	 }
