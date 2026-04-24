@@ -230,7 +230,7 @@ const channel = supabase
   console.log(`Message Recieved with a request type of "${msg.payload.request}"; PAYLOAD.REQUEST ==> (${msg.payload.body})`);
 	if (msg.payload.request == "Invite") {
 	if (msg.payload.body.to == Username) {
-		alert("it worked" + msg.payload);
+		generate(false, false, false, msg.payload.body.Message)
 	}
 	} else {
 	window.P2Payloadpos = msg.payload.body.Message;
@@ -832,7 +832,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
    function seededRandom() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
 
 
-   function generate(isDailyChallenge = false, force = false, tutorial = false) {
+   function generate(isDailyChallenge = false, force = false, tutorial = false, seed) {
      if(!force) {
      if(isDailyChallenge && lastDailyDate === new Date().toDateString()) return;}
      isDaily = isDailyChallenge;
