@@ -227,9 +227,15 @@ const channel = supabase
   })
   .on('broadcast', { event: 'fr1' }, (msg) => {
 	if (msg.payload.id != Username) {
-  console.log(`Message Recieved with a request type of "${msg.payload.request}"; PAYLOAD.REQUEST ==> (${msg.payload.body.Message})`);
+  console.log(`Message Recieved with a request type of "${msg.payload.request}"; PAYLOAD.REQUEST ==> (${msg.payload.body})`);
+	if (msg.payload.request == "Invite") {
+	if (msg.payload.body.to == Username) {
+		alert("it worked");
+	}
+	} else {
 	window.P2Payloadpos = msg.payload.body.Message;
 	draw();
+	}
 	}
   })
 
