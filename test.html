@@ -896,7 +896,10 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
      const pw = parseInt(document.getElementById('pathwidth').value);
      const ww = parseInt(document.getElementById('wallwidth').value);
      const mode = document.getElementById('algo').value;
-     const getRand = isDaily ? seededRandom : Math.random;
+	   if (ftseed) {
+		   const getRand = ftseed;
+	   } else {
+     const getRand = isDaily ? seededRandom : Math.random;}
 
 
      canvas.width = (pw * 2) + (w * pw) + ((w - 1) * ww);
