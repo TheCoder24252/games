@@ -727,8 +727,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
    function setSkin(n) { activeSkin = n; save(); updateCredits(); draw(); }
    function buyTrail(n, p) { if(credits >= p) { credits -= p; unlockedTrails.push(n); save(); updateCredits(); }  else {document.getElementById('amountText').innerHTML=`You need ${p - credits} more credits to buy the ${n} trail`;document.getElementById('creditModal').style.display = 'flex';} }
    function setTrail(n) { activeTrail = n; save(); updateCredits(); draw(); }
-async function fttes(fto, fseed, fw, fh, ftlimit, al, bl) {
-let fbody = {Message: fseed, w: fw, h: fh, ls: ftlimit, al: al, bl: bl, from: Username, to: fto, rand: Math.random()};
+async function fttes(fto, layout, ftlimit, al, bl) {
+let fbody = {Message: layout, ls: ftlimit, al: al, bl: bl, from: Username, to: fto, rand: Math.random()};
 const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
  const urL = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username} `;
  const response = await fetch(urL, {
@@ -834,7 +834,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
    function seededRandom() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
 
 
-   function generate(isDailyChallenge = false, force = false, tutorial = false, ftseed) {
+   function generate(isDailyChallenge = false, force = false, tutorial = false, req = false) {
      if(!force) {
      if(isDailyChallenge && lastDailyDate === new Date().toDateString()) return;}
      isDaily = isDailyChallenge;
@@ -923,7 +923,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
          while (stack.length > 0) {
              const curr = stack[stack.length - 1], neighbors = getNeighbors(curr).filter(n => grid[n] === 0);
              if (neighbors.length > 0) {
-                 const next = neighbors[Math.floor(getRand * neighbors.length)];
+                 const next = neighbors[Math.floor(getRand() * neighbors.length)];
                  grid[next] = 1; adj[curr].push(next); adj[next].push(curr); stack.push(next);
              } else stack.pop();
          }
@@ -959,13 +959,14 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
        if (step1Limit < minSteps) {step1Limit = minSteps + 1; document.getElementById('stepLimitAmount').value = minSteps + 1}
        if (step2Limit < minSteps) {step2Limit = minSteps + 1; document.getElementById('step2LimitAmount').value = minSteps + 1}
      }
+	if (req) {
+		fttes("TheCoderPageTestingAccount2", currentLayout, false, false, false);
+	}
      draw();
    }
    function calculateMinSteps(adj, startNode, endNode) {
    let queue = [[startNode, 0]];
    let visited = new Set([startNode]);
-
-
    while (queue.length > 0) {
        let [currentNode, distance] = queue.shift();
 
