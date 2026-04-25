@@ -235,6 +235,9 @@ const channel = supabase
 		console.log(2)
 		currentLayout = msg.payload.body.Message;
 		isRaceMode = true;
+		document.getElementById('wallColor').value = '#6f42c1';
+       document.getElementById('titletext').style.color = '#6f42c1';
+       document.getElementById('titletext').innerHTML = '2 Player Race';
 		draw()
 	}
 	} else {
@@ -1033,7 +1036,13 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
      ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);
     
      drawPlayer(p1.pos, document.getElementById('playerColor').value);
-     if (isRaceMode) drawPlayer(P2Payloadpos, document.getElementById('player2Color').value);
+     if (isRaceMode) {
+		 if (!P2Payloadpos) {
+		 	drawPlayer(P2Payloadpos, document.getElementById('player2Color').value);
+		 } else {
+			 drawPlayer(P2Payloadpos, document.getElementById('player2Color').value);
+		 }
+	}
      if (limitSteps == true) {
        if (step1Limit != false && step2Limit != false) {
          if (p1.steps < step1Limit) {
