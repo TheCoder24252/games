@@ -1041,7 +1041,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
     
      drawPlayer(p1.pos, document.getElementById('playerColor').value);
      if (isRaceMode) {
-		 if (!P2Payloadpos) {
+		 if (typeof P2Payloadpos !== 'undefined') {
 		 	drawPlayer(P2Payloadpos, document.getElementById('player2Color').value);
 		 } else {
 			 drawPlayer(p2.pos, document.getElementById('player2Color').value);
