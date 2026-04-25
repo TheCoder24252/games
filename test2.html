@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html id='html'>
+<head>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <link rel="icon" type="image/x-icon" href=".Maze-Logo.png">
+ <title>Maze Game</title>
+ <style>
+   body {user-select:none; margin: 0; background: #1a1e23; font-family: 'Segoe UI', sans-serif; color: #eee; overflow: hidden; height: 100vh; }
+   h1 { color: #ff3e3e; text-shadow: 2px 2px 0px #000; margin: 0; padding-top: 20px; position: absolute; top: 0; left: 0; right: 0; text-align: center; width: 100%; pointer-events: none; z-index: 5; }
+   .viewport { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; position: relative; }
+   .dashboard { position: absolute; left: 20px; top: 20px; bottom: 20px; width: 260px; background: #2c343f; border-radius: 12px; box-shadow: 5px 0 25px rgba(0,0,0,0.5); padding: 20px; display: flex; flex-direction: column; z-index: 10; overflow-y: auto; }
+   .side-panel { position: absolute; right: -350px; top: 20px; bottom: 20px; width: 260px; background: #2c343f; border-radius: 12px; box-shadow: -5px 0 25px rgba(0,0,0,0.5); padding: 20px; z-index: 11; transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; }
+   #settingsPanel { border-right: 4px solid #d24; }
+   #shopPanel { border-right: 4px solid #ffc107;cursor: default;user-select: none; }
+   #leaderPanel { border-right: 4px solid #001affff;cursor: default;user-select: none; }
+     #shopPanel:active {cursor: default;}
+   .side-panel.open { right: 20px; }
+   canvas { background: #000; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 4px; image-rendering: pixelated; max-height: 75vh; max-width: 50vw; }
+   .stat-box { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #007bff; }
+   .stat-box2 { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #007bff; }
+   .stat-label { font-size: 9px; color: #888; text-transform: uppercase; }
+   .stat-value { font-size: 18px; font-weight: bold; font-family: monospace; }
+   .shop-item { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #444; }
+   .shop-item h4 { margin: 0; color: #ffc107; font-size: 14px; }
+   .shop-item p { margin: 5px 0; font-size: 11px; color: #aaa; }
+   .controls { list-style: none; padding: 0; margin: 0; }
+   li { margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+   label { font-size: 11px; font-weight: bold; color: #bbb; }
+   input, select { width: 85px; height: 24px; border: 1px solid #444; background: #111; color: #fff; border-radius: 4px; font-size: 11px; }
+   .btn { width: 100%; color: white; cursor: pointer; margin-top: 8px; font-size: 12px; height: 36px; border-radius: 6px; border: none; font-weight: bold; transition: 0.1s; display: flex; align-items: center; justify-content: center; text-decoration: none; text-align: center; }
+   .btn:active { transform: scale(0.96); }
+   .btn-gen { background: #d24; }
+   .btn-shop { background: #ffc107; color: #000; }
+   .btn-more { background: #ff5500; }
+   .btn-daily { background: #28a745; }
+   .btn-race { background: #6f42c1; }
+   .btn-download { background: #007bff; }
+   .btn-leader { background: #001affff; }
+   .btn-fullscreen { background: #187a2fff; }
+   .btn-settings { background: #4a5568; margin-top: auto; }
+   .btn-danger { background: #333; color: #ffaaaa; font-size: 10px; height: 28px; margin-top: 10px; }
+   .btn-sec { background: #555; }
+   .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
+	.modal-overlayy { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; justify-content: flex-end; align-items: flex-end; pointer-events: none;}
+   .modal-content { background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 300px; }
+   .modal-contentt {pointer-events: auto; height: 20%;background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 450px; }
+#shopContainer::-webkit-scrollbar {display: none;}
+#shopContainer {-ms-overflow-style: none;scrollbar-width: none;}
+ </style>
+</head>
+<body oncontextmenu="return false;">
+ <h1 id="titletext">Maze Game</h1>
+  <div id="winModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2 id="winTitle">Maze Complete!</h2>
+     <p id="finalStats" style="font-family: monospace; color: #00ffcc;"></p>
+     <p id="rewardText" style="color:#ffc107; font-weight:bold;">+50 CREDITS</p>
+     <button id="replay" class="btn btn-gen" onclick="playAgain()">PLAY AGAIN</button>
+   </div>
+ </div>
+ <div id="howModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2 id="welcomeTitle">Maze Game Tutorial</h2>
+     <p id="instructions" style="color:white; font-weight:bold;"></p>
+     <button id="startgame" class="btn btn-gen" onclick="localStorage.setItem('Tutorial', true);document.getElementById('howModal').style.display ='none';playAgain()">Skip Tutorial</button>
+     <button id="viewTutorial" class="btn btn-gen" onclick="tutorial()">View Tutorial</button>
+     <button style="display:none" id="nextBTN" class="btn btn-gen" onclick="tutorialA()">Next</button>
+     <button style="display:none;" id="tutorialLevel" class="btn btn-gen" onclick="localStorage.setItem('Tutorial', true);document.getElementById('howModal').style.display ='none';generate(false,false,true)">Play tutorial level</button>
+   </div>
+ </div>
+ <div id="welModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2 id="logInTitle">Create Account</h2>
+     <p style="color:white; font-weight:bold;" id="instructText">Please set a username and passcode to create an account</p>
+     <p id="invalidText" style="color:red;"></p>
+     <input id="username" style="width: 100%; height: 39px;" type="text" placeholder="Username"></input>
+     <input id="passCode" style="width: 100%; height: 39px;" type="password" placeholder="Passcode"></input>
+     <input id="confirmPass" style="width: 100%; height: 39px;" type="password" placeholder="Confirm Passcode"></input>
+     <button onclick="logIn(document.getElementById('username').value, document.getElementById('passCode').value)" id="logInBtn" style="display:none;" class="btn btn-gen">Log In</button>
+     <button onclick="insertData(document.getElementById('username').value, document.getElementById('passCode').value)" id="createButton" disabled style="background:#555;cursor:not-allowed;" class="btn btn-gen">Create Account</button>
+   </div>
+ </div>
+ <div id="accModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Welcome to the Maze Game</h2>
+     <button onclick="logPrep()" id="accButton" class="btn btn-gen">Log in</button>
+     <button onclick="intervalID = setInterval(checkAccount, 1000);document.getElementById('accModal').style.display = 'none';document.getElementById('welModal').style.display = 'flex';" id="logButton" class="btn btn-gen">Create Account</button>
+   </div>
+ </div>
+<div id="dailyModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Daily Bonus</h2>
+     <p id="bonusText" style="color:#ffc107; font-weight:bold;">+10 CREDITS</p>
+	<p id="streakText" style="color:white; font-weight:bold;"></p>
+	<button onclick="document.getElementById('dailyModal').style.display = 'none'" id="okbButton" class="btn btn-gen">OK</button>
+   </div>
+ </div>
+<div id="raceModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>2 Player Race</h2>
+	<button id="race1btn" class="btn btn-gen">2 PLAYER OFFLINE</button>
+	<button onclick="document.getElementById('raceModal').style.display = 'none';document.getElementById('race1Modal').style.display = 'flex'" id="on2Button" class="btn btn-gen">2 PLAYER ONLINE</button>
+   </div>
+ </div>
+<div id="race1Modal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Race Mode Settings</h2>
+		<ul class="controls">
+		<li><label>Opponent Username:</label><input id="vers2"/></li>
+       <li><label>Difficulty:</label>
+         <select id="algo2">
+           <option value="backtrack">Easy</option>
+           <option value="prim">Medium</option>
+           <option value="huntkill">Hard</option>
+         </select>
+       </li>
+       <li><label>Width:</label><input id="width2" type="number" min="15" value="20"/></li>
+       <li><label>Height:</label><input id="height2" type="number" min="15" value="20"/></li>
+		<button onclick="document.getElementById('race1Modal').style.display = 'none';fttee()" id="GameButton" class="btn btn-gen">Send Game Invite</button>
+     </ul>
+   </div>
+ </div>
+ <div id="loseModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2 id="loseTitle">You took too many steps!</h2>
+     <p style="color:#ffc107; font-weight:bold;">+0 CREDITS</p>
+     <button class="btn btn-gen" onclick="document.getElementById('loseModal').style.display='none';playAgain();">PLAY AGAIN</button>
+   </div>
+ </div>
+ <div id="creditModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2 id="winTitle">You dont have enough credits!</h2>
+     <p id="amountText" style="color:#ffc107; font-weight:bold;">You need amount more credits to buy the name trail/icon</p>
+     <p style="color:#ffc107; font-weight:bold;">Get more credits by playing more mazes and daily challenges</p>
+     <button class="btn btn-gen" onclick="document.getElementById('creditModal').style.display='none';">OK</button>
+   </div>
+ </div>
+<div class="modal-overlayy">
+   <div class="modal-contentt">
+     <h2 id="winTitle">Request!</h2>
+     <p id="amountText" style="color:#ffc107; font-weight:bold;">You need amount more credits to buy the name trail/icon</p>
+     <p style="color:#ffc107; font-weight:bold;">Get more credits by playing more mazes and daily challenges</p>
+     <button class="btn btn-gen" onclick="document.getElementById('creditModal').style.display='none';">OK</button>
+   </div>
+ </div>
+
+ <div id="deleteModal" class="modal-overlay">
+   <div class="modal-content" style="border-color: #555;">
+     <h3>Reset Game?</h3>
+     <p style="font-size: 13px; color: #bbb;">Wipes credits, skins, and records.</p>
+     <div style="display:flex; gap:10px; margin-top:20px;">
+       <button class="btn btn-sec" style="flex:1" onclick="closeDeleteModal()">CANCEL</button>
+       <button class="btn btn-gen" style="flex:1" onclick="confirmFullReset()">DELETE ALL</button>
+     </div>
+   </div>
+ </div>
+ <div id="accoModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Account Data</h2>
+     <p id="accData" style="font-size: 13px; color: #bbb;"></p>
+     <div style="display:flex; gap:10px; margin-top:20px;">
+       <button class="btn btn-gen" style="flex:1" onclick="logOut()">SIGN OUT</button>
+       <button class="btn btn-gen" style="flex:1" onclick="document.getElementById('accoModal').style.display='none';document.getElementById('deleteModal').style.display='flex'">DELETE ACCOUNT</button>
+     </div>
+     <button class="btn btn-sec" onclick="document.getElementById('accoModal').style.display='none'">BACK</button>
+   </div>
+ </div>
+
+
+ <div class="viewport">
+   <div id="dashPanel" class="dashboard">
+     <h3 style="margin:0 0 10px 0; color:#007bff;">DASHBOARD</h3>
+     <div class="stat-box" style="border-left-color:#ffc107;"><div class="stat-label">Credits</div><div id="creditDisplay" class="stat-value">0</div></div>
+     <div class="stat-box" style="border-left-color:#ff3e3e;"><div class="stat-label">Timer</div><div id="timer" class="stat-value">00:00.0</div></div>
+     <div class="stat-box"><div class="stat-label" id="p1Label">P1 Steps (WASD)</div><div id="p1Steps" class="stat-value">0</div></div>
+     <div id="p2Stats" style="display:none;" class="stat-box2" style="border-left-color:#28a745;"><div class="stat-label" id="p2Label">P2 Steps (Arrow Keys)</div><div id="p2Steps" class="stat-value">0</div></div>
+
+
+     <div style="margin-top: 10px;">
+       <button id="generate" class="btn btn-gen">GENERATE NEW</button>
+       <button id="dailyBtn" class="btn btn-daily" onclick="isRaceMode=false;document.getElementById('p2Stats').style.display = 'none';generate(true)"><span id="dailyBtnText">DAILY CHALLENGE</span></button>
+       <button id="raceBtn" class="btn btn-race">2-PLAYER RACE</button>
+       <button id="leaderboardBtn" class="btn btn-leader" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#001affff';showLeaderboard(false, true)">LEADERBOARD</button>
+       <button onclick="togglePanel('shopPanel')" class="btn btn-shop">SHOP</button>
+       <button id="downloadBtn" class="btn btn-download" onclick="downloadMaze()">DOWNLOAD MAZE AS A PNG</button>
+       <button id="fullscreenBtn" class="btn btn-fullscreen" onclick="toggleFullscreen()">ENTER FULLSCREEN</button>
+       <a href="https://vitalsaw-studios.w3spaces.com" style="display:none;" target="_blank" class="btn btn-more">MORE VITALSAW STUDIO GAMES</a>
+     </div>
+     <button onclick="togglePanel('settingsPanel')" class="btn btn-settings">SETTINGS</button>
+     <button onclick="openAccountModal()" class="btn btn-danger">ACCOUNT</button>
+   </div>
+
+
+   <div class="maze-container"><canvas id="mazeCanvas"></canvas></div>
+
+
+   <div id="settingsPanel" class="side-panel">
+     <h3 style="color:#d24;">SETTINGS</h3>
+     <ul class="controls">
+       <li><label>Difficulty:</label>
+         <select id="algo">
+           <option value="backtrack">Easy</option>
+           <option value="prim">Medium</option>
+           <option value="huntkill">Hard</option>
+         </select>
+       </li>
+       <li><label>Width:</label><input id="width" type="number" min="15" value="20"/></li>
+       <li><label>Height:</label><input id="height" type="number" min="15" value="20"/></li>
+       <li><label>Cell Size:</label><input id="pathwidth" type="number" value="15"/></li>
+       <li><label>Wall Size:</label><input id="wallwidth" type="number" value="4"/></li>
+       <li><label>Path Color:</label><input id="pathColor" type="color" value="#1a1e23"/></li>
+       <li><label>Wall Color:</label><input id="wallColor" type="color" value="#ff3e3e"/></li>
+       <li><label>P1 Color:</label><input id="playerColor" type="color" value="#007bff"/></li>
+       <li><label>P2 Color:</label><input id="player2Color" type="color" value="#28a745"/></li>
+       <li><label>Limit Steps:</label><input id="limitSteps" type="checkbox"/></li>
+       <li id="stepLimit" style="display:none;"><label>P1 Limit:</label><input id="stepLimitAmount" type="number" value="250"/></li>
+       <li id="step2Limit" style="display:none;"><label>P2 Limit:</label><input id="step2LimitAmount" type="number" value="250"/></li>
+     </ul>
+     <button class="btn btn-sec" style="margin-top:auto;height:36px;" onclick="togglePanel('settingsPanel')">CLOSE</button>
+   </div>
+
+
+   <div id="shopPanel" class="side-panel">
+     <h3 style="color:#ffc107;">SHOP</h3>
+     <div id="shopContainer" style="overflow-y:auto; flex-grow:1;"></div>
+     <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('shopPanel')">CLOSE</button>
+   </div>
+ </div>
+ <div id="leaderPanel" class="side-panel">
+     <h3 style="color:#001affff;">LEADERBOARD</h3>
+     <div id="leaderContainer" style="overflow-y:auto; flex-grow:1;">
+       <div id="leaderTabs">
+     <button id="creditTab" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#001affff';showLeaderboard()" style="background:#001affff" class="btn">Credits</button>
+     <button id="bestTab" onclick="document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#555';document.getElementById('bestTab').style.background = '#001affff';showLeaderboard('time')" style="background:#555" class="btn">Best Time</button>
+     <button id="mazeTab" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('creditTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#001affff';showLeaderboard('maze')" style="background:#555" class="btn">Mazes Finished</button>
+   </div>
+   <div id="leaderboard"></div>
+ </div>
+   <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('leaderPanel')">CLOSE</button>
+ </div>
+    <script type="module">
+      import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+const SUPABASE_URL = 'https://oqapjpayxyrlwmatreep.supabase.co'
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+const channel = supabase
+  .channel('maze-game-main-1694', {
+    config: { private: true },
+  })
+  .on('broadcast', { event: 'fr1' }, (msg) => {
+	  console.log(msg)
+	if (msg.payload.id != Username) {
+  console.log(`Message Recieved with a request type of "${msg.payload.request}"; PAYLOAD.REQUEST ==> (${msg.payload.body})`);
+	if (msg.payload.request == "Invite") {
+		console.log(1);
+	if (msg.payload.body.to == Username) {
+		window.versing = msg.payload.id;
+		console.log(2)
+		currentLayout = msg.payload.body.Message;
+		isRaceMode = true;
+		document.getElementById('wallColor').value = '#6f42c1';
+       document.getElementById('titletext').style.color = '#6f42c1';
+       document.getElementById('titletext').innerHTML = '2 Player Race';
+		draw()
+	}
+	} else {
+	if (msg.payload.id == versing) {
+	window.P2Payloadpos = msg.payload.body.Message;
+	draw();
+	}
+	}
+	}
+  })
+
+channel.subscribe((status, err) => {
+  if (status === 'SUBSCRIBED') console.log('Subscribed!')
+  else console.error('Subscribe error:', err)
+})
+    </script>
+ <script>
+   let wins;
+   let attUsername;
+   let Username;
+   if (localStorage.getItem("Username")) {
+     Username = localStorage.getItem("Username");
+     if (!localStorage.getItem('Tutorial') || localStorage.getItem('Tutorial') == "undefined") {
+ document.getElementById('howModal').style.display = 'flex';
+}
+   } else {
+     document.getElementById('accModal').style.display = 'flex';
+   }
+   let intervalID;
+   let gameData;
+	let btime = parseInt(localStorage.getItem('btime')) || 5000;
+	let credits = parseInt(localStorage.getItem('mazeCredits')) || 0;
+	 let mazeComp = parseInt(localStorage.getItem('mazeComp')) || 0;
+	 let unlockedSkins = JSON.parse(localStorage.getItem('unlockedSkins')) || ['Square'];
+	 let activeSkin = localStorage.getItem('activeSkin') || 'Square';
+	 let lastDailyDate = localStorage.getItem('lastDailyDate') || "";
+	 let customImgData = localStorage.getItem('customIcon') || null;
+   let activeTrail = localStorage.getItem('activeTrail') || 'None';
+	 let unlockedTrails = JSON.parse(localStorage.getItem('unlockedTrails')) || ['None'];
+	 let minSteps = 0;
+   let limitSteps = false;
+   let step1Limit = 250;
+   let step2Limit = 250;
+	 let lastBonus;
+	 let streak;
+	let customImg = new Image();
+   const canvas = document.getElementById('mazeCanvas');
+   const ctx = canvas.getContext('2d', { alpha: false });
+   let currentLayout = null, gameActive = false, startTime = null, timerInterval = null;
+   let isRaceMode = false, isDaily = false;
+   let p1 = { pos: 0, steps: 0, name: "P1" }, p2 = { pos: 0, steps: 0, name: "P2" };
+   fetchData().then(res => {gameData = res[0];
+	lastBonus = gameData.last_bonus;
+	btime = gameData.Time;
+    credits = gameData.credits;
+    mazeComp = gameData.maze_complete;
+    unlockedSkins = gameData.unlocked_skins;
+    activeSkin = gameData.active_skin;
+    lastDailyDate = gameData.last_daily;
+    customImgData = gameData.custom_icon;
+    activeTrail = gameData.active_trail;
+	streak = gameData.streak;
+    unlockedTrails = gameData.unlocked_trails;
+	let todayDate = new Date().toDateString();
+	const yesterday = new Date();
+yesterday.setDate(yesterday.getDate() - 1);
+console.log(yesterday.toDateString()); 
+   if(customImgData) customImg.src = customImgData;
+	if (lastBonus != todayDate) {
+		if (lastBonus != yesterday.toDateString()) {
+			streak = 1;
+		}
+		let bonus = streak * 5;
+		bonus += 5;
+		document.getElementById("streakText").innerHTML = "Online streak: " + streak;
+		document.getElementById("bonusText").innerHTML = `+${bonus} credits`;
+		document.getElementById("dailyModal").style.display = "flex";
+		lastBonus = new Date().toDateString();
+		streak++;
+		credits+= bonus;
+	}
+	updateCredits()
+	save()});
+	const skins = [
+     { name: 'Square', price: 0, desc: 'Classic block.' },
+     { name: 'Circle', price: 750, desc: 'Smooth sphere.' },
+     { name: 'Diamond', price: 1000, desc: 'Sharp edges.' },
+     { name: 'Custom', price: 2500, desc: 'Upload your own image!' }
+   ];
+   const trails = [
+     { name: 'None', price: 0, desc: 'No trail.' },
+     { name: 'Neon Blue', color: '#00f2ff', price: 500, desc: 'A glowing blue path.' },
+     { name: 'Lava', color: '#ff4500', price: 1000, desc: 'Hot molten trail.' },
+     { name: 'Rainbow', color: 'rainbow', price: 2000, desc: 'Cycles through colors.' }
+   ];
+   let p1History = [];
+   let p2History = [];
+   const slider = document.querySelector('#shopContainer');
+let isDown = false, startX, startY, scrollLeft, scrollTop;
+// Detect mouse interaction
+slider.addEventListener('mousedown', (e) => {
+ isDown = true;
+ startX = e.pageX - slider.offsetLeft;
+ startY = e.pageY - slider.offsetTop;
+ scrollLeft = slider.scrollLeft;
+ scrollTop = slider.scrollTop;
+});
+
+
+slider.addEventListener('mouseleave', () => isDown = false);
+slider.addEventListener('mouseup', () => isDown = false);
+
+
+// Handle dragging
+slider.addEventListener('mousemove', (e) => {
+ if (!isDown) return;
+ e.preventDefault();
+ const x = e.pageX - slider.offsetLeft;
+ const y = e.pageY - slider.offsetTop;
+ slider.scrollLeft = scrollLeft - (x - startX);
+ slider.scrollTop = scrollTop - (y - startY);
+});
+const devtools = {
+setCredits : function(credits) {
+ localStorage.setItem('mazeCredits', credits);
+ window.location.reload();
+},
+replayDaily: function() {
+   generate(true, true);
+   const today = new Date();
+   return today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+},
+seed: function(maze) {
+ generate(false, false, maze);
+ return maze;
+},
+tutorial: function() {
+ localStorage.setItem('Tutorial', undefined);
+ window.location.reload();
+}
+}
+document.getElementById("limitSteps").addEventListener('change', (event) => {
+   if (event.target.checked) {
+       limitSteps = true;
+       document.getElementById("stepLimit").style.display = 'flex';
+       document.getElementById("step2Limit").style.display = 'flex';
+step1Limit = 250;
+    step2Limit = 250;
+
+
+   } else {
+       limitSteps = false;
+       document.getElementById("stepLimit").style.display = 'none';
+       document.getElementById("step2Limit").style.display = 'none';
+step1Limit = false;
+step2Limit = false;
+   }
+});
+document.getElementById("stepLimit").addEventListener('change', (event) => {
+       step1Limit = parseInt(document.getElementById('stepLimitAmount').value) || false;
+});
+document.getElementById("step2Limit").addEventListener('change', (event) => {
+       step2Limit = parseInt(document.getElementById('step2LimitAmount').value) || false;
+});
+function logOut() {
+ localStorage.clear()
+ localStorage.setItem('Tutorial', true);
+ window.location.reload();
+}
+function showLeaderboard(by, force = false) {
+ if (by == 'maze') {
+   fetchData(false, by).then(res => {
+ gameData = res;
+ const container = document.getElementById('leaderboard');
+ container.innerHTML = '';
+ for (let hi = 0; hi < gameData.length; hi++) {
+	if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
+   container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].maze_complete}</label></li>`;
+	}
+	}
+})
+ }
+ if (by == 'time') {
+   fetchData(false, by).then(res => {
+ gameData = res;
+ const container = document.getElementById('leaderboard');
+ container.innerHTML = '';
+ for (let hi = 0; hi < gameData.length; hi++) {
+   if (gameData[hi].Time != 5000) {
+	   if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
+   container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].Time}s</label></li>`;
+	   }
+	   }
+ }
+})
+ }
+ if (!by) {
+ fetchData(true).then(res => {
+ gameData = res;
+ const container = document.getElementById('leaderboard');
+ container.innerHTML = '';
+ for (let hi = 0; hi < gameData.length; hi++) {
+	 if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
+   container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].credits}</label></li>`;
+	 }
+	 }
+ })};
+if (force == false) {if (!document.getElementById("leaderPanel").classList[1]) {togglePanel('leaderPanel');}} else {togglePanel('leaderPanel');}
+}
+function logPrep() {
+ document.getElementById('instructText').innerHTML = "Enter your username and passcode below";
+ document.getElementById('logInBtn').style.display = "flex";
+ document.getElementById("createButton").style.display = "none";
+ document.getElementById("confirmPass").style.display = "none";
+ document.getElementById('welModal').style.display = "flex";
+ document.getElementById('logInTitle').innerHTML = "Log In";
+ document.getElementById('accModal').style.display = "none";
+}
+function logIn(AccountUser, password) {
+ const url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${AccountUser}&select=Usernames,passcode`;
+ const options = {
+   method: 'GET',
+   headers: {
+     'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ',
+     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'
+   }
+ };
+
+
+ return fetch(url, options)
+   .then(response => {
+     if (!response.ok) {
+       throw new Error(`HTTP error! status: ${response.status}`);
+     }
+     return response.json();
+   })
+   .then(data => {
+     if (data[0].passcode == password) {
+     localStorage.setItem("Username", AccountUser);
+     window.location.reload();
+     } else {
+       document.getElementById('invalidText').innerHTML = "Passcode incorrect";
+     }
+   })
+   .catch(error => {
+     console.error('Error:', error);
+     document.getElementById('invalidText').innerHTML = "This account does not exist";
+   });
+}
+async function deleteRow(idValue) {
+ const supabaseUrl = 'https://oqapjpayxyrlwmatreep.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
+const tableName = 'accounts';
+ const url = `${supabaseUrl}/rest/v1/${tableName}?Usernames=eq.${idValue}`;
+
+
+ try {
+   const response = await fetch(url, {
+     method: 'DELETE',
+     headers: {
+       'apikey': supabaseKey,
+       'Authorization': `Bearer ${supabaseKey}`,
+       'Content-Type': 'application/json',
+       'Prefer': 'return=representation'
+     }
+   });
+
+
+   if (!response.ok) {
+     const errorData = await response.json();
+     console.error('Delete failed:', errorData);
+     return;
+   }
+
+
+   const data = await response.json();
+   console.log('Deleted successfully:', data);
+ } catch (err) {
+   console.error('Fetch error:', err);
+ }
+}
+function checkAccount() {
+ if (document.getElementById('username').value == "" && document.getElementById('passCode').value == "" && document.getElementById('confirmPass').value == "") {return;}
+ if (document.getElementById('username').value.length < 5) {document.getElementById('invalidText').innerHTML = 'Your username must be more than 4 characters long'; return;}
+ if (document.getElementById('passCode').value != document.getElementById('confirmPass').value) {document.getElementById('invalidText').innerHTML = "Both the passcodes don't match"; return;}
+ if (document.getElementById('passCode').value.length < 8) {document.getElementById('invalidText').innerHTML = 'Your passcode must be more than 7 characters'; return;}
+ if (document.getElementById('confirmPass').value.length < 8) {document.getElementById('invalidText').innerHTML = 'Your passcode must be more than 7 characters'; return;}
+ if (attUsername == document.getElementById('username').value) {return;}
+ document.getElementById('createButton').style.background = '#d24';
+ document.getElementById('createButton').style.cursor = 'pointer';
+ document.getElementById('invalidText').innerHTML = '';
+ clearInterval(intervalID);
+ document.getElementById('createButton').disabled = false;
+}
+async function insertData(AccountUser, password) {
+ const PROJECT_URL = 'https://oqapjpayxyrlwmatreep.supabase.co';
+ const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
+ attUsername = AccountUser;
+ const response = await fetch(`${PROJECT_URL}/rest/v1/accounts`, {
+   method: 'POST',
+   headers: {
+     'apikey': ANON_KEY,
+     'Authorization': `Bearer ${ANON_KEY}`,
+     'Content-Type': 'application/json',
+     'Prefer': 'return=representation'
+   },
+   body: JSON.stringify({
+     Usernames: AccountUser,
+     passcode: password,
+     unlocked_skins: ["Square"],
+     unlocked_trails: "[\"None\"]"
+   })
+ });
+
+
+ if (response.ok) {
+   const result = await response.json();
+   console.log('Account successfully created:', result);
+   document.getElementById('welModal').style.display = 'none';
+   localStorage.setItem('Username', AccountUser);
+   window.location.reload();
+if (!localStorage.getItem('Tutorial') || localStorage.getItem('Tutorial') == "undefined") {
+ document.getElementById('howModal').style.display = 'flex';
+}
+ } else {
+   console.error('Error: Username already taken');
+   document.getElementById('invalidText').innerHTML = `The username '${AccountUser}' has already been taken. Please pick another username.`;
+   document.getElementById('createButton').style.background = '#555';
+   document.getElementById('createButton').style.cursor = 'not-allowed';
+   document.getElementById('createButton').disabled = true;
+   intervalID = setInterval(checkAccount, 1000);
+ }
+}
+function fetchData(leader = false, by) {
+ let url = (leader) ? "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,credits&order=credits.desc" : `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username}`;
+ if (by == 'maze') {
+   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,maze_complete&order=maze_complete.desc";
+ }
+ if (by == 'time') {
+   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time&order=Time.asc";
+ }
+ const options = {
+   method: 'GET',
+   headers: {
+     'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ',
+     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'
+   }
+ };
+
+
+ return fetch(url, options)
+   .then(response => {
+     if (!response.ok) {
+       throw new Error(`HTTP error! status: ${response.status}`);
+     }
+     return response.json();
+   })
+   .then(data => {
+     console.log('Success:', data);
+     return data;
+   })
+   .catch(error => {
+     console.error('Error:', error);
+   });
+}
+   function tutorial() {
+     document.getElementById('startgame').style.display = 'none';
+     document.getElementById('viewTutorial').style.display = 'none';
+     document.getElementById('instructions').innerHTML = "The aim of the game is to beat the maze as fast and as efficiently as possible to earn credits, icons, and even trails";
+     document.getElementById('nextBTN').style.display = 'flex';
+   }
+   function tutorialA() {
+     const howto = document.getElementById('instructions');
+     howto.innerHTML = "To move player one use WASD and to move player two in race mode use Arrow Keys.";
+     document.getElementById('welcomeTitle').innerHTML = "How to Play";
+     document.getElementById('tutorialLevel').style.display = 'flex';
+     document.getElementById('nextBTN').style.display = 'none';
+
+
+   }
+   function toggleFullscreen() {
+     let elem = document.getElementById('html');
+     if (!document.fullscreenElement && !document.webkitFullscreenElement &&
+         !document.mozFullScreenElement && !document.msFullscreenElement) {
+       if (elem.requestFullscreen) elem.requestFullscreen();
+       else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+       else if (elem.mozRequestFullScreen) elem.mozRequestFullScreen();
+       else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+       document.getElementById('fullscreenBtn').innerHTML = 'EXIT FULLSCREEN';
+     } else {
+       if (document.exitFullscreen) document.exitFullscreen();
+       else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+       else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+       else if (document.msExitFullscreen) document.msExitFullscreen();
+       document.getElementById('fullscreenBtn').innerHTML = 'ENTER FULLSCREEN';
+     }
+   }
+
+
+   function updateDailyStatus() {
+       const dailyBtn = document.getElementById('dailyBtn');
+       const btnText = document.getElementById('dailyBtnText');
+       const today = new Date().toDateString();
+       if (lastDailyDate === today) {
+           dailyBtn.disabled = true;
+           dailyBtn.style.background = "#555";
+           dailyBtn.style.cursor = "not-allowed";
+           const now = new Date();
+           const midnight = new Date();
+           midnight.setHours(24, 0, 0, 0);
+           const diff = midnight - now;
+           const h = Math.floor(diff / 3600000);
+           const m = Math.floor((diff % 3600000) / 60000);
+           const s = Math.floor((diff % 60000) / 1000);
+           btnText.innerText = `NEXT DAILY IN ${h}h ${m}m ${s}s`;
+       } else {
+           dailyBtn.disabled = false;
+           dailyBtn.style.background = "#28a745";
+           dailyBtn.style.cursor = "pointer";
+           btnText.innerText = "DAILY CHALLENGE";
+       }
+   }
+   setInterval(updateDailyStatus, 1000);
+
+
+   function downloadMaze() {
+       const link = document.createElement('a');
+       link.download = `Maze-${new Date().getTime()}.png`;
+       link.href = canvas.toDataURL("image/png");
+       link.click();
+   }
+
+
+   function togglePanel(id) {
+       ['settingsPanel', 'shopPanel', 'leaderPanel'].forEach(p => {
+           const el = document.getElementById(p);
+           if(p === id) el.classList.toggle('open');
+           else el.classList.remove('open');
+       });
+   }
+   function openAccountModal() {
+     document.getElementById("accData").innerHTML = `<li><label class='username'>Username:</label><label class='credits'>${Username}</label></li>
+     <br><li><label class='username'>Credits:</label><label class='credits'>${credits}</label></li>
+     <br><li><label class='username'>Best Time:</label><label class='credits'>${btime}s</label></li>
+     <br><li><label class='username'>Mazes Completed:</label><label class='credits'>${mazeComp}</label></li>
+	 <br><li><label class='username'>Online Streak:</label><label class='credits'>${streak} days</label></li>`;
+     document.getElementById("accoModal").style.display = "flex";
+   }
+   function openDeleteModal() { document.getElementById('deleteModal').style.display = 'flex'; }
+   function closeDeleteModal() { document.getElementById('deleteModal').style.display = 'none'; }
+   function confirmFullReset() {
+       localStorage.clear(); deleteRow(Username); localStorage.setItem('Tutorial', true); credits = 0; unlockedSkins = ['Square']; activeSkin = 'Square';
+       unlockedTrails = ['None']; activeTrail = 'None'; customImgData = null; lastDailyDate = "";
+       updateCredits(); closeDeleteModal(); generate(); updateDailyStatus();
+       window.location.reload()
+   }
+
+
+   function updateCredits() {
+       document.getElementById('creditDisplay').innerText = credits;
+       const container = document.getElementById('shopContainer');
+       container.innerHTML = '<h4 style="color:#ff3e3e;">SKINS</h4>';
+       skins.forEach(s => {
+           const unlocked = unlockedSkins.includes(s.name);
+           const active = activeSkin === s.name;
+           let extra = (s.name === 'Custom' && unlocked) ? `<input type="file" id="iconUpload" style="display:none" accept="image/*" onchange="handleImg(this)"><button class="btn btn-sec" style="font-size:10px; height:24px; margin-top:5px" onclick="document.getElementById('iconUpload').click()">CHOOSE IMAGE</button>` : "";
+           container.innerHTML += `<div class="shop-item" style="border-color:${active ? '#ff3e3e' : '#444'}"><h4 style='color:#ff3e3e;'>${s.name}</h4><p>${s.desc}</p>${unlocked ? `<button class="btn btn-sec" onclick="setSkin('${s.name}')" ${active ? 'disabled' : ''}>${active ? 'EQUIPPED' : 'EQUIP'}</button>${extra}` : `<button class="btn btn-shop" onclick="buySkin('${s.name}', ${s.price})">BUY: ${s.price}</button>`}</div>`;
+       });
+       container.innerHTML += '<h4 style="color:#007bff; margin-top:20px;">TRAILS</h4>';
+       trails.forEach(t => {
+           const unlocked = unlockedTrails.includes(t.name);
+           const active = activeTrail === t.name;
+           container.innerHTML += `<div class="shop-item" style="border-color:${active ? '#007bff' : '#444'}"><h4 style='color:#007bff;'>${t.name}</h4><p>${t.desc}</p>${unlocked ? `<button class="btn btn-sec" onclick="setTrail('${t.name}')" ${active ? 'disabled' : ''}>${active ? 'EQUIPPED' : 'EQUIP'}</button>` : `<button class="btn btn-shop" onclick="buyTrail('${t.name}', ${t.price})">BUY: ${t.price}</button>`}</div>`;
+       });
+   }
+
+
+   function handleImg(input) {
+       if (!input.files[0]) return;
+       const reader = new FileReader();
+       reader.onload = async (e) => { customImgData = e.target.result; customImg.src = customImgData; localStorage.setItem('customIcon', customImgData);
+       const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
+       const urL = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username} `;
+       const response = await fetch(urL, {
+   method: 'PATCH',headers: {'apikey': anonkey,'Authorization': `Bearer ${anonkey}`,'Content-Type': 'application/json','Prefer': 'return=representation'},body: JSON.stringify({custom_icon: customImgData})
+ });
+if (response.ok) {const updatedRow = await response.json();console.log('Game data successfully saved:', updatedRow);
+ } else {const errorData = await response.json();console.error('The Game did not get saved:', errorData);}
+  draw(); };
+       reader.readAsDataURL(input.files[0]);
+   }
+
+
+    function buySkin(n, p) { if(credits >= p) { credits -= p; unlockedSkins.push(n); save(); updateCredits(); } else {document.getElementById('amountText').innerHTML=`You need ${p - credits} more credits to buy the ${n} icon`;document.getElementById('creditModal').style.display = 'flex';} }
+   function setSkin(n) { activeSkin = n; save(); updateCredits(); draw(); }
+   function buyTrail(n, p) { if(credits >= p) { credits -= p; unlockedTrails.push(n); save(); updateCredits(); }  else {document.getElementById('amountText').innerHTML=`You need ${p - credits} more credits to buy the ${n} trail`;document.getElementById('creditModal').style.display = 'flex';} }
+   function setTrail(n) { activeTrail = n; save(); updateCredits(); draw(); }
+	 function fttee() {
+		 let invitename = document.getElementById('vers2').value;
+		 let gamediff = document.getElementById('algo2').value;
+		 let gamew = parseInt(document.getElementById('width2').value);
+		 let gameh = parseInt(document.getElementById('height2').value);
+		 if (invitename = '') {alert('This Username does not exist');return;}
+		 if (gamew = '' || gamew > 70 || gamew < 15) {alert('Invalid Width');return;}
+		 if (gameh = '' || gameh > 70 || gameh < 15) {alert('Invalid Height');return;}
+		 const url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?select=Usernames`;
+ const options = {method: 'GET',headers: {'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ','Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'
+   }
+ };
+return fetch(url, options)
+   .then(response => {
+     if (!response.ok) {
+       throw new Error(`HTTP error! status: ${response.status}`);
+     }
+     return response.json();
+   })
+   .then(data => {
+ for (let hi = 0; hi < data.length; hi++) {
+	if (data[hi].Usernames == invitename) {
+		break;
+	}
+	}
+     generate(false, false, false, true, invitename, gamediff, gamew, gameh);
+   })
+   .catch(error => {
+     console.error('Error:', error);
+     alert("This account does not exist");
+   });
+	 }
+async function fttes(fto, layout, ftlimit, al, bl, difficulty) {
+let fbody = {Message: layout, ls: ftlimit, al: al, bl: bl, from: Username, to: fto, rand: Math.random()};
+const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
+ const urL = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username} `;
+ const response = await fetch(urL, {
+   method: 'PATCH',
+   headers: {
+     'apikey': anonkey,
+     'Authorization': `Bearer ${anonkey}`,
+     'Content-Type': 'application/json',
+     'Prefer': 'return=representation'
+   },
+   body: JSON.stringify({
+     request: "Invite",
+	  body: fbody
+   })
+ });
+
+
+ if (response.ok) {
+   const updatedRow = await response.json();
+   console.log('Sent Request:', updatedRow);
+	window.versing = fto;
+ } else {
+   const errorData = await response.json();
+   console.error('Error:', errorData);
+ }
+}
+async function ftte(coords) {
+let fbody = {Message: coords}
+const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
+ const urL = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username} `;
+ const response = await fetch(urL, {
+   method: 'PATCH',
+   headers: {
+     'apikey': anonkey,
+     'Authorization': `Bearer ${anonkey}`,
+     'Content-Type': 'application/json',
+     'Prefer': 'return=representation'
+   },
+   body: JSON.stringify({
+     request: "OPU",
+	  body: fbody
+   })
+ });
+
+
+ if (response.ok) {
+   const updatedRow = await response.json();
+   console.log('Sent Request:', updatedRow);
+ } else {
+   const errorData = await response.json();
+   console.error('Error:', errorData);
+ }
+}
+   async function save() {
+       localStorage.setItem('mazeCredits', credits);
+       localStorage.setItem('unlockedSkins', JSON.stringify(unlockedSkins));
+       localStorage.setItem('activeSkin', activeSkin);
+       localStorage.setItem('unlockedTrails', JSON.stringify(unlockedTrails));
+       localStorage.setItem('activeTrail', activeTrail);
+       localStorage.setItem('lastDailyDate', lastDailyDate);
+       localStorage.setItem('mazeComp', mazeComp);
+ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
+
+
+
+
+ const urL = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username} `;
+
+
+ const response = await fetch(urL, {
+   method: 'PATCH',
+   headers: {
+     'apikey': anonkey,
+     'Authorization': `Bearer ${anonkey}`,
+     'Content-Type': 'application/json',
+     'Prefer': 'return=representation'
+   },
+   body: JSON.stringify({
+     credits: credits,
+     unlocked_skins: unlockedSkins,
+     unlocked_trails: unlockedTrails,
+     active_skin: activeSkin,
+     active_trail: activeTrail,
+     last_daily: lastDailyDate,
+     maze_complete: mazeComp,
+     Time: btime,
+	 streak: streak,
+	 last_bonus: lastBonus
+   })
+ });
+
+
+ if (response.ok) {
+   const updatedRow = await response.json();
+   console.log('Game data successfully saved:', updatedRow);
+ } else {
+   const errorData = await response.json();
+   console.error('The Game did not get saved:', errorData);
+ }
+   }
+
+
+   let seed = 1;
+   function seededRandom() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+
+
+   function generate(isDailyChallenge = false, force = false, tutorial = false, req = false, ivn, gdi, rgw, rgh) {
+     if(!force) {
+     if(isDailyChallenge && lastDailyDate === new Date().toDateString()) return;}
+     isDaily = isDailyChallenge;
+     if (document.getElementById('height').value == 5) { document.getElementById('height').value = 20; document.getElementById('width').value = 20; document.getElementById('pathwidth').value = 15; document.getElementById('wallwidth').value = 4; document.getElementById('titletext').innerHTML = "Maze Game"; document.getElementById('dashPanel').style.display = "flex";}
+     if (document.getElementById('width').value < 15) document.getElementById('width').value = 15;
+     if (document.getElementById('height').value < 15) document.getElementById('height').value = 15;
+	if (req) {isRaceMode = true;}
+     if (tutorial) {
+       document.getElementById('width').value = 5;
+       document.getElementById('height').value = 5;
+       document.getElementById('pathwidth').value = 30;
+       document.getElementById('wallwidth').value = 8;
+       document.getElementById('titletext').innerHTML = "Tutorial Level";
+       document.getElementById('dashPanel').style.display = "none";
+     }
+     if(isDaily) {
+         const today = new Date();
+         seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+         document.getElementById('algo').value = "huntkill";
+         document.getElementById('wallColor').value = "#28a745";
+         document.getElementById('titletext').style.color = "#28a745";
+         document.getElementById('titletext').innerHTML = "Daily Challenge";
+         document.getElementById('height').value = 20;
+         document.getElementById('width').value = 20;
+         document.getElementById('limitSteps').checked = false;
+         document.getElementById("stepLimit").style.display = 'none';
+       document.getElementById("step2Limit").style.display = 'none';
+       limitSteps = false;
+
+
+     } else {
+         seed = Math.floor(Math.random() * 2147483647); 
+         if (document.getElementById("wallColor").value == '#28a745'){
+           document.getElementById('wallColor').value = '#ff3e3e';
+           document.getElementById('titletext').style.color = "#ff3e3e";
+           document.getElementById('titletext').innerHTML = "Maze Game";
+         }
+     }
+     if (document.getElementById("wallColor").value == '#6f42c1') {
+       document.getElementById('wallColor').value = '#ff3e3e';
+       document.getElementById('titletext').style.color = '#ff3e3e';
+       document.getElementById('titletext').innerHTML = 'Maze Game';
+     }
+     if (isRaceMode) {
+       document.getElementById('wallColor').value = '#6f42c1';
+       document.getElementById('titletext').style.color = '#6f42c1';
+       document.getElementById('titletext').innerHTML = '2 Player Race';
+     }
+
+
+     p1History = [];
+     p2History = [];
+     let w = parseInt(document.getElementById('width').value);
+     let h = parseInt(document.getElementById('height').value);
+     const pw = parseInt(document.getElementById('pathwidth').value);
+     const ww = parseInt(document.getElementById('wallwidth').value);
+     let mode = document.getElementById('algo').value;
+     let getRand = isDaily ? seededRandom : Math.random;
+	if (req) {
+		w = rgw;
+		h = rgh;
+		mode = gdi;
+	}
+     canvas.width = (pw * 2) + (w * pw) + ((w - 1) * ww);
+     canvas.height = (pw * 2) + (h * pw) + ((h - 1) * ww);
+    
+     gameActive = true; startTime = null; clearInterval(timerInterval);
+     document.getElementById('timer').innerText = "00:00.0";
+     p1 = { pos: 0, steps: 0, name: "P1" };
+     p2 = { pos: 0, steps: 0, name: "P2" };
+     document.getElementById('p1Steps').innerText = "0";
+     document.getElementById('p2Steps').innerText = "0";
+    
+     let adj = Array.from({length: w*h}, () => []);
+     const grid = new Uint8Array(w * h);
+     const getNeighbors = (idx) => {
+         const x = idx % w, y = Math.floor(idx / w), n = [];
+         if (y > 0) n.push(idx - w); if (y < h - 1) n.push(idx + w);
+         if (x > 0) n.push(idx - 1); if (x < w - 1) n.push(idx + 1);
+         return n;
+     };
+
+
+     if (mode === 'backtrack') {
+         const stack = [0]; grid[0] = 1;
+         while (stack.length > 0) {
+             const curr = stack[stack.length - 1], neighbors = getNeighbors(curr).filter(n => grid[n] === 0);
+             if (neighbors.length > 0) {
+                 const next = neighbors[Math.floor(getRand() * neighbors.length)];
+                 grid[next] = 1; adj[curr].push(next); adj[next].push(curr); stack.push(next);
+             } else stack.pop();
+         }
+     } else if (mode === 'prim') {
+         const walls = []; grid[0] = 1;
+         getNeighbors(0).forEach(n => walls.push([0, n]));
+         while (walls.length > 0) {
+             const idx = Math.floor(getRand() * walls.length);
+             const [u, v] = walls.splice(idx, 1)[0];
+             if (grid[v] === 0) { grid[v] = 1; adj[u].push(v); adj[v].push(u); getNeighbors(v).forEach(n => { if(grid[n] === 0) walls.push([v, n]); }); }
+         }
+     } else {
+         let curr = 0; grid[0] = 1;
+         while (curr !== null) {
+             const neighbors = getNeighbors(curr).filter(n => grid[n] === 0);
+             if (neighbors.length > 0) {
+                 const next = neighbors[Math.floor(getRand() * neighbors.length)];
+                 grid[next] = 1; adj[curr].push(next); adj[next].push(curr); curr = next;
+             } else {
+                 curr = null;
+                 for (let i = 0; i < w * h; i++) {
+                     if (grid[i] === 0) {
+                         const visited = getNeighbors(i).filter(n => grid[n] === 1);
+                         if (visited.length > 0) { curr = i; grid[i] = 1; const next = visited[Math.floor(getRand() * visited.length)]; adj[curr].push(next); adj[next].push(curr); break; }
+                     }
+                 }
+             }
+         }
+     }
+     currentLayout = { adj, w, h };
+     minSteps = calculateMinSteps(adj, 0, (w * h) - 1);
+     if (limitSteps) {
+       if (step1Limit < minSteps) {step1Limit = minSteps + 1; document.getElementById('stepLimitAmount').value = minSteps + 1}
+       if (step2Limit < minSteps) {step2Limit = minSteps + 1; document.getElementById('step2LimitAmount').value = minSteps + 1}
+     }
+	if (req) {
+		fttes(ivn, currentLayout, false, false, false);
+	}
+     draw();
+   }
+   function calculateMinSteps(adj, startNode, endNode) {
+   let queue = [[startNode, 0]];
+   let visited = new Set([startNode]);
+   while (queue.length > 0) {
+       let [currentNode, distance] = queue.shift();
+
+
+       if (currentNode === endNode) return distance;
+
+
+       for (let neighbor of adj[currentNode]) {
+           if (!visited.has(neighbor)) {
+               visited.add(neighbor);
+               queue.push([neighbor, distance + 1]);
+           }
+       }
+   }
+   return 0;
+}
+
+
+   function drawPlayer(pos, color) {
+       if(!currentLayout) return;
+       const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
+       const x = (pos % currentLayout.w) * (pw + ww) + pw, y = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
+       ctx.fillStyle = color;
+       if(activeSkin === 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
+       else if(activeSkin === 'Diamond') { ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); }
+       else if(activeSkin === 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
+       else { ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); }
+   }
+
+
+   function draw() {
+     if (!currentLayout) return;
+     const { adj, w, h } = currentLayout;
+     const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
+    
+     ctx.fillStyle = document.getElementById('wallColor').value;
+     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+     ctx.fillStyle = document.getElementById('pathColor').value;
+     for (let i = 0; i < w * h; i++) {
+       const px = pw + (i % w) * (pw + ww), py = pw + Math.floor(i / w) * (pw + ww);
+       ctx.fillRect(px, py, pw, pw);
+       adj[i].forEach(n => { if (n > i) { if (n % w > i % w) ctx.fillRect(px + pw, py, ww, pw); else ctx.fillRect(px, py + pw, pw, ww); } });
+     }
+
+
+     if (activeTrail !== 'None') {
+       ctx.save();
+       const trailData = trails.find(t => t.name === activeTrail);
+       const drawTrailPath = (history) => {
+           history.forEach((pos, index) => {
+               const tx = (pos % currentLayout.w) * (pw + ww) + pw;
+               const ty = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
+               ctx.fillStyle = trailData.color === 'rainbow' ? `hsl(${(index * 20) % 360}, 80%, 60%)` : trailData.color;
+               ctx.globalAlpha = 0.5;
+               ctx.fillRect(tx + 4, ty + 4, pw - 8, pw - 8);
+           });
+       };
+       drawTrailPath(p1History);
+       if (isRaceMode) drawTrailPath(p2History);
+       ctx.restore();
+     }
+    
+     ctx.fillStyle = "#ff0000";
+     ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);
+    
+     drawPlayer(p1.pos, document.getElementById('playerColor').value);
+     if (isRaceMode) {
+		 if (typeof P2Payloadpos !== 'undefined') {
+		 	drawPlayer(P2Payloadpos, document.getElementById('player2Color').value);
+		 } else {
+			 drawPlayer(p2.pos, document.getElementById('player2Color').value);
+		 }
+	}
+     if (limitSteps == true) {
+       if (step1Limit != false && step2Limit != false) {
+         if (p1.steps < step1Limit) {
+           document.getElementById('p1Steps').innerText = `${p1.steps} / ${step1Limit}`;
+         } else {
+           if (isRaceMode) {
+             const p = {
+               name: "P2",
+               steps: p2.steps
+             };
+             wins = "P2";
+           win(p);
+           } else {document.getElementById('loseModal').style.display='flex';}
+         }
+         if(isRaceMode) {
+         if (p2.steps < step2Limit) {
+           document.getElementById('p2Steps').innerText = `${p2.steps} / ${step2Limit}`;
+         } else {
+           const p = {
+               name: "P1",
+               steps: p1.steps
+             };
+             wins = "P1";
+           win(p);
+         }
+         }
+       } else {
+         document.getElementById('p1Steps').innerText = p1.steps;
+     if(isRaceMode) document.getElementById('p2Steps').innerText = p2.steps;
+       }
+     } else {
+       document.getElementById('p1Steps').innerText = p1.steps;
+     if(isRaceMode) document.getElementById('p2Steps').innerText = p2.steps;
+     }
+   }
+
+
+   window.addEventListener('keydown', e => {
+     if (e.code !== 'KeyS' && e.code !== 'KeyW' && e.code !== 'KeyD' && e.code !== 'KeyA'){
+       if (isRaceMode) {
+         if (e.code !== 'ArrowUp' && e.code !== 'ArrowDown' && e.code !== 'ArrowLeft' && e.code !== 'ArrowRight'){
+           return;
+         }
+       } else {return;}
+     }
+     if(!gameActive || !currentLayout) return;
+     const { adj, w, h } = currentLayout;
+     if (!startTime) { startTime = Date.now(); timerInterval = setInterval(() => { document.getElementById('timer').innerText = ((Date.now() - startTime) / 1000).toFixed(1) + "s"; }, 100); }
+     const move = (p, t) => {
+         if (t !== undefined && adj[p.pos] && adj[p.pos].includes(t)) {
+             if (p.name === "P1") {
+               p1History.push(p.pos);
+               if(p1History.length > 10) p1History.shift();
+             } else {
+               p2History.push(p.pos);
+               if(p2History.length > 10) p2History.shift();
+             }
+             p.pos = t;
+			 			 if (isRaceMode) {
+				 ftte(p.pos);
+						 }
+             p.steps++;
+             draw();
+             if (p.pos === w * h - 1) win(p);
+         }
+     };
+     if (e.code === 'KeyW') move(p1, p1.pos - w); if (e.code === 'KeyS') move(p1, p1.pos + w); if (e.code === 'KeyA') move(p1, p1.pos - 1); if (e.code === 'KeyD') move(p1, p1.pos + 1);
+     if (isRaceMode) { if (e.code === 'ArrowUp') move(p2, p2.pos - w); if (e.code === 'ArrowDown') move(p2, p2.pos + w); if (e.code === 'ArrowLeft') move(p2, p2.pos - 1); if (e.code === 'ArrowRight') move(p2, p2.pos + 1); }
+     if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code)) e.preventDefault();
+   });
+
+
+   function win(p) {
+        gameActive = false; clearInterval(timerInterval);
+        let reward = 50;
+        if(isDaily) {
+           lastDailyDate = new Date().toDateString();
+           updateDailyStatus();
+           document.getElementById('replay').innerHTML = 'NEW MAZE';
+           var fsteps = p.steps;
+           if (fsteps = minSteps) {
+             reward = 40;
+           } else {
+             fsteps = fsteps - 100;
+             fsteps = 40 - fsteps;
+             reward = fsteps;
+           }
+           var ftime = parseFloat(document.getElementById('timer').innerText);
+           if (ftime < 14) {
+             reward = reward + 40;
+           } else {
+             ftime = ftime - 13;
+             ftime = 40 - ftime;
+             reward = reward + ftime;
+           }
+           var fmode = document.getElementById('algo').value;
+           if (fmode == 'backtrack') reward += 6;
+           else if (fmode == 'prim') reward += 12;
+           else reward += 20;
+        } else {
+         if (p.pos){
+           var fsteps = p.steps;
+           if (fsteps < 101) {
+             reward = 20;
+           } else {
+             fsteps = fsteps - 100;
+             if (document.getElementById('algo').value == 'prim' || document.getElementById('algo').value == 'huntkill') {fsteps = fsteps / 4}
+             fsteps = fsteps / 8;
+             fsteps = 20 - fsteps;
+             reward = fsteps;
+           }
+           var ftime = parseFloat(document.getElementById('timer').innerText);
+           if (ftime < 26) {
+             reward = reward + 20;
+           } else {
+             ftime = ftime - 25;
+             ftime = ftime / 1.5;
+             ftime = 20 - ftime;
+             reward = reward + ftime;
+           }
+           var fmode = document.getElementById('algo').value;
+           if (fmode == 'backtrack') reward += 3;
+           else if (fmode == 'prim') reward += 6;
+           else reward += 10;
+          
+           let fwidth = parseInt(document.getElementById('width').value);
+           let fheight = parseInt(document.getElementById('height').value);
+           if (fwidth < 20 || fheight < 20) {
+             let mean = (fwidth + fheight) / 2;
+             mean = 20 - mean;
+             mean *= 2;
+             reward = reward - mean;
+           }
+         } else {reward = 5}
+        }
+
+
+        reward = Math.round(reward);
+        if (p.pos) {
+        if (reward < 11) reward = 10;
+        mazeComp++
+        } else {
+         reward = 0;
+        }
+        const gtime = parseFloat(document.getElementById('timer').innerText);
+        if (gtime < btime && currentLayout.w == 20 && currentLayout.h == 20) {
+         btime = gtime;
+        }
+        if (currentLayout.w != 5) {
+        credits += reward; save(); updateCredits();
+        }
+        document.getElementById('rewardText').innerText = "+" + reward + " CREDITS EARNED!";
+        if (p.pos) {
+        document.getElementById('winTitle').innerText = isRaceMode ? p.name + " Wins!" : (isDaily ? "Daily Complete!" : "Maze Complete!");
+        } else {
+         if (wins == "P1") {
+         document.getElementById('winTitle').innerText = "P1 Wins because P2 ran out of steps";
+         } else {
+         document.getElementById('winTitle').innerText = "P2 Wins because P1 ran out of steps";
+         }
+         document.getElementById('replay').innerHTML = "New Maze";
+        }
+        document.getElementById('finalStats').innerText = "Time: " + document.getElementById('timer').innerText;
+        document.getElementById('winModal').style.display = 'flex';
+        if (currentLayout.w == 5) {
+           document.getElementById('finalStats').innerText = "";
+           document.getElementById('winTitle').innerText = "Tutorial Level Complete!"
+           document.getElementById('replay').innerHTML = "Start Game";
+           document.getElementById('rewardText').innerText = "";
+        }
+   }
+      
+   function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); }
+   document.getElementById('generate').onclick = () => { isRaceMode = false; document.getElementById('p2Stats').style.display = 'none'; generate(false); };
+   document.getElementById('racebtn').onclick = () => {isRaceMode = true; document.getElementById('p2Stats').style.display = 'block'; generate(false); };
+   updateDailyStatus();
+   window.onload = () => generate();
+ </script>
+</body>
+</html>
