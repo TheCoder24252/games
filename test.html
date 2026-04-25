@@ -234,6 +234,7 @@ const channel = supabase
 	if (msg.payload.body.to == Username) {
 		console.log(2)
 		currentLayout = msg.payload.body.Message;
+		isRaceMode = true;
 		draw()
 	}
 	} else {
@@ -843,6 +844,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
      if (document.getElementById('height').value == 5) { document.getElementById('height').value = 20; document.getElementById('width').value = 20; document.getElementById('pathwidth').value = 15; document.getElementById('wallwidth').value = 4; document.getElementById('titletext').innerHTML = "Maze Game"; document.getElementById('dashPanel').style.display = "flex";}
      if (document.getElementById('width').value < 15) document.getElementById('width').value = 15;
      if (document.getElementById('height').value < 15) document.getElementById('height').value = 15;
+	if (req) {isRaceMode = true;}
      if (tutorial) {
        document.getElementById('width').value = 5;
        document.getElementById('height').value = 5;
