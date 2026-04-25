@@ -767,7 +767,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 		 let gamew = document.getElementById('width2').value;
 		 let gameh = document.getElementById('height2').value;
 		 if (invitename = '') {alert('This Username does not exist');return;}
-		 if (gameh = '' || gameh > 70 || gameh < 15) {alert('Invalid Width');return;}
+		 if (gamew = '' || gamew > 70 || gamew < 15) {alert('Invalid Width');return;}
 		 if (gameh = '' || gameh > 70 || gameh < 15) {alert('Invalid Height');return;}
 		 const url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?select=Usernames`;
  const options = {method: 'GET',headers: {'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ','Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'
