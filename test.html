@@ -865,12 +865,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 
 
      } else {
-		 if (ftseed) {
-			 seed = ftseed;
-			 console.log(3);
-		 } else {
-         seed = Math.floor(Math.random() * 2147483647);
-		 }	 
+         seed = Math.floor(Math.random() * 2147483647); 
          if (document.getElementById("wallColor").value == '#28a745'){
            document.getElementById('wallColor').value = '#ff3e3e';
            document.getElementById('titletext').style.color = "#ff3e3e";
