@@ -764,12 +764,12 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 	 function fttee() {
 		 let invitename = document.getElementById('vers2').value;
 		 let gamediff = document.getElementById('algo2').value;
-		 let gamew = document.getElementById('width2').value;
-		 let gameh = document.getElementById('height2').value;
+		 let gamew = parseInt(document.getElementById('width2').value):
+		 let gameh = parseInt(document.getElementById('height2').value);
 		 if (invitename = '') {alert('This Username does not exist');return;}
 		 if (gamew = '' || gamew > 70 || gamew < 15) {alert('Invalid Width');return;}
 		 if (gameh = '' || gameh > 70 || gameh < 15) {alert('Invalid Height');return;}
-		 const url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?select=Usernames`;
+		 const url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?select=${Usernames}`;
  const options = {method: 'GET',headers: {'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ','Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'
    }
  };
@@ -790,7 +790,7 @@ return fetch(url, options)
    })
    .catch(error => {
      console.error('Error:', error);
-     document.getElementById('invalidText').innerHTML = "This account does not exist";
+     alert("This account does not exist");
    });
 	 }
 async function fttes(fto, layout, ftlimit, al, bl, difficulty) {
@@ -1166,7 +1166,9 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
                if(p2History.length > 10) p2History.shift();
              }
              p.pos = t;
+			 			 if (isRaceMode) {
 				 ftte(p.pos);
+						 }
              p.steps++;
              draw();
              if (p.pos === w * h - 1) win(p);
