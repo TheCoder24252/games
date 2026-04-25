@@ -926,7 +926,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
          while (stack.length > 0) {
              const curr = stack[stack.length - 1], neighbors = getNeighbors(curr).filter(n => grid[n] === 0);
              if (neighbors.length > 0) {
-                 const next = neighbors[Math.floor(getRand() * neighbors.length)];
+                 const next = neighbors[Math.floor(getRand * neighbors.length)];
                  grid[next] = 1; adj[curr].push(next); adj[next].push(curr); stack.push(next);
              } else stack.pop();
          }
