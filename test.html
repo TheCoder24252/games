@@ -92,7 +92,14 @@
      <h2>Daily Bonus</h2>
      <p id="bonusText" style="color:#ffc107; font-weight:bold;">+10 CREDITS</p>
 	<p id="streakText" style="color:white; font-weight:bold;"></p>
-	<button onclick="document.getElementById('dailyModal').style.display = 'none'" id="okbButton" class="btn btn-gen">Ok</button>
+	<button onclick="document.getElementById('dailyModal').style.display = 'none'" id="okbButton" class="btn btn-gen">OK</button>
+   </div>
+ </div>
+<div id="raceModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>2 Player Race</h2>
+	<button id="race1btn" class="btn btn-gen">2 PLAYER OFFLINE</button>
+	<button onclick="document.getElementById('raceModal').style.display = 'none'" id="on2Button" class="btn btn-gen">2 PLAYER ONLINE</button>
    </div>
  </div>
  <div id="loseModal" class="modal-overlay">
@@ -1219,7 +1226,8 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
       
    function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); }
    document.getElementById('generate').onclick = () => { isRaceMode = false; document.getElementById('p2Stats').style.display = 'none'; generate(false); };
-   document.getElementById('raceBtn').onclick = () => { isRaceMode = true; document.getElementById('p2Stats').style.display = 'block'; generate(false); };
+   document.getElementById('race1Btn').onclick = () => {document.getElementById('raceModal').style.display = 'none'; isRaceMode = true; document.getElementById('p2Stats').style.display = 'block'; generate(false); };
+   document.getElementById('raceBtn').onclick = () => {document.getElementById('raceModal').style.display = 'flex';};
    updateDailyStatus();
    window.onload = () => generate();
  </script>
