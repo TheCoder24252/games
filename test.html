@@ -232,6 +232,7 @@ const channel = supabase
 	if (msg.payload.request == "Invite") {
 		console.log(1);
 	if (msg.payload.body.to == Username) {
+		window.versing = msg.payload.id;
 		console.log(2)
 		currentLayout = msg.payload.body.Message;
 		isRaceMode = true;
@@ -241,8 +242,10 @@ const channel = supabase
 		draw()
 	}
 	} else {
+	if (msg.payload.id == versing) {
 	window.P2Payloadpos = msg.payload.body.Message;
 	draw();
+	}
 	}
 	}
   })
@@ -755,6 +758,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
  if (response.ok) {
    const updatedRow = await response.json();
    console.log('Sent Request:', updatedRow);
+	window.versing = fto;
  } else {
    const errorData = await response.json();
    console.error('Error:', errorData);
