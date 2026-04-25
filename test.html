@@ -226,6 +226,7 @@ const channel = supabase
     config: { private: true },
   })
   .on('broadcast', { event: 'fr1' }, (msg) => {
+	  console.log(msg)
 	if (msg.payload.id != Username) {
   console.log(`Message Recieved with a request type of "${msg.payload.request}"; PAYLOAD.REQUEST ==> (${msg.payload.body})`);
 	if (msg.payload.request == "Invite") {
