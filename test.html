@@ -232,7 +232,8 @@ const channel = supabase
 		console.log(1);
 	if (msg.payload.body.to == Username) {
 		console.log(2)
-		generate(false, false, false, msg.payload.body.Message)
+		currentLayout = msg.payload.body.Mesage;
+		draw()
 	}
 	} else {
 	window.P2Payloadpos = msg.payload.body.Message;
