@@ -1280,7 +1280,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
       
    function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); }
    document.getElementById('generate').onclick = () => { isRaceMode = false; document.getElementById('p2Stats').style.display = 'none'; generate(false); };
-   document.getElementById('race1Btn').onclick = () => {document.getElementById('raceModal').style.display = 'none'; isRaceMode = true; document.getElementById('p2Stats').style.display = 'block'; generate(false); };
+   document.getElementById('race1btn').onclick = () => {document.getElementById('raceModal').style.display = 'none'; isRaceMode = true; document.getElementById('p2Stats').style.display = 'block'; generate(false); };
    document.getElementById('raceBtn').onclick = () => {document.getElementById('raceModal').style.display = 'flex';};
    updateDailyStatus();
    window.onload = () => generate();
