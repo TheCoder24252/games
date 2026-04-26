@@ -97,7 +97,7 @@
  </div>
 <div id="waitModal" class="modal-overlay">
    <div class="modal-content">
-     <h2>Waiting for </h2>
+     <h2 id="waitText">Waiting for </h2>
 	<img src="./loader.gif" style="width:100%;">
    </div>
  </div>
@@ -145,8 +145,10 @@
    <div class="modal-contentt">
      <h2>Game Invite!</h2>
 	 <p id="invText" style="color:white; font-weight:bold;">TheCoder sent you a game invite for an maze with the difficulty set to easy</p>
+	 <div style="display:flex; gap:10px; margin-top:20px;">
 	 <button class="btn btn-sec" style="flex:1" onclick="invDeny()">Deny</button>
      <button class="btn btn-gen" style="flex:1" onclick="invAcc()">Accept</button>
+	 </div>
    </div>
  </div>
 
@@ -892,6 +894,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
  if (response.ok) {
    const updatedRow = await response.json();
    console.log('Sent Request:', updatedRow);
+	 document.getElementById('waitText').innerHTML = `Waiting For ${fto}`;
 	 document.getElementById('waitModal').style.display = 'flex';
 	 window.inWait = true;
 	window.versing = fto;
