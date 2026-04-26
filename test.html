@@ -268,8 +268,11 @@ const channel = supabase
 		showInv()
 	}
 	} else if (msg.payload.request == 'InviteFlw') {
+		console.log('i1');
 		if (msg.payload.id == versing) {
+			console.log('i2');
 			if (msg.payload.body.Message) {
+				console.log('i3');
 				document.getElementById('waitModal').style.display = 'none';
 				inWait = false;
 			} else {
