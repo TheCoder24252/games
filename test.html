@@ -114,8 +114,8 @@
            <option value="huntkill">Hard</option>
          </select>
        </li>
-       <li><label>Width:</label><input id="width2" type="number" min="15" value="20"/></li>
-       <li><label>Height:</label><input id="height2" type="number" min="15" value="20"/></li>
+       <li style="display:none"><label>Width:</label><input id="width2" type="number" min="15" value="20"/></li>
+       <li style="display:none"><label>Height:</label><input id="height2" type="number" min="15" value="20"/></li>
 		<button onclick="document.getElementById('race1Modal').style.display = 'none';fttee()" id="GameButton" class="btn btn-gen">Send Game Invite</button>
      </ul>
    </div>
@@ -764,11 +764,11 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 	 function fttee() {
 		 let invitename = document.getElementById('vers2').value;
 		 let gamediff = document.getElementById('algo2').value;
-		 let gamew = parseInt(document.getElementById('width2').value);
-		 let gameh = parseInt(document.getElementById('height2').value);
+		// let gamew = parseInt(document.getElementById('width2').value);
+		// let gameh = parseInt(document.getElementById('height2').value);
 		 if (invitename = '') {alert('This Username does not exist');return;}
-		 if (gamew = '' || gamew > 70 || gamew < 15) {alert('Invalid Width');return;}
-		 if (gameh = '' || gameh > 70 || gameh < 15) {alert('Invalid Height');return;}
+		// if (gamew = '' || gamew > 70 || gamew < 15) {alert('Invalid Width');return;}
+		// if (gameh = '' || gameh > 70 || gameh < 15) {alert('Invalid Height');return;}
 		 const url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?select=Usernames`;
  const options = {method: 'GET',headers: {'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ','Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'
    }
