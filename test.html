@@ -961,9 +961,9 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
      let mode = document.getElementById('algo').value;
      let getRand = isDaily ? seededRandom : Math.random;
 	if (req) {
-		w = rgw;
-		h = rgh;
-		mode = gdi;
+		w = parseInt(document.getElementById('width2').value);;
+		h = parseInt(document.getElementById('height2').value);;
+		mode = parseInt(document.getElementById('algo2').value);;
 	}
      canvas.width = (pw * 2) + (w * pw) + ((w - 1) * ww);
      canvas.height = (pw * 2) + (h * pw) + ((h - 1) * ww);
