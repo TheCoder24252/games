@@ -504,10 +504,10 @@ function invAcc() {
 		document.getElementById("p2Stats").style.display = 'block';
 		draw();
 		invflw(true);
-		document.getElementBy('invModal').style.display = 'none';
+		document.getElementById('invModal').style.display = 'none';
 }
 function invDeny() {
-	document.getElementBy('invModal').style.display = 'none';
+	document.getElementById('invModal').style.display = 'none';
 	invflw(false);
 }
 async function invflw(accInv = false) {
@@ -544,7 +544,7 @@ function showInv() {
 	else if (modiff == "prim") {modiff = 'medium'}
 	else {modiff = 'hard'}
 	document.getElementById('invText').innerHTML = `${msgg.payload.id} sent you a game request with the difficulty set to ${modiff}`;
-	document.getElementBy('invModal').style.display = 'flex';
+	document.getElementById('invModal').style.display = 'flex';
 }
 function logPrep() {
  document.getElementById('instructText').innerHTML = "Enter your username and passcode below";
