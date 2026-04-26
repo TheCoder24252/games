@@ -269,6 +269,8 @@ const channel = supabase
 	} else {
 	if (msg.payload.id == versing) {
 	window.P2Payloadpos = msg.payload.body.Message;
+	p2.steps = msg.payload.body.steps;
+	document.getElementById("p2Steps").innerHTML = p2.steps;
 	draw();
 	}
 	}
@@ -786,7 +788,7 @@ return fetch(url, options)
 		break;
 	}
 	}
-     generate(false, false, false, true, invitename, gamediff, gamew, gameh);
+     generate(false, false, false, true/*, invitename, gamediff, gamew, gameh*/);
    })
    .catch(error => {
      console.error('Error:', error);
@@ -821,8 +823,8 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
    console.error('Error:', errorData);
  }
 }
-async function ftte(coords) {
-let fbody = {Message: coords}
+async function ftte(coords, steps) {
+let fbody = {Message: coords, steps: steps}
 const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
  const urL = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username} `;
  const response = await fetch(urL, {
@@ -1167,7 +1169,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
              }
              p.pos = t;
 			 			 if (isRaceMode) {
-				 ftte(p.pos);
+				 ftte(p.pos, p.steps);
 						 }
              p.steps++;
              draw();
