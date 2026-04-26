@@ -274,6 +274,7 @@ const channel = supabase
 	window.P2Payloadpos = msg.payload.body.Message;
 	p2.steps = msg.payload.body.steps;
 	document.getElementById("p2Steps").innerHTML = p2.steps;
+	document.getElementById("p2Stats").display = 'block';
 	draw();
 	}
 	}
