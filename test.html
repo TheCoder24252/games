@@ -1027,7 +1027,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
        if (step2Limit < minSteps) {step2Limit = minSteps + 1; document.getElementById('step2LimitAmount').value = minSteps + 1}
      }
 	if (req) {
-		fttes(ivn, currentLayout, false, false, false);
+		fttes(document.getElementById('vers2').value, currentLayout, false, false, false);
 	}
      draw();
    }
