@@ -269,11 +269,11 @@ const channel = supabase
 	} else if (msg.payload.request == 'InviteFlw') {
 		if (msg.payload.id == versing) {
 			if (msg.payload.body.Message) {
-				document.getElementById('waitModal').style.display = none;
+				document.getElementById('waitModal').style.display = 'none';
 				inWait = false;
 			} else {
 				alert("invite declined")
-				document.getElementById('waitModal').style.display = none;
+				document.getElementById('waitModal').style.display = 'none';
 				versing = false;
 				inWait = false;
 				generate();
