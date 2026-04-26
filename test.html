@@ -264,6 +264,7 @@ const channel = supabase
 		console.log(1);
 	if (msg.payload.body.to == Username) {
 		window.msgg = msg;
+		window.versing = msg.payload.id;
 		showInv()
 	}
 	} else if (msg.payload.request == 'InviteFlw') {
