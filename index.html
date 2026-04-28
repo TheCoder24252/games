@@ -1010,7 +1010,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
              if (p.pos === w * h - 1) win(p);
          }
      };
-     if (e.code === 'KeyW') move(p1, p1.pos - w); if (e.code === 'KeyS') move(p1, p1.pos + w); if (e.code === 'KeyA') move(p1, p1.pos - 1); if (e.code === 'KeyD') move(p1, p1.pos + 1);
+     if (!isRaceMode) {if (e.code === 'KeyW'|| e.code === 'ArrowUp') move(p1, p1.pos - w); if (e.code === 'KeyS' || e.code === 'ArrowDown') move(p1, p1.pos + w); if (e.code === 'KeyA' || e.code === 'ArrowLeft') move(p1, p1.pos - 1); if (e.code === 'KeyD' || e.code === 'ArrowRight') move(p1, p1.pos + 1);} else {
+	 if (e.code === 'KeyW') move(p1, p1.pos - w); if (e.code === 'KeyS') move(p1, p1.pos + w); if (e.code === 'KeyA') move(p1, p1.pos - 1); if (e.code === 'KeyD') move(p1, p1.pos + 1); }
      if (isRaceMode) { if (e.code === 'ArrowUp') move(p2, p2.pos - w); if (e.code === 'ArrowDown') move(p2, p2.pos + w); if (e.code === 'ArrowLeft') move(p2, p2.pos - 1); if (e.code === 'ArrowRight') move(p2, p2.pos + 1); }
      if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code)) e.preventDefault();
    });
