@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html id='html'>
 <head>
- <link rel="icon" type="image/x-icon" href=".Maze-Logo.png">
+ <link rel="icon" type="image/x-icon" href="./Maze-Logo.png">
  <title>Maze Game</title>
  <style>
    body {user-select:none; margin: 0; background: #1a1e23; font-family: 'Segoe UI', sans-serif; color: #eee; overflow: hidden; height: 100vh; }
@@ -984,13 +984,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 
 
    window.addEventListener('keydown', e => {
-     if (e.code !== 'KeyS' && e.code !== 'KeyW' && e.code !== 'KeyD' && e.code !== 'KeyA'){
-       console.log(1);
-       if (isRaceMode) {
-         if (e.code !== 'ArrowUp' && e.code !== 'ArrowDown' && e.code !== 'ArrowLeft' && e.code !== 'ArrowRight'){
-           return;
-         }
-       } else {return;}
+     if (e.code !== 'KeyS' && e.code !== 'KeyW' && e.code !== 'KeyD' && e.code !== 'KeyA' && e.code !== 'ArrowUp' && e.code !== 'ArrowDown' && e.code !== 'ArrowLeft' && e.code !== 'ArrowRight'){
+return;
      }
      if(!gameActive || !currentLayout) return;
      const { adj, w, h } = currentLayout;
