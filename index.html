@@ -44,7 +44,8 @@
    .modal-content { background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 300px; }
    .modal-contentt {pointer-events: auto; height: 20%;background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 450px; }
 #shopContainer::-webkit-scrollbar {display: none;}
-#shopContainer {-ms-overflow-style: none;scrollbar-width: none;}
+#leaderTabs::-webkit-scrollbar {display: none;}
+#shopContainer, leaderTabs {-ms-overflow-style: none;scrollbar-width: none;}
  </style>
 </head>
 <body oncontextmenu="return false;">
@@ -296,6 +297,7 @@ console.log(yesterday.toDateString());
    let p1History = [];
    let p2History = [];
    const slider = document.querySelector('#shopContainer');
+	const sliderr = document.querySelector('#leaderTabs');
 let isDown = false, startX, startY, scrollLeft, scrollTop;
 // Detect mouse interaction
 slider.addEventListener('mousedown', (e) => {
@@ -313,6 +315,14 @@ slider.addEventListener('mouseup', () => isDown = false);
 
 // Handle dragging
 slider.addEventListener('mousemove', (e) => {
+ if (!isDown) return;
+ e.preventDefault();
+ const x = e.pageX - slider.offsetLeft;
+ const y = e.pageY - slider.offsetTop;
+ slider.scrollLeft = scrollLeft - (x - startX);
+ slider.scrollTop = scrollTop - (y - startY);
+});
+sliderr.addEventListener('mousemove', (e) => {
  if (!isDown) return;
  e.preventDefault();
  const x = e.pageX - slider.offsetLeft;
