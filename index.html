@@ -45,7 +45,7 @@
    .modal-contentt {pointer-events: auto; height: 20%;background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 450px; }
 #shopContainer::-webkit-scrollbar {display: none;}
 #leaderTabs::-webkit-scrollbar {display: none;}
-#shopContainer, leaderTabs {-ms-overflow-style: none;scrollbar-width: none;}
+#shopContainer, #leaderTabs {-ms-overflow-style: none;scrollbar-width: none;}
  </style>
 </head>
 <body oncontextmenu="return false;">
@@ -229,6 +229,7 @@
    }
    let intervalID;
    let gameData;
+	let Ptime = 'Backtrack';
 	let btime = parseInt(localStorage.getItem('btime')) || 5000;
 	let credits = parseInt(localStorage.getItem('mazeCredits')) || 0;
 	 let mazeComp = parseInt(localStorage.getItem('mazeComp')) || 0;
@@ -297,8 +298,9 @@ console.log(yesterday.toDateString());
    let p1History = [];
    let p2History = [];
    const slider = document.querySelector('#shopContainer');
-	const sliderr = document.querySelector('#leaderTabs');
+	const sliderr = document.querySelector('#leadeContainer');
 let isDown = false, startX, startY, scrollLeft, scrollTop;
+let isDownn = false, startXr, startYr, scrollLeftr, scrollTopr;
 // Detect mouse interaction
 slider.addEventListener('mousedown', (e) => {
  isDown = true;
@@ -307,12 +309,19 @@ slider.addEventListener('mousedown', (e) => {
  scrollLeft = slider.scrollLeft;
  scrollTop = slider.scrollTop;
 });
-
+sliderr.addEventListener('mousedown', (e) => {
+ isDownn = true;
+ startXr = e.pageX - sliderr.offsetLeft;
+ startYr = e.pageY - sliderr.offsetTop;
+ scrollLeftr = sliderr.scrollLeft;
+ scrollTopr = sliderr.scrollTop;
+});
 
 slider.addEventListener('mouseleave', () => isDown = false);
 slider.addEventListener('mouseup', () => isDown = false);
 
-
+sliderr.addEventListener('mouseleave', () => isDownn = false);
+sliderr.addEventListener('mouseup', () => isDownn = false);
 // Handle dragging
 slider.addEventListener('mousemove', (e) => {
  if (!isDown) return;
@@ -323,12 +332,12 @@ slider.addEventListener('mousemove', (e) => {
  slider.scrollTop = scrollTop - (y - startY);
 });
 sliderr.addEventListener('mousemove', (e) => {
- if (!isDown) return;
+ if (!isDownn) return;
  e.preventDefault();
- const x = e.pageX - slider.offsetLeft;
- const y = e.pageY - slider.offsetTop;
- slider.scrollLeft = scrollLeft - (x - startX);
- slider.scrollTop = scrollTop - (y - startY);
+ const x = e.pageX - sliderr.offsetLeft;
+ const y = e.pageY - sliderr.offsetTop;
+ sliderr.scrollLeft = scrollLeftr - (x - startXr);
+ sliderr.scrollTop = scrollTopr - (y - startYr);
 });
 const devtools = {
 setCredits : function(credits) {
@@ -776,6 +785,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
        document.getElementById('dashPanel').style.display = "none";
      }
      if(isDaily) {
+		Pmode = document.getElementById('algo').value;
          const today = new Date();
          seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
          document.getElementById('algo').value = "huntkill";
@@ -818,7 +828,6 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
      const ww = parseInt(document.getElementById('wallwidth').value);
      const mode = document.getElementById('algo').value;
      const getRand = isDaily ? seededRandom : Math.random;
-
 
      canvas.width = (pw * 2) + (w * pw) + ((w - 1) * ww);
      canvas.height = (pw * 2) + (h * pw) + ((h - 1) * ww);
@@ -1101,6 +1110,9 @@ return;
         if (currentLayout.w != 5) {
         credits += reward; save(); updateCredits();
         }
+	   	if (isDaily) {
+			document.getElementById('algo').value = Pmode;
+		}
         document.getElementById('rewardText').innerText = "+" + reward + " CREDITS EARNED!";
         if (p.pos) {
         document.getElementById('winTitle').innerText = isRaceMode ? p.name + " Wins!" : (isDaily ? "Daily Complete!" : "Maze Complete!");
