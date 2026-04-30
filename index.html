@@ -212,9 +212,9 @@
      <h3 style="color:#001affff;">LEADERBOARD</h3>
      <div id="leaderContainer" style="overflow-y:auto; flex-grow:1;">
        <div id="leaderTabs" style="position: sticky; top: 0;">
-     <button id="creditTab" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#001affff';board()" style="background:#001affff" class="btn">Credits</button>
-     <button id="bestTab" onclick="document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#555';document.getElementById('bestTab').style.background = '#001affff';board('time')" style="background:#555" class="btn">Best Time</button>
-     <button id="mazeTab" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('creditTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#001affff';board('maze')" style="background:#555" class="btn">Mazes Finished</button>
+     <button id="creditTab" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#001affff';showLeaderboard()" style="background:#001affff" class="btn">Credits</button>
+     <button id="bestTab" onclick="document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#555';document.getElementById('bestTab').style.background = '#001affff';showLeaderboard('time')" style="background:#555" class="btn">Best Time</button>
+     <button id="mazeTab" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('creditTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#001affff';showLeaderboard('maze')" style="background:#555" class="btn">Mazes Finished</button>
    </div>
    <div id="leaderboard"></div>
  </div>
