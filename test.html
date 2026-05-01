@@ -1265,7 +1265,7 @@ return;
 	if (inWait) {return;}
      if(!gameActive || !currentLayout) return;
      const { adj, w, h } = currentLayout;
-     if (!startTime) { startTime = Date.now(); timerInterval = setInterval(() => { document.getElementById('timer').innerText = ((Date.now() - startTime) / 1000).toFixed(1) + "s"; }, 100); }
+     if (!startTime) { startTime = Date.now(); timerInterval = setInterval(() => { document.getElementById('timer').innerText = ((Date.now() - startTime) / 1000).toFixed(1) + "s"; }, 100); ftte(null, null, true)}
      const move = (p, t) => {
          if (t !== undefined && adj[p.pos] && adj[p.pos].includes(t)) {
              if (p.name === "P1") {
