@@ -305,7 +305,7 @@ const channel = supabase
 	document.getElementById("p2Steps").innerHTML = p2.steps;
 	document.getElementById("p2Stats").style.display = 'block';
 	draw();
-	if (p2.pos === currentLayout.w * currentLayout.h - 1) win(p2);
+	if (p2.pos === currentLayout.w * currentLayout.h - 1) win(p2, true);
 	}
 	}
 	}
@@ -1287,7 +1287,7 @@ return;
      if (isRaceMode) { if (e.code === 'ArrowUp') move(p2, p2.pos - w); if (e.code === 'ArrowDown') move(p2, p2.pos + w); if (e.code === 'ArrowLeft') move(p2, p2.pos - 1); if (e.code === 'ArrowRight') move(p2, p2.pos + 1); }
      if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code)) e.preventDefault();
    });
-   function win(p) {
+   function win(p, online = false) {
         gameActive = false; clearInterval(timerInterval);
         let reward = 50;
         if(isDaily) {
@@ -1351,7 +1351,6 @@ return;
          } else {reward = 5}
         }
 
-
         reward = Math.round(reward);
         if (p.pos) {
         if (reward < 11) reward = 10;
@@ -1385,6 +1384,13 @@ return;
            document.getElementById('replay').innerHTML = "Start Game";
            document.getElementById('rewardText').innerText = "";
         }
+	   if (online) {
+			if (p.name = 'P1' {
+				document.getElementById('winTitle').innerText = "P2 Wins!";
+				document.getElementById('rewardText').innerText = "+" + '0' + " CREDITS EARNED!";
+				credits -= reward; save(); updateCredits();
+			})
+		}
    }
       
    function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); }
