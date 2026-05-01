@@ -395,8 +395,10 @@ console.log(yesterday.toDateString());
    ];
    let p1History = [];
    let p2History = [];
-   const slider = document.querySelector('#shopContainer');
+    const slider = document.querySelector('#shopContainer');
+	const sliderr = document.querySelector('#leaderContainer');
 let isDown = false, startX, startY, scrollLeft, scrollTop;
+let isDownn = false, startXr, startYr, scrollLeftr, scrollTopr;
 // Detect mouse interaction
 slider.addEventListener('mousedown', (e) => {
  isDown = true;
@@ -405,12 +407,19 @@ slider.addEventListener('mousedown', (e) => {
  scrollLeft = slider.scrollLeft;
  scrollTop = slider.scrollTop;
 });
-
+sliderr.addEventListener('mousedown', (e) => {
+ isDownn = true;
+ startXr = e.pageX - sliderr.offsetLeft;
+ startYr = e.pageY - sliderr.offsetTop;
+ scrollLeftr = sliderr.scrollLeft;
+ scrollTopr = sliderr.scrollTop;
+});
 
 slider.addEventListener('mouseleave', () => isDown = false);
 slider.addEventListener('mouseup', () => isDown = false);
 
-
+sliderr.addEventListener('mouseleave', () => isDownn = false);
+sliderr.addEventListener('mouseup', () => isDownn = false);
 // Handle dragging
 slider.addEventListener('mousemove', (e) => {
  if (!isDown) return;
@@ -420,6 +429,15 @@ slider.addEventListener('mousemove', (e) => {
  slider.scrollLeft = scrollLeft - (x - startX);
  slider.scrollTop = scrollTop - (y - startY);
 });
+sliderr.addEventListener('mousemove', (e) => {
+ if (!isDownn) return;
+ e.preventDefault();
+ const x = e.pageX - sliderr.offsetLeft;
+ const y = e.pageY - sliderr.offsetTop;
+ sliderr.scrollLeft = scrollLeftr - (x - startXr);
+ sliderr.scrollTop = scrollTopr - (y - startYr);
+});
+const 
 const devtools = {
 setCredits : function(credits) {
  localStorage.setItem('mazeCredits', credits);
