@@ -1392,7 +1392,7 @@ return;
 			} else {
 				document.getElementById('winTitle').innerText = "You Win!";
 			}
-		}
+		} else if (versing != false) {document.getElementById('winTitle').innerText = "You Win!";}
    }
       
    function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); }
