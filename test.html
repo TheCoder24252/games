@@ -46,6 +46,14 @@
    .modal-contentt {pointer-events: auto; height: 20%;background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 450px; }
 #shopContainer::-webkit-scrollbar {display: none;}
 #shopContainer {-ms-overflow-style: none;scrollbar-width: none;}
+		.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;             /* Chrome, Safari, and Opera */
+}
  </style>
 </head>
 <body oncontextmenu="return false;">
