@@ -305,6 +305,7 @@ const channel = supabase
 	document.getElementById("p2Steps").innerHTML = p2.steps;
 	document.getElementById("p2Stats").style.display = 'block';
 	draw();
+	if (p2.pos === w * h - 1) win(p2);
 	}
 	}
 	}
