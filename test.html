@@ -1386,9 +1386,11 @@ return;
         }
 	   if (online) {
 			if (p.name = 'P1' ){
-				document.getElementById('winTitle').innerText = "P2 Wins!";
+				document.getElementById('winTitle').innerText = versing + " Wins!";
 				document.getElementById('rewardText').innerText = "+" + '0' + " CREDITS EARNED!";
 				credits -= reward; save(); updateCredits();
+			} else {
+				document.getElementById('winTitle').innerText = "You Win!";
 			}
 		}
    }
