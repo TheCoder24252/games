@@ -1210,7 +1210,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
      }
 
 
-     if (activeTrail !== 'None') {
+     if (activeTrail !== 'None' && p2od.t !== 'None') {
        ctx.save();
        let trailData = trails.find(t => t.name === activeTrail);
        const drawTrailPath = (history, p) => {
