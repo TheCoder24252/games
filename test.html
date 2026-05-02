@@ -304,6 +304,7 @@ const channel = supabase
 	p2History = msg.payload.body.hist;
 	document.getElementById("p2Steps").innerHTML = p2.steps;
 	document.getElementById("p2Stats").style.display = 'block';
+	p2od = {s: msg.payload.body.s, t: msg.payload.body.t}
 	draw();
 	if (p2.pos === currentLayout.w * currentLayout.h - 1) win(p2, true);
 	}
@@ -318,6 +319,7 @@ channel.subscribe((status, err) => {
 })
     </script>
  <script>
+	 let p2od = {};
 	let inWait = false;
    let wins;
    let attUsername;
@@ -346,7 +348,7 @@ channel.subscribe((status, err) => {
    let step1Limit = 250;
    let step2Limit = 250;
 	 let lastBonus;
-	 let streak;
+	 let streak = 0;
 	let customImg = new Image();
    const canvas = document.getElementById('mazeCanvas');
    const ctx = canvas.getContext('2d', { alpha: false });
@@ -934,7 +936,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 }
 async function ftte(coords, steps, sTimer = false) {
 let fbody = {Message: coords, steps: steps}
-fbody = {Message: p1, hist: p1History}
+fbody = {Message: p1, hist: p1History, s: activeSkin, t: activeTrail}
 if (sTimer) {
 	fbody = {Message:true}
 }
@@ -1167,15 +1169,27 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 }
 
 
-   function drawPlayer(pos, color) {
+   function drawPlayer(pos, color, p) {
        if(!currentLayout) return;
        const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
        const x = (pos % currentLayout.w) * (pw + ww) + pw, y = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
        ctx.fillStyle = color;
+	   if (p == 1) {
        if(activeSkin === 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
        else if(activeSkin === 'Diamond') { ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); }
        else if(activeSkin === 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
        else { ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); }
+	   } else if (p == 2){
+	   if(p20d.s === 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
+       else if(p20d.s === 'Diamond') { ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); }
+       else if(p20d.s === 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
+       else { ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); }
+	   } else {
+		if(activeSkin === 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
+       else if(activeSkin === 'Diamond') { ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); }
+       else if(activeSkin === 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
+       else { ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); }
+	   }
    }
 
 
@@ -1215,13 +1229,10 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
      ctx.fillStyle = "#ff0000";
      ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);
     
-     drawPlayer(p1.pos, document.getElementById('playerColor').value);
+     drawPlayer(p1.pos, document.getElementById('playerColor').value, 1);
      if (isRaceMode) {
-		/* if (typeof P2Payloadpos !== 'undefined') {
-		 	drawPlayer(P2Payloadpos, document.getElementById('player2Color').value);
-		 } else {*/
-			 drawPlayer(p2.pos, document.getElementById('player2Color').value);
-		// }
+		 if (versing != false) drawPlayer(p2.pos, document.getElementById('player2Color').value, 2);
+		 drawPlayer(p2.pos, document.getElementById('player2Color').value);
 	}
      if (limitSteps == true) {
        if (step1Limit != false && step2Limit != false) {
