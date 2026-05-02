@@ -274,7 +274,7 @@ const channel = supabase
 		console.log(1);
 	if (msg.payload.body.to == Username) {
 		window.msgg = msg;
-		window.versing = msg.payload.id;
+		versing = msg.payload.id;
 		showInv()
 	}
 	} else if (msg.payload.request == 'InviteFlw') {
@@ -532,7 +532,7 @@ function showLeaderboard(by, force = false) {
 if (force == false) {if (!document.getElementById("leaderPanel").classList[1]) {togglePanel('leaderPanel');}} else {togglePanel('leaderPanel');}
 }
 function invAcc() {
-	window.versing = msgg.payload.id;
+	versing = msgg.payload.id;
 		console.log(2);
 		currentLayout = msgg.payload.body.Message;
 		isRaceMode = true;
@@ -570,7 +570,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
  if (response.ok) {
    const updatedRow = await response.json();
    console.log('Sent Request:', updatedRow);
-	window.versing = msgg.payload.id;
+	versing = msgg.payload.id;
  } else {
    const errorData = await response.json();
    console.error('Error:', errorData);
