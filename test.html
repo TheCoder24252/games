@@ -1181,9 +1181,9 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
        else if(activeSkin === 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
        else { ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); }
 	   } else if (p == 2){
-	   if(p20d.s === 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
-       else if(p20d.s === 'Diamond') { ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); }
-       else if(p20d.s === 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
+	   if(p2od.s === 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
+       else if(p2od.s === 'Diamond') { ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); }
+       else if(p2od.s === 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
        else { ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); }
 	   } else {
 		if(activeSkin === 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
