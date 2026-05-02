@@ -1215,18 +1215,33 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 
      if (activeTrail !== 'None') {
        ctx.save();
-       const trailData = trails.find(t => t.name === activeTrail);
-       const drawTrailPath = (history) => {
+       let trailData = trails.find(t => t.name === activeTrail);
+       const drawTrailPath = (history, p) => {
+		   if (p == 2) {
            history.forEach((pos, index) => {
                const tx = (pos % currentLayout.w) * (pw + ww) + pw;
                const ty = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
+			   trailData = trails.find(t => t.name === p2od.t);
                ctx.fillStyle = trailData.color === 'rainbow' ? `hsl(${(index * 20) % 360}, 80%, 60%)` : trailData.color;
                ctx.globalAlpha = 0.5;
                ctx.fillRect(tx + 4, ty + 4, pw - 8, pw - 8);
            });
+		   } else {
+			history.forEach((pos, index) => {
+               const tx = (pos % currentLayout.w) * (pw + ww) + pw;
+               const ty = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
+			   trailData = trails.find(t => t.name === activeTrail);
+               ctx.fillStyle = trailData.color === 'rainbow' ? `hsl(${(index * 20) % 360}, 80%, 60%)` : trailData.color;
+               ctx.globalAlpha = 0.5;
+               ctx.fillRect(tx + 4, ty + 4, pw - 8, pw - 8);
+           });
+		   }
        };
-       drawTrailPath(p1History);
-       if (isRaceMode) drawTrailPath(p2History);
+       drawTrailPath(p1History, 1);
+       if (isRaceMode) {
+		   if (versing != false) {drawTrailPath(p2History, 2);}
+		   else {drawTrailPath(p2History);}
+	   }
        ctx.restore();
      }
     
