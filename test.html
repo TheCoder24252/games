@@ -1176,16 +1176,19 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
        const x = (pos % currentLayout.w) * (pw + ww) + pw, y = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
        ctx.fillStyle = color;
 	   if (p == 1) {
+	   console.log(1);
        if(activeSkin === 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
        else if(activeSkin === 'Diamond') { ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); }
        else if(activeSkin === 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
        else { ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); }
 	   } else if (p == 2){
-	   if(p2od.s === 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
-       else if(p2od.s === 'Diamond') { ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); }
-       else if(p2od.s === 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
+		console.log(2);
+	   if(p2od.s == 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
+       else if(p2od.s == 'Diamond') { ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); }
+       else if(p2od.s == 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
        else { ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); }
 	   } else {
+		console.log(3);
 		if(activeSkin === 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
        else if(activeSkin === 'Diamond') { ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); }
        else if(activeSkin === 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
