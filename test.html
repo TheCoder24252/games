@@ -1216,6 +1216,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
        const drawTrailPath = (history, p) => {
 		   if (p == 2) {
 			console.log(2);
+			   if (p2od.t !== 'none') {
            history.forEach((pos, index) => {
                const tx = (pos % currentLayout.w) * (pw + ww) + pw;
                const ty = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
@@ -1223,9 +1224,10 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
                ctx.fillStyle = trailData.color === 'rainbow' ? `hsl(${(index * 20) % 360}, 80%, 60%)` : trailData.color;
                ctx.globalAlpha = 0.5;
                ctx.fillRect(tx + 4, ty + 4, pw - 8, pw - 8);
-           });
+           });} else {return;}
 		   } else {
 			   console.log(1);
+			if (p2od.t !== 'none') {
 			history.forEach((pos, index) => {
                const tx = (pos % currentLayout.w) * (pw + ww) + pw;
                const ty = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
@@ -1233,7 +1235,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
                ctx.fillStyle = trailData.color === 'rainbow' ? `hsl(${(index * 20) % 360}, 80%, 60%)` : trailData.color;
                ctx.globalAlpha = 0.5;
                ctx.fillRect(tx + 4, ty + 4, pw - 8, pw - 8);
-           });
+           });} else {return;}
 		   }
        };
        drawTrailPath(p1History, 1);
