@@ -1235,8 +1235,8 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
     
      drawPlayer(p1.pos, document.getElementById('playerColor').value, 1);
      if (isRaceMode) {
-		 if (versing != false) drawPlayer(p2.pos, document.getElementById('player2Color').value, 2);
-		 drawPlayer(p2.pos, document.getElementById('player2Color').value);
+		 if (versing != false) {drawPlayer(p2.pos, document.getElementById('player2Color').value, 2);}
+		 else {drawPlayer(p2.pos, document.getElementById('player2Color').value);}
 	}
      if (limitSteps == true) {
        if (step1Limit != false && step2Limit != false) {
