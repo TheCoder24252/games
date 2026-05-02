@@ -929,7 +929,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
 	 document.getElementById('waitText').innerHTML = `Waiting For ${fto}`;
 	 document.getElementById('waitModal').style.display = 'flex';
 	 window.inWait = true;
-	window.versing = document.getElementById('vers2').value;
+	versing = document.getElementById('vers2').value;
  } else {
    const errorData = await response.json();
    console.error('Error:', errorData);
