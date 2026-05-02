@@ -1216,7 +1216,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
        const drawTrailPath = (history, p) => {
 		   if (p == 2) {
 			console.log(2);
-			   if (p2od.t !== 'none') {
+			   if (p2od.t !== 'None') {
            history.forEach((pos, index) => {
                const tx = (pos % currentLayout.w) * (pw + ww) + pw;
                const ty = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
@@ -1227,7 +1227,7 @@ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsIn
            });} else {return;}
 		   } else {
 			   console.log(1);
-			if (p2od.t !== 'none') {
+			if (p2od.t !== 'None') {
 			history.forEach((pos, index) => {
                const tx = (pos % currentLayout.w) * (pw + ww) + pw;
                const ty = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
