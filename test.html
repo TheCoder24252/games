@@ -183,7 +183,16 @@
    </div>
  </div>
 
-
+<div id="igModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Are you sure you want to do this?</h2>
+     <p style="font-size: 13px; color: #bbb;">Playing a new maze will make you lose the current maze, giving a automatic win to your opponent</p>
+     <div style="display:flex; gap:10px; margin-top:20px;">
+       <button class="btn btn-sec" style="flex:1" onclick="document.getElementById('igModal').style.display = 'none'">KEEP PLAYING</button>
+       <button class="btn btn-gen" style="flex:1" onclick="">RESIGN GAME</button>
+     </div>
+   </div>
+ </div>
  <div class="viewport">
    <div id="dashPanel" class="dashboard">
      <h3 style="margin:0 0 10px 0; color:#007bff;">DASHBOARD</h3>
@@ -195,7 +204,7 @@
 
      <div style="margin-top: 10px;">
        <button id="generate" class="btn btn-gen">GENERATE NEW</button>
-       <button id="dailyBtn" class="btn btn-daily" onclick="isRaceMode=false;document.getElementById('p2Stats').style.display = 'none';generate(true)"><span id="dailyBtnText">DAILY CHALLENGE</span></button>
+       <button id="dailyBtn" class="btn btn-daily" onclick="if(versing == false){isRaceMode=false;document.getElementById('p2Stats').style.display = 'none';generate(true)} else {document.getElementById('igModal').style.display = 'flex'}"><span id="dailyBtnText">DAILY CHALLENGE</span></button>
        <button id="raceBtn" class="btn btn-race">2-PLAYER RACE</button>
        <button id="leaderboardBtn" class="btn btn-leader" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#001affff';showLeaderboard(false, true)">LEADERBOARD</button>
        <button onclick="togglePanel('shopPanel')" class="btn btn-shop">SHOP</button>
@@ -321,7 +330,7 @@ channel.subscribe((status, err) => {
 })
     </script>
  <script>
-	 let versing;
+	 let versing = false;
 	 let p2od = {s: 'Square', t: 'None'};
 	let inWait = false;
    let wins;
@@ -1429,9 +1438,9 @@ return;
    }
       
    function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); }
-   document.getElementById('generate').onclick = () => { isRaceMode = false; document.getElementById('p2Stats').style.display = 'none'; generate(false); };
+   document.getElementById('generate').onclick = () => { if (versing == false) {isRaceMode = false; document.getElementById('p2Stats').style.display = 'none'; generate(false); } else {document.getElementById('igModal').style.display = 'flex'}};
    document.getElementById('race1btn').onclick = () => {document.getElementById('raceModal').style.display = 'none'; isRaceMode = true; document.getElementById('p2Stats').style.display = 'block'; generate(false); };
-   document.getElementById('raceBtn').onclick = () => {document.getElementById('raceModal').style.display = 'flex';};
+   document.getElementById('raceBtn').onclick = () => { if (versing == false) {document.getElementById('raceModal').style.display = 'flex';} else {document.getElementById('igModal').style.display = 'flex'}};
    updateDailyStatus();
    window.onload = () => generate();
  </script>
