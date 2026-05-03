@@ -315,7 +315,7 @@ const channel = supabase
 	document.getElementById("p2Steps").innerHTML = p2.steps;
 	document.getElementById("p2Stats").style.display = 'block';
 	p2od = {s: msg.payload.body.s, t: msg.payload.body.t, c: new Image()}
-	p2od.c.src = msg.payload.body.c;
+	if (msg.payload.body.c != null) {p2od.c.src = msg.payload.body.c;}
 	draw();
 	if (p2.pos === currentLayout.w * currentLayout.h - 1) win(p2, true);
 	}
