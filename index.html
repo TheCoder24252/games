@@ -959,6 +959,14 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
                const tx = (pos % currentLayout.w) * (pw + ww) + pw;
                const ty = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
                ctx.fillStyle = trailData.color === 'rainbow' ? `hsl(${(index * 20) % 360}, 80%, 60%)` : trailData.color;
+			   if (trailData.color === '#ff4500') {
+				   randdom = Math.floor(Math.random() * 5) + 1;
+				   if (randdom == 1) {ctx.fillStyle = '#ff3300'}
+				   else if (randdom == 2) {ctx.fillStyle = '#ff4500'}
+				   else if (randdom == 3) {ctx.fillStyle = '#cc0000'}
+				   else if (randdom == 4) {ctx.fillStyle = '#cc5200'}
+				   else if (randdom == 5) {ctx.fillStyle = '#cc3300'}
+			   }
                ctx.globalAlpha = 0.5;
                ctx.fillRect(tx + 4, ty + 4, pw - 8, pw - 8);
            });
