@@ -303,7 +303,11 @@ const channel = supabase
 				generate();
 			}
 		}
-	} else {
+	} else if (msg.payload.request == "Resign") {
+	if (msg.payload.id == versing) {
+	
+	}
+	} else{
 	if (msg.payload.id == versing) {
 	if (msg.payload.body.Message == true) {
 	startTime = Date.now(); timerInterval = setInterval(() => { document.getElementById('timer').innerText = ((Date.now() - startTime) / 1000).toFixed(1) + "s"; }, 100);
