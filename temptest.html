@@ -1170,7 +1170,7 @@ return;
 		let achdesc;
 		let achearn;
 	    let achrew;
-		const achup = () => {ach.push({name: achtext, desc: achdesc}) credits += achearn}
+		const achup = () => {ach.push({name: achtext, desc: achdesc}); credits += achearn}
 	    if (mazeComp > 0) {achtext = 'First Step'; if (ach.some(ach => ach.name == 'First Step')) {return;} achdesc = 'Complete your first maze'; achearn = 10; achup()
 		} if (mazeComp > 4) { achtext = 'Novice Navigator'; if (ach.some(ach => ach.name == 'Novice Navigator')) {return;} achdesc = 'Complete 5 mazes'; achearn = 15; achup()
         } if (mazeComp > 9) {achtext = 'Maze Apprentice'; if (ach.some(ach => ach.name == 'Maze Apprentice')) {return;} achdesc = 'Complete 10 mazes'; achearn = 30; achup()
