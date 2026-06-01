@@ -7,7 +7,7 @@
 	
 	
 	
-	STOP TRYING TO BREAK MY GAME
+	STOP TRYING TO BREAK MY GAME Please
 	
 	
 	
@@ -53,6 +53,7 @@
    .btn-race { background: #6f42c1; }
    .btn-download { background: #007bff; }
    .btn-leader { background: #001affff; }
+   .btn-ach { background: #ff6600; }
    .btn-fullscreen { background: #187a2fff; }
    .btn-settings { background: #4a5568; margin-top: auto; }
    .btn-danger { background: #333; color: #ffaaaa; font-size: 10px; height: 28px; margin-top: 10px; }
@@ -182,6 +183,7 @@
        <button id="raceBtn" class="btn btn-race">2-PLAYER RACE</button>
        <button id="leaderboardBtn" class="btn btn-leader" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#001affff';showLeaderboard(false, true)">LEADERBOARD</button>
        <button onclick="togglePanel('shopPanel')" class="btn btn-shop">SHOP</button>
+	   <button id="achBtn" class="btn btn-ach" onclick="togglePanel('achPanel')">VIEW ACHIEVEMENTS</button>
        <button id="downloadBtn" class="btn btn-download" onclick="downloadMaze()">DOWNLOAD MAZE AS A PNG</button>
        <button id="fullscreenBtn" class="btn btn-fullscreen" onclick="toggleFullscreen()">ENTER FULLSCREEN</button>
        <a href="https://vitalsaw-studios.w3spaces.com" style="display:none;" target="_blank" class="btn btn-more">MORE VITALSAW STUDIO GAMES</a>
@@ -238,6 +240,11 @@
  </div>
    <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('leaderPanel')">CLOSE</button>
  </div>
+ <div id="achPanel" class="side-panel">
+     <h3 style="color:#ff6600;">ACHIEVEMENTS</h3>
+     <div id="achContainer" style="overflow-y:auto; flex-grow:1;"></div>
+   <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('achPanel')">CLOSE</button>
+ </div>
 
 
  <script>
@@ -270,6 +277,7 @@
    let step2Limit = 250;
 	 let lastBonus;
 	 let streak;
+   let ach;
 	let customImg = new Image();
    const canvas = document.getElementById('mazeCanvas');
    const ctx = canvas.getContext('2d', { alpha: false });
@@ -278,6 +286,7 @@
    let p1 = { pos: 0, steps: 0, name: "P1" }, p2 = { pos: 0, steps: 0, name: "P2" };
    console.log('STOP TRYING TO BREAK MY GAME');
    fetchData().then(res => {gameData = res[0];
+    ach = gameData.achieve;
 	lastBonus = gameData.last_bonus;
 	btime = gameData.Time;
     credits = gameData.credits;
@@ -679,7 +688,7 @@ function fetchData(leader = false, by) {
 
 
    function togglePanel(id) {
-       ['settingsPanel', 'shopPanel', 'leaderPanel'].forEach(p => {
+       ['settingsPanel', 'shopPanel', 'leaderPanel', 'achPanel'].forEach(p => {
            const el = document.getElementById(p);
            if(p === id) el.classList.toggle('open');
            else el.classList.remove('open');
@@ -719,6 +728,10 @@ function fetchData(leader = false, by) {
            const active = activeTrail === t.name;
            container.innerHTML += `<div class="shop-item" style="border-color:${active ? '#007bff' : '#444'}"><h4 style='color:#007bff;'>${t.name}</h4><p>${t.desc}</p>${unlocked ? `<button class="btn btn-sec" onclick="setTrail('${t.name}')" ${active ? 'disabled' : ''}>${active ? 'EQUIPPED' : 'EQUIP'}</button>` : `<button class="btn btn-shop" onclick="buyTrail('${t.name}', ${t.price})">BUY: ${t.price}</button>`}</div>`;
        });
+       const cont = document.getElementById('achContainer');
+       ach.forEach(a => {
+         cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#ff6600;'>${a.name}</h4><p>${a.desc}</p></div>`;
+       })
    }
 
 
@@ -778,7 +791,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
      maze_complete: mazeComp,
      Time: btime,
 	 streak: streak,
-	 last_bonus: lastBonus
+	 last_bonus: lastBonus,
+	 achieve: ach
    })
  });
 
@@ -1153,7 +1167,23 @@ return;
         }
         if (currentLayout.w != 5) {
         credits += reward; save(); updateCredits();
+		let achtext;
+		let achdesc;
+		let achearn;
+	    let achrew;
+		const achup = () => {ach.push({name: achtext, desc: achdesc}); credits += achearn}
+	    if (mazeComp > 0) {achtext = 'First Step'; if (ach.some(ach => ach.name == 'First Step')) {return;} achdesc = 'Complete your first maze'; achearn = 10; achup()
+		} if (mazeComp > 4) { achtext = 'Novice Navigator'; if (ach.some(ach => ach.name == 'Novice Navigator')) {return;} achdesc = 'Complete 5 mazes'; achearn = 15; achup()
+        } if (mazeComp > 9) {achtext = 'Maze Apprentice'; if (ach.some(ach => ach.name == 'Maze Apprentice')) {return;} achdesc = 'Complete 10 mazes'; achearn = 30; achup()
+        } if (mazeComp > 24) {achtext = 'Corridoor Crawler'; if (ach.some(ach => ach.name == 'Corridoor Crawler')) {return;} achdesc = 'Complete 25 mazes'; achearn = 50; achup()
+        } if (mazeComp > 49) {achtext = 'Maze Steamroller'; if (ach.some(ach => ach.name == 'Maze Steamroller')) {return;} achdesc = 'Complete 50 mazes'; achearn = 100; achup()
+        } if (mazeComp > 99) {achtext = 'Maze Master'; if (ach.some(ach => ach.name == 'Maze Master')) {return;} achdesc = 'Complete 100 mazes'; achearn = 175; achup()
+        } if (mazeComp > 249) {achtext = '3D Mapper'; if (ach.some(ach => ach.name == '3D Mapper')) {return;} achdesc = 'Complete 250 mazes'; achearn = 250; achup()
+        } if (mazeComp > 499) {achtext = 'Maze God'; if (ach.some(ach => ach.name == 'Maze God')) {return;} achdesc = 'Complete 500 mazes'; achearn = 500; achup()
+        } if (mazeComp > 999) {achtext = 'Beyond the Grid'; if (ach.some(ach => ach.name == 'Beyond the Grid')) {return;} achdesc = 'Complete 1000 mazes'; achearn = 1000; achup()
         }
+		updateCredits()
+		save()
 	   	if (isDaily) {
 			document.getElementById('algo').value = Pmode;
 		}
@@ -1176,6 +1206,7 @@ return;
            document.getElementById('replay').innerHTML = "Start Game";
            document.getElementById('rewardText').innerText = "";
         }
+   }
    }
       
    function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); }
