@@ -241,7 +241,7 @@
    <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('leaderPanel')">CLOSE</button>
  </div>
  <div id="achPanel" class="side-panel">
-     <h3 style="color:#001affff;">ACHIEVEMENTS</h3>
+     <h3 style="color:#ff6600;">ACHIEVEMENTS</h3>
      <div id="achContainer" style="overflow-y:auto; flex-grow:1;"></div>
    <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('achPanel')">CLOSE</button>
  </div>
@@ -730,7 +730,7 @@ function fetchData(leader = false, by) {
        });
        const cont = document.getElementById('achContainer');
        ach.forEach(a => {
-         cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#007bff;'>${a.name}</h4><p>${a.desc}</p></div>`;
+         cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#ff6600;'>${a.name}</h4><p>${a.desc}</p></div>`;
        })
    }
 
@@ -1166,6 +1166,20 @@ return;
         }
         if (currentLayout.w != 5) {
         credits += reward; save(); updateCredits();
+		let achtext;
+		let achdesc;
+		let achearn;
+	    let achrew;
+		const achup = () => {ach.push({name: achtext, desc: achdesc})}
+	    if (mazeComp == 1) {achtext = 'First Step';achdesc = 'Complete your first maze'; achearn = 10; achup()
+		} else if (mazeComp == 5) {achtext = 'Novice Navigator'; achdesc = 'Complete 5 mazes'; achearn = 15; achup()
+        } else if (mazeComp == 10) {achtext = 'Mace Apprentice'; achdesc = 'Complete 10 mazes'; achearn = 30; achup()
+        } else if (mazeComp == 25) {achtext = 'Corridoor Crawler'; achdesc = 'Complete 25 mazes'; achearn = 50; achup()
+        } else if (mazeComp == 50) {achtext = 'Maze Steamroller'; achdesc = 'Complete 50 mazes'; achearn = 100; achup()
+        } else if (mazeComp == 100) {achtext = 'Maze Master'; achdesc = 'Complete 100 mazes'; achearn = 175; achup()
+        } else if (mazeComp == 250) {achtext = '3D Mapper'; achdesc = 'Complete 250 mazes'; achearn = 250; achup()
+        } else if (mazeComp == 500) {achtext = 'Maze God'; achdesc = 'Complete 500 mazes'; achearn = 500; achup()
+        } else if (mazeComp == 1000) {achtext = 'Beyond the Grid'; achdesc = 'Complete 1000 mazes'; achearn = 1000; achup()
         }
 	   	if (isDaily) {
 			document.getElementById('algo').value = Pmode;
