@@ -1170,17 +1170,18 @@ return;
 		let achdesc;
 		let achearn;
 	    let achrew;
-		const achup = () => {ach.push({name: achtext, desc: achdesc})}
+		const achup = () => {ach.push({name: achtext, desc: achdesc}) credits += achearn}
 	    if (mazeComp > 0) {achtext = 'First Step'; if (ach.some(ach => ach.name == 'First Step')) {return;} achdesc = 'Complete your first maze'; achearn = 10; achup()
-		} else if (mazeComp > 4) { achtext = 'Novice Navigator'; if (ach.some(ach => ach.name == 'Novice Navigator')) {return;} achdesc = 'Complete 5 mazes'; achearn = 15; achup()
-        } else if (mazeComp > 9) {achtext = 'Maze Apprentice'; if (ach.some(ach => ach.name == 'Maze Apprentice')) {return;} achdesc = 'Complete 10 mazes'; achearn = 30; achup()
-        } else if (mazeComp > 24) {achtext = 'Corridoor Crawler'; if (ach.some(ach => ach.name == 'Corridoor Crawler')) {return;} achdesc = 'Complete 25 mazes'; achearn = 50; achup()
-        } else if (mazeComp > 49) {achtext = 'Maze Steamroller'; if (ach.some(ach => ach.name == 'Maze Steamroller')) {return;} achdesc = 'Complete 50 mazes'; achearn = 100; achup()
-        } else if (mazeComp > 99) {achtext = 'Maze Master'; if (ach.some(ach => ach.name == 'Maze Master')) {return;} achdesc = 'Complete 100 mazes'; achearn = 175; achup()
-        } else if (mazeComp > 249) {achtext = '3D Mapper'; if (ach.some(ach => ach.name == '3D Mapper')) {return;} achdesc = 'Complete 250 mazes'; achearn = 250; achup()
-        } else if (mazeComp > 499) {achtext = 'Maze God'; if (ach.some(ach => ach.name == 'Maze God')) {return;} achdesc = 'Complete 500 mazes'; achearn = 500; achup()
-        } else if (mazeComp > 999) {achtext = 'Beyond the Grid'; if (ach.some(ach => ach.name == 'Beyond the Grid')) {return;} achdesc = 'Complete 1000 mazes'; achearn = 1000; achup()
+		} if (mazeComp > 4) { achtext = 'Novice Navigator'; if (ach.some(ach => ach.name == 'Novice Navigator')) {return;} achdesc = 'Complete 5 mazes'; achearn = 15; achup()
+        } if (mazeComp > 9) {achtext = 'Maze Apprentice'; if (ach.some(ach => ach.name == 'Maze Apprentice')) {return;} achdesc = 'Complete 10 mazes'; achearn = 30; achup()
+        } if (mazeComp > 24) {achtext = 'Corridoor Crawler'; if (ach.some(ach => ach.name == 'Corridoor Crawler')) {return;} achdesc = 'Complete 25 mazes'; achearn = 50; achup()
+        } if (mazeComp > 49) {achtext = 'Maze Steamroller'; if (ach.some(ach => ach.name == 'Maze Steamroller')) {return;} achdesc = 'Complete 50 mazes'; achearn = 100; achup()
+        } if (mazeComp > 99) {achtext = 'Maze Master'; if (ach.some(ach => ach.name == 'Maze Master')) {return;} achdesc = 'Complete 100 mazes'; achearn = 175; achup()
+        } if (mazeComp > 249) {achtext = '3D Mapper'; if (ach.some(ach => ach.name == '3D Mapper')) {return;} achdesc = 'Complete 250 mazes'; achearn = 250; achup()
+        } if (mazeComp > 499) {achtext = 'Maze God'; if (ach.some(ach => ach.name == 'Maze God')) {return;} achdesc = 'Complete 500 mazes'; achearn = 500; achup()
+        } if (mazeComp > 999) {achtext = 'Beyond the Grid'; if (ach.some(ach => ach.name == 'Beyond the Grid')) {return;} achdesc = 'Complete 1000 mazes'; achearn = 1000; achup()
         }
+		updateCredits()
 	   	if (isDaily) {
 			document.getElementById('algo').value = Pmode;
 		}
