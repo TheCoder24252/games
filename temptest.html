@@ -53,6 +53,7 @@
    .btn-race { background: #6f42c1; }
    .btn-download { background: #007bff; }
    .btn-leader { background: #001affff; }
+   .btn-ach { background: #ff6600; }
    .btn-fullscreen { background: #187a2fff; }
    .btn-settings { background: #4a5568; margin-top: auto; }
    .btn-danger { background: #333; color: #ffaaaa; font-size: 10px; height: 28px; margin-top: 10px; }
@@ -182,6 +183,7 @@
        <button id="raceBtn" class="btn btn-race">2-PLAYER RACE</button>
        <button id="leaderboardBtn" class="btn btn-leader" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#001affff';showLeaderboard(false, true)">LEADERBOARD</button>
        <button onclick="togglePanel('shopPanel')" class="btn btn-shop">SHOP</button>
+	   <button id="achBtn" class="btn btn-ach" onclick="togglePanel('achPanel')">VIEW ACHIEVEMENTS</button>
        <button id="downloadBtn" class="btn btn-download" onclick="downloadMaze()">DOWNLOAD MAZE AS A PNG</button>
        <button id="fullscreenBtn" class="btn btn-fullscreen" onclick="toggleFullscreen()">ENTER FULLSCREEN</button>
        <a href="https://vitalsaw-studios.w3spaces.com" style="display:none;" target="_blank" class="btn btn-more">MORE VITALSAW STUDIO GAMES</a>
@@ -728,7 +730,7 @@ function fetchData(leader = false, by) {
        });
        const cont = document.getElementById('achContainer');
        ach.forEach(a => {
-         contain.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#007bff;'>${a.name}</h4><p>${a.desc}</p></div>`;
+         cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#007bff;'>${a.name}</h4><p>${a.desc}</p></div>`;
        })
    }
 
