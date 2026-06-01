@@ -1183,6 +1183,7 @@ return;
         } if (mazeComp > 999) {achtext = 'Beyond the Grid'; if (ach.some(ach => ach.name == 'Beyond the Grid')) {return;} achdesc = 'Complete 1000 mazes'; achearn = 1000; achup()
         }
 		updateCredits()
+		save()
 	   	if (isDaily) {
 			document.getElementById('algo').value = Pmode;
 		}
