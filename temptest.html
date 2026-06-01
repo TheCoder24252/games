@@ -286,7 +286,7 @@
    let p1 = { pos: 0, steps: 0, name: "P1" }, p2 = { pos: 0, steps: 0, name: "P2" };
    console.log('STOP TRYING TO BREAK MY GAME');
    fetchData().then(res => {gameData = res[0];
-    ach = [{name: 'Maze Destroyer', desc: 'Complete 500 mazes'}];
+    ach = gameData.achieve;
 	lastBonus = gameData.last_bonus;
 	btime = gameData.Time;
     credits = gameData.credits;
