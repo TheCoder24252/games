@@ -1167,6 +1167,22 @@ return;
         }
         if (currentLayout.w != 5) {
         credits += reward; save(); updateCredits();
+	   	if (isDaily) {
+			document.getElementById('algo').value = Pmode;
+		}
+        document.getElementById('rewardText').innerText = "+" + reward + " CREDITS EARNED!";
+        if (p.pos) {
+        document.getElementById('winTitle').innerText = isRaceMode ? p.name + " Wins!" : (isDaily ? "Daily Complete!" : "Maze Complete!");
+        } else {
+         if (wins == "P1") {
+         document.getElementById('winTitle').innerText = "P1 Wins because P2 ran out of steps";
+         } else {
+         document.getElementById('winTitle').innerText = "P2 Wins because P1 ran out of steps";
+         }
+         document.getElementById('replay').innerHTML = "New Maze";
+        }
+        document.getElementById('finalStats').innerText = "Time: " + document.getElementById('timer').innerText;
+        document.getElementById('winModal').style.display = 'flex';
 		let achtext;
 		let achdesc;
 		let achearn;
@@ -1184,29 +1200,14 @@ return;
         }
 		updateCredits()
 		save()
-	   	if (isDaily) {
-			document.getElementById('algo').value = Pmode;
 		}
-        document.getElementById('rewardText').innerText = "+" + reward + " CREDITS EARNED!";
-        if (p.pos) {
-        document.getElementById('winTitle').innerText = isRaceMode ? p.name + " Wins!" : (isDaily ? "Daily Complete!" : "Maze Complete!");
-        } else {
-         if (wins == "P1") {
-         document.getElementById('winTitle').innerText = "P1 Wins because P2 ran out of steps";
-         } else {
-         document.getElementById('winTitle').innerText = "P2 Wins because P1 ran out of steps";
-         }
-         document.getElementById('replay').innerHTML = "New Maze";
-        }
-        document.getElementById('finalStats').innerText = "Time: " + document.getElementById('timer').innerText;
-        document.getElementById('winModal').style.display = 'flex';
         if (currentLayout.w == 5) {
            document.getElementById('finalStats').innerText = "";
            document.getElementById('winTitle').innerText = "Tutorial Level Complete!"
            document.getElementById('replay').innerHTML = "Start Game";
            document.getElementById('rewardText').innerText = "";
         }
-   }
+   
    }
       
    function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); }
