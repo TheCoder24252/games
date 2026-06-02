@@ -728,6 +728,18 @@ function fetchData(leader = false, by) {
            const active = activeTrail === t.name;
            container.innerHTML += `<div class="shop-item" style="border-color:${active ? '#007bff' : '#444'}"><h4 style='color:#007bff;'>${t.name}</h4><p>${t.desc}</p>${unlocked ? `<button class="btn btn-sec" onclick="setTrail('${t.name}')" ${active ? 'disabled' : ''}>${active ? 'EQUIPPED' : 'EQUIP'}</button>` : `<button class="btn btn-shop" onclick="buyTrail('${t.name}', ${t.price})">BUY: ${t.price}</button>`}</div>`;
        });
+	   let achtext; let achdesc; let achearn; let achrew; const achup = () => {ach.push({name: achtext, desc: achdesc}); credits += achearn} 
+	   const skineg = ["Square","Circle","Diamond","Custom"];
+   const sk1 = [...unlockedSkins].sort((a, b) => a.localeCompare(b));
+   const sk2 = [...skineg].sort((a, b) => a.localeCompare(b));
+   
+	   const traileg = ["None","Neon Blue","Lava","Rainbow"];
+   const tr1 = [...unlockedTrails].sort((a, b) => a.localeCompare(b));
+   const tr2 = [...traileg].sort((a, b) => a.localeCompare(b));
+	   
+   const isMatchS = JSON.stringify(sk1) === JSON.stringify(sk2);
+   const isMatchT = JSON.stringify(tr1) === JSON.stringify(tr2);
+   if (isMatchS && isMatchT) {achtext = "I'll Take It All"; if (ach.some(ach => ach.name == "I'll Take It All")) { achdesc = 'Buy every item in the shop'; achearn = 1000; achup()}}
        const cont = document.getElementById('achContainer');
 	   cont.innerHTML = '';
        ach.forEach(a => {
@@ -752,11 +764,10 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
    }
 
 
-   function buySkin(n, p) { if(credits >= p) { credits -= p; unlockedSkins.push(n); save(); updateCredits(); } else {document.getElementById('amountText').innerHTML=`You need ${p - credits} more credits to buy the ${n} icon`;document.getElementById('creditModal').style.display = 'flex';} }
+   function buySkin(n, p) { if(credits >= p) { credits -= p; unlockedSkins.push(n); save(); updateCredits();} else {document.getElementById('amountText').innerHTML=`You need ${p - credits} more credits to buy the ${n} icon`;document.getElementById('creditModal').style.display = 'flex';} }
    function setSkin(n) { activeSkin = n; save(); updateCredits(); draw(); }
-   function buyTrail(n, p) { if(credits >= p) { credits -= p; unlockedTrails.push(n); save(); updateCredits(); }  else {document.getElementById('amountText').innerHTML=`You need ${p - credits} more credits to buy the ${n} trail`;document.getElementById('creditModal').style.display = 'flex';} }
+   function buyTrail(n, p) { if(credits >= p) { credits -= p; unlockedTrails.push(n); save(); updateCredits();}  else {document.getElementById('amountText').innerHTML=`You need ${p - credits} more credits to buy the ${n} trail`;document.getElementById('creditModal').style.display = 'flex';} }
    function setTrail(n) { activeTrail = n; save(); updateCredits(); draw(); }
-
 
    async function save() {
        localStorage.setItem('mazeCredits', credits);
