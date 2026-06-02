@@ -739,7 +739,7 @@ function fetchData(leader = false, by) {
 	   
    const isMatchS = JSON.stringify(sk1) === JSON.stringify(sk2);
    const isMatchT = JSON.stringify(tr1) === JSON.stringify(tr2);
-   if (isMatchS && isMatchT) {achtext = "I'll Take It All"; if (ach.some(ach => ach.name == "I'll Take It All")) { achdesc = 'Buy every item in the shop'; achearn = 1000; achup()}}
+   if (isMatchS && isMatchT) {achtext = "I'll Take It All"; if (!ach.some(ach => ach.name == "I'll Take It All")) { achdesc = 'Buy every item in the shop'; achearn = 1000; achup()}}
        const cont = document.getElementById('achContainer');
 	   cont.innerHTML = '';
        ach.forEach(a => {
