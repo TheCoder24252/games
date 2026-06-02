@@ -729,7 +729,7 @@ function fetchData(leader = false, by) {
            container.innerHTML += `<div class="shop-item" style="border-color:${active ? '#007bff' : '#444'}"><h4 style='color:#007bff;'>${t.name}</h4><p>${t.desc}</p>${unlocked ? `<button class="btn btn-sec" onclick="setTrail('${t.name}')" ${active ? 'disabled' : ''}>${active ? 'EQUIPPED' : 'EQUIP'}</button>` : `<button class="btn btn-shop" onclick="buyTrail('${t.name}', ${t.price})">BUY: ${t.price}</button>`}</div>`;
        });
        const cont = document.getElementById('achContainer');
-	   ach.innerHTML = '';
+	   cont.innerHTML = '';
        ach.forEach(a => {
          cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#ff6600;'>${a.name}</h4><p>${a.desc}</p></div>`;
        })
