@@ -12,7 +12,7 @@
 	
 	
 	
-	
+
 	
 	
 	
@@ -435,7 +435,7 @@ function logOut() {
 function openProfile(id) {
 	fetchData(false, false, id).then(res => {
 		document.getElementById('profileData').innerHTML = `Credits: ${res[0].credits}<br>Best Time: ${res[0].Time}<br>Mazes Complete: ${res[0].maze_complete}`
-	}
+	})
 }
 function showLeaderboard(by, force = false) {
  if (by == 'maze') {
