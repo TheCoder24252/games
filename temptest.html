@@ -32,6 +32,8 @@
    #leaderPanel { border-right: 4px solid #001affff;cursor: default;user-select: none; }
      #shopPanel:active {cursor: default;}
    .side-panel.open { right: 20px; }
+   .prD-container {display: flex;gap: 15px;}
+   .prB {flex: 1;padding: 20px;}
    canvas { background: #000; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 4px; image-rendering: pixelated; max-height: 75vh; max-width: 50vw; }
    .stat-box { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #007bff; }
    .stat-box2 { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #007bff; }
@@ -168,8 +170,11 @@
  </div>
 <div id="prModal" class="modal-overlay">
    <div class="modal-content">
-     <h2 id='profileId'></h2>
-     <p id="profileData" style="font-size: 13px; color: #bbb;"></p>
+     <h2 id='profileId'>Profile Data</h2>
+	 <div class="prD-container">
+     <div id="profileData" style="font-size: 13px; color: #bbb;" class='prB'></div>
+	 <div id="profileAch" style="font-size: 13px; color: #bbb;" class='prB'></div>
+	</div>
      <button class="btn btn-sec" onclick="document.getElementById('prModal').style.display='none'">BACK</button>
    </div>
  </div>
@@ -430,8 +435,16 @@ function logOut() {
 }
 function openProfile(id) {
 	fetchData(false, false, id).then(res => {
-		document.getElementById('profileData').innerHTML = `Credits: ${res[0].credits}<br>Best Time: ${res[0].Time}<br>Mazes Complete: ${res[0].maze_complete}<br>Online Streak: ${res[0].streak}`;
+		document.getElementById('profileData').innerHTML = `<li><label class='username'>Credits:</label><label class='credits'>${res[0].credits}</label></li>
+		<br><li><label class='username'>Best Time:</label><label class='credits'>${res[0].Time}</label></li>
+		<br><li><label class='username'>Mazes Complete:</label><label class='credits'>${res[0].maze_complete}</label></li>
+		<br><li><label class='username'>Online Streak:</label><label class='credits'>${res[0].streak}</label></li>`;
 		document.getElementById('profileId').innerHTML = id;
+		const cont = document.getElementById('profileAch');
+	   cont.innerHTML = '';
+       res[0].achieve.forEach(a => {
+         cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#ff6600;'>${a.name}</h4><p>${a.desc}</p></div>`;
+       })
 		document.getElementById('prModal').style.display = 'flex';
 	})
 }
@@ -716,7 +729,7 @@ function fetchData(leader = false, by, id) {
      <br><li><label class='username'>Best Time:</label><label class='credits'>${btime}s</label></li>
      <br><li><label class='username'>Mazes Completed:</label><label class='credits'>${mazeComp}</label></li>
 	 <br><li><label class='username'>Online Streak:</label><label class='credits'>${streak} days</label></li>`;
-     document.getElementById("accoModal").style.display = "flex";
+     document.getElementById("prModal").style.display = "flex";
    }
    function openDeleteModal() { document.getElementById('deleteModal').style.display = 'flex'; }
    function closeDeleteModal() { document.getElementById('deleteModal').style.display = 'none'; }
