@@ -434,7 +434,9 @@ function logOut() {
 }
 function openProfile(id) {
 	fetchData(false, false, id).then(res => {
-		document.getElementById('profileData').innerHTML = `Credits: ${res[0].credits}<br>Best Time: ${res[0].Time}<br>Mazes Complete: ${res[0].maze_complete}`
+		document.getElementById('profileData').innerHTML = `Credits: ${res[0].credits}<br>Best Time: ${res[0].Time}<br>Mazes Complete: ${res[0].maze_complete}<br>Online Streak: ${res[0].streak}`;
+		document.getElementById('profileId').innerHTML = id;
+		document.getElementById('prModal').style.display = 'flex';
 	})
 }
 function showLeaderboard(by, force = false) {
@@ -611,7 +613,7 @@ function fetchData(leader = false, by, id) {
    url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time&order=Time.asc";
  }
  if (id) {
-   url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails`
+   url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak`
  }
  const options = {
    method: 'GET',
