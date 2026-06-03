@@ -166,7 +166,17 @@
      <button class="btn btn-sec" onclick="document.getElementById('accoModal').style.display='none'">BACK</button>
    </div>
  </div>
-
+<div id="prModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2 id='profileId'></h2>
+     <p id="profileData" style="font-size: 13px; color: #bbb;"></p>
+     <div style="display:flex; gap:10px; margin-top:20px;">
+       <button class="btn btn-gen" style="flex:1" onclick="logOut()">SIGN OUT</button>
+       <button class="btn btn-gen" style="flex:1" onclick="document.getElementById('accoModal').style.display='none';document.getElementById('deleteModal').style.display='flex'">DELETE ACCOUNT</button>
+     </div>
+     <button class="btn btn-sec" onclick="document.getElementById('accoModal').style.display='none'">BACK</button>
+   </div>
+ </div>
 
  <div class="viewport">
    <div id="dashPanel" class="dashboard">
@@ -422,6 +432,11 @@ function logOut() {
  localStorage.setItem('Tutorial', true);
  window.location.reload();
 }
+function openProfile(id) {
+	fetchData(false, false, id).then(res => {
+		document.getElementById('profileData').innerHTML = `Credits: ${res[0].credits}<br>Best Time: ${res[0].Time}<br>Mazes Complete: ${res[0].maze_complete}`
+	}
+}
 function showLeaderboard(by, force = false) {
  if (by == 'maze') {
    fetchData(false, by).then(res => {
@@ -430,7 +445,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].maze_complete}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.querySelector("label").innerHTML)' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].maze_complete}</label></li>`;
 	}
 	}
 })
@@ -443,7 +458,7 @@ function showLeaderboard(by, force = false) {
  for (let hi = 0; hi < gameData.length; hi++) {
    if (gameData[hi].Time != 5000) {
 	   if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].Time}s</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].Time}s</label></li>`;
 	   }
 	   }
  }
@@ -456,7 +471,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	 if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].credits}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].credits}</label></li>`;
 	 }
 	 }
  })};
@@ -587,13 +602,16 @@ if (!localStorage.getItem('Tutorial') || localStorage.getItem('Tutorial') == "un
    intervalID = setInterval(checkAccount, 1000);
  }
 }
-function fetchData(leader = false, by) {
+function fetchData(leader = false, by, id) {
  let url = (leader) ? "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,credits&order=credits.desc" : `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username}`;
  if (by == 'maze') {
    url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,maze_complete&order=maze_complete.desc";
  }
  if (by == 'time') {
    url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time&order=Time.asc";
+ }
+ if (id) {
+   url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails`
  }
  const options = {
    method: 'GET',
