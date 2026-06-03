@@ -7,12 +7,12 @@
 	
 	
 	
-	STOP TRYING TO BREAK MY GAME Please
+	STOP TRYING TO BREAK MY GAME
 	
 	
 	
 	
-	
+
 	
 	
 	
@@ -32,6 +32,8 @@
    #leaderPanel { border-right: 4px solid #001affff;cursor: default;user-select: none; }
      #shopPanel:active {cursor: default;}
    .side-panel.open { right: 20px; }
+   .prD-container {display: flex;gap: 15px;}
+   .prB {flex: 1;padding: 20px;}
    canvas { background: #000; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 4px; image-rendering: pixelated; max-height: 75vh; max-width: 50vw; }
    .stat-box { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #007bff; }
    .stat-box2 { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #007bff; }
@@ -58,6 +60,7 @@
    .btn-settings { background: #4a5568; margin-top: auto; }
    .btn-danger { background: #333; color: #ffaaaa; font-size: 10px; height: 28px; margin-top: 10px; }
    .btn-sec { background: #555; }
+   .modal-content-a { background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 300px;}
    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
 	.modal-overlayy { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; justify-content: flex-end; align-items: flex-end; pointer-events: none;}
    .modal-content { background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 300px; }
@@ -166,7 +169,16 @@
      <button class="btn btn-sec" onclick="document.getElementById('accoModal').style.display='none'">BACK</button>
    </div>
  </div>
-
+<div id="prModal" class="modal-overlay">
+   <div class="modal-content-a">
+     <h2 id='profileId'>Profile Data</h2>
+	 <div class="prD-container">
+     <div id="profileData" style="font-size: 13px; color: #bbb;" class='prB'></div>
+	 <div id="profileAch" style="font-size: 13px; color: #bbb; max-height: 33vh;overflow-y: auto;" class='prB'></div>
+	</div>
+     <button class="btn btn-sec" onclick="document.getElementById('prModal').style.display='none'">BACK</button>
+   </div>
+ </div>
 
  <div class="viewport">
    <div id="dashPanel" class="dashboard">
@@ -422,6 +434,21 @@ function logOut() {
  localStorage.setItem('Tutorial', true);
  window.location.reload();
 }
+function openProfile(id) {
+	fetchData(false, false, id).then(res => {
+		document.getElementById('profileData').innerHTML = `<li><label class='username'>Credits:</label><label class='credits'>${res[0].credits}</label></li>
+		<br><li><label class='username'>Best Time:</label><label class='credits'>${res[0].Time}</label></li>
+		<br><li><label class='username'>Mazes Complete:</label><label class='credits'>${res[0].maze_complete}</label></li>
+		<br><li><label class='username'>Online Streak:</label><label class='credits'>${res[0].streak}</label></li>`;
+		document.getElementById('profileId').innerHTML = id;
+		const cont = document.getElementById('profileAch');
+	   cont.innerHTML = '';
+       res[0].achieve.forEach(a => {
+         cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#ff6600;'>${a.name}</h4><p>${a.desc}</p></div>`;
+       })
+		document.getElementById('prModal').style.display = 'flex';
+	})
+}
 function showLeaderboard(by, force = false) {
  if (by == 'maze') {
    fetchData(false, by).then(res => {
@@ -430,7 +457,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].maze_complete}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].maze_complete}</label></li>`;
 	}
 	}
 })
@@ -443,7 +470,7 @@ function showLeaderboard(by, force = false) {
  for (let hi = 0; hi < gameData.length; hi++) {
    if (gameData[hi].Time != 5000) {
 	   if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].Time}s</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].Time}s</label></li>`;
 	   }
 	   }
  }
@@ -456,7 +483,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	 if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li><label class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].credits}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].credits}</label></li>`;
 	 }
 	 }
  })};
@@ -587,13 +614,16 @@ if (!localStorage.getItem('Tutorial') || localStorage.getItem('Tutorial') == "un
    intervalID = setInterval(checkAccount, 1000);
  }
 }
-function fetchData(leader = false, by) {
+function fetchData(leader = false, by, id) {
  let url = (leader) ? "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,credits&order=credits.desc" : `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username}`;
  if (by == 'maze') {
    url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,maze_complete&order=maze_complete.desc";
  }
  if (by == 'time') {
    url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time&order=Time.asc";
+ }
+ if (id) {
+   url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak`
  }
  const options = {
    method: 'GET',
