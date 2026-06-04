@@ -164,7 +164,7 @@
      <p id="accData" style="font-size: 13px; color: #bbb;"></p>
 	 <input type="file" id="profileInput" accept="image/*" style="display: none;">
 	 <li><label>Pronouns:</label><input id='profilePronouns' maxlength='15'></li>
-	 <li><label>Bio:</label><input id='profileBio' maxlength='15'></li>
+	 <li><label>Bio:</label><input id='profileBio'></li>
      <div style="display:flex; gap:10px;">
        <button class="btn btn-gen" style="flex:1" onclick="logOut()">SIGN OUT</button>
        <button class="btn btn-gen" style="flex:1" onclick="document.getElementById('accoModal').style.display='none';document.getElementById('deleteModal').style.display='flex'">DELETE ACCOUNT</button>
@@ -383,11 +383,11 @@ const profileUpload = document.getElementById('profileImgUpload');
     }
   });
 	document.getElementById('profilePronouns').onchange = function(event) {
-  prPronouns = event.target.value;
+  profilePronouns = event.target.value;
   save()
 };
 	 document.getElementById('profileBio').onchange = function(event) {
-  prBio = event.target.value;
+  profileBio = event.target.value;
   save()
 };
 slider.addEventListener('mousedown', (e) => {
