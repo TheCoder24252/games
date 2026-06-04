@@ -162,12 +162,14 @@
    <div class="modal-content">
      <h2>Account Data</h2>
      <p id="accData" style="font-size: 13px; color: #bbb;"></p>
-	 <button class="btn btn-sec" id="profileImgUpload">Upload Profile Picture</button>
 	 <input type="file" id="profileInput" accept="image/*" style="display: none;">
-     <div style="display:flex; gap:10px; margin-top:20px;">
+	 <li><label>Pronouns:</label><input id='profilePronouns' maxlength='15'></li>
+	 <li><label>Bio:</label><input id='profileBio' maxlength='15'></li>
+     <div style="display:flex; gap:10px;">
        <button class="btn btn-gen" style="flex:1" onclick="logOut()">SIGN OUT</button>
        <button class="btn btn-gen" style="flex:1" onclick="document.getElementById('accoModal').style.display='none';document.getElementById('deleteModal').style.display='flex'">DELETE ACCOUNT</button>
      </div>
+	 <button class="btn btn-sec" id="profileImgUpload">Upload Profile Picture</button>
      <button class="btn btn-sec" onclick="document.getElementById('accoModal').style.display='none'">BACK</button>
    </div>
  </div>
@@ -175,6 +177,8 @@
    <div class="modal-content-a">
 	 <img style="border-radius: 50%; width: 200px; height: 200px; object-fit: cover;" id="profileImg">
      <h2 id='profileId'>Profile Data</h2>
+	 <p id="profileBioD" style="font-size: 13px; color: #bbb;"></p>
+	 <p id="profilePronounsD" style="font-size: 13px; color: #bbb;"></p>
 	 <div class="prD-container">
      <div id="profileData" style="font-size: 13px; color: #bbb;" class='prB'></div>
 	 <div id="profileAch" style="font-size: 13px; color: #bbb; max-height: 14vh;overflow-y: auto;" class='prB'></div>
@@ -294,8 +298,9 @@
 	 let lastBonus;
 	 let streak;
    let ach;
+	let profilePronouns;
+	let profileBio;
 	let customImg = new Image();
-	let profileImg = new Image()
    const canvas = document.getElementById('mazeCanvas');
    const ctx = canvas.getContext('2d', { alpha: false });
    let currentLayout = null, gameActive = false, startTime = null, timerInterval = null;
@@ -377,6 +382,14 @@ const profileUpload = document.getElementById('profileImgUpload');
       reader.readAsDataURL(file);
     }
   });
+	document.getElementById('profilePronouns').onchange = function(event) {
+  prPronouns = event.target.value;
+  save()
+};
+	 document.getElementById('profileBio').onchange = function(event) {
+  prBio = event.target.value;
+  save()
+};
 slider.addEventListener('mousedown', (e) => {
  isDown = true;
  startX = e.pageX - slider.offsetLeft;
@@ -464,6 +477,8 @@ function logOut() {
 function openProfile(id) {
 	fetchData(false, false, id).then(res => {
 		document.getElementById('profileImg').src = res[0].profile_picture;
+		document.getElementById('profileBioD').innerHTML = res[0].profile_bio;
+		document.getElementById('profilePronounsD').innerHTML = res[0].profile_pronouns;
 		document.getElementById('profileData').innerHTML = `<li><label class='username'>Credits:</label><label class='credits'>${res[0].credits}</label></li>
 		<br><li><label class='username'>Best Time:</label><label class='credits'>${res[0].Time}</label></li>
 		<br><li><label class='username'>Mazes Complete:</label><label class='credits'>${res[0].maze_complete}</label></li>
@@ -861,7 +876,9 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 	 streak: streak,
 	 last_bonus: lastBonus,
 	 achieve: ach,
-	 profile_picture: profileImgData
+	 profile_picture: profileImgData,
+	 profile_bio: profileBio,
+	 profile_pronouns: profilePronouns
    })
  });
 
