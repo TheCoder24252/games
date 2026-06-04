@@ -162,7 +162,7 @@
    <div class="modal-content">
      <h2>Account Data</h2>
      <p id="accData" style="font-size: 13px; color: #bbb;"></p>
-	 <button class="btn btn-sec" id="profileImgUpload"></button>
+	 <button class="btn btn-sec" id="profileImgUpload">Upload Profile Picture</button>
 	 <input type="file" id="profileInput" accept="image/*" style="display: none;">
      <div style="display:flex; gap:10px; margin-top:20px;">
        <button class="btn btn-gen" style="flex:1" onclick="logOut()">SIGN OUT</button>
@@ -173,7 +173,7 @@
  </div>
 <div id="prModal" class="modal-overlay">
    <div class="modal-content-a">
-	 <img id="profileImg">
+	 <img style="border-radius: 50%; width: 200px; height: 200px; object-fit: cover;" id="profileImg">
      <h2 id='profileId'>Profile Data</h2>
 	 <div class="prD-container">
      <div id="profileData" style="font-size: 13px; color: #bbb;" class='prB'></div>
