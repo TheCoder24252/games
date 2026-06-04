@@ -371,6 +371,7 @@ const profileUpload = document.getElementById('profileImgUpload');
 
       reader.addEventListener('load', function() {
         profileImgData = reader.result;
+		save();
       });
 
       reader.readAsDataURL(file);
@@ -650,7 +651,7 @@ function fetchData(leader = false, by, id) {
    url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time&order=Time.asc";
  }
  if (id) {
-   url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak`
+   url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak,profile_picture`
  }
  const options = {
    method: 'GET',
