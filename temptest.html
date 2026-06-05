@@ -303,6 +303,7 @@
    let step1Limit = 250;
    let step2Limit = 250;
 	 let lastBonus;
+	 let rank;
 	 let streak;
    let ach;
 	let profilePronouns;
@@ -318,6 +319,7 @@
     ach = gameData.achieve;
 	lastBonus = gameData.last_bonus;
 	btime = gameData.Time;
+	rank = gameData.rank;
     credits = gameData.credits;
     mazeComp = gameData.maze_complete;
     unlockedSkins = gameData.unlocked_skins;
@@ -360,6 +362,15 @@ console.log(yesterday.toDateString());
      { name: 'Lava', color: '#ff4500', price: 1000, desc: 'Hot molten trail.' },
      { name: 'Rainbow', color: 'rainbow', price: 2000, desc: 'Cycles through colors.' }
    ];
+   const ranks = [
+	   {name: 'Owner', desc: 'Get the features of master rank and more'},
+	   {name: 'Admin', desc: 'Automatically get every thing from master rank'},
+	   {name: 'Master', desc: ''},
+	   {name: 'Expert', desc: ''},
+	   {name: 'Apprentice', desc: 'Change the color of your username that is displayed in the leaderboard and in your profile', 
+		requirement: '50+ mazes completed, 500+ credits, best time less than 30 seconds'},
+	   {name: 'Begginer', desc: 'Earned by default, no extra features'}
+   ]
    let p1History = [];
    let p2History = [];
    const slider = document.querySelector('#shopContainer');
