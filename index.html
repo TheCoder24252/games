@@ -162,19 +162,26 @@
    <div class="modal-content">
      <h2>Account Data</h2>
      <p id="accData" style="font-size: 13px; color: #bbb;"></p>
-     <div style="display:flex; gap:10px; margin-top:20px;">
+	 <input type="file" id="profileInput" accept="image/*" style="display: none;">
+	 <li><label>Pronouns:</label><input id='profilePronouns' maxlength='15'></li>
+	 <li><label>Bio:</label><input id='profileBio'></li>
+     <div style="display:flex; gap:10px;">
        <button class="btn btn-gen" style="flex:1" onclick="logOut()">SIGN OUT</button>
        <button class="btn btn-gen" style="flex:1" onclick="document.getElementById('accoModal').style.display='none';document.getElementById('deleteModal').style.display='flex'">DELETE ACCOUNT</button>
      </div>
+	 <button class="btn btn-sec" id="profileImgUpload">Upload Profile Picture</button>
      <button class="btn btn-sec" onclick="document.getElementById('accoModal').style.display='none'">BACK</button>
    </div>
  </div>
 <div id="prModal" class="modal-overlay">
    <div class="modal-content-a">
+	 <img style="border-radius: 50%; width: 200px; height: 200px; object-fit: cover;" id="profileImg">
      <h2 id='profileId'>Profile Data</h2>
+	 <p id="profileBioD" style="font-size: 13px; color: #bbb;"></p>
+	 <p id="profilePronounsD" style="font-size: 13px; color: #bbb;"></p>
 	 <div class="prD-container">
      <div id="profileData" style="font-size: 13px; color: #bbb;" class='prB'></div>
-	 <div id="profileAch" style="font-size: 13px; color: #bbb; max-height: 33vh;overflow-y: auto;" class='prB'></div>
+	 <div id="profileAch" style="font-size: 13px; color: #bbb; max-height: 14vh;overflow-y: auto;" class='prB'></div>
 	</div>
      <button class="btn btn-sec" onclick="document.getElementById('prModal').style.display='none'">BACK</button>
    </div>
@@ -281,6 +288,7 @@
 	 let activeSkin = localStorage.getItem('activeSkin') || 'Square';
 	 let lastDailyDate = localStorage.getItem('lastDailyDate') || "";
 	 let customImgData = localStorage.getItem('customIcon') || null;
+	 let profileImgData;
    let activeTrail = localStorage.getItem('activeTrail') || 'None';
 	 let unlockedTrails = JSON.parse(localStorage.getItem('unlockedTrails')) || ['None'];
 	 let minSteps = 0;
@@ -290,6 +298,8 @@
 	 let lastBonus;
 	 let streak;
    let ach;
+	let profilePronouns;
+	let profileBio;
 	let customImg = new Image();
    const canvas = document.getElementById('mazeCanvas');
    const ctx = canvas.getContext('2d', { alpha: false });
@@ -349,7 +359,37 @@ console.log(yesterday.toDateString());
 	const sliderr = document.querySelector('#leaderContainer');
 let isDown = false, startX, startY, scrollLeft, scrollTop;
 let isDownn = false, startXr, startYr, scrollLeftr, scrollTopr;
-// Detect mouse interaction
+const profileUpload = document.getElementById('profileImgUpload');
+  const profileInput = document.getElementById('profileInput');
+
+  // Trigger the hidden file input when the button is clicked
+  profileUpload.addEventListener('click', function() {
+    profileInput.click();
+  });
+
+  // Handle the file processing when a file is selected
+  profileInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+
+      reader.addEventListener('load', function() {
+        profileImgData = reader.result;
+		save();
+      });
+
+      reader.readAsDataURL(file);
+    }
+  });
+	document.getElementById('profilePronouns').onchange = function(event) {
+  profilePronouns = event.target.value;
+  save()
+};
+	 document.getElementById('profileBio').onchange = function(event) {
+  profileBio = event.target.value;
+  save()
+};
 slider.addEventListener('mousedown', (e) => {
  isDown = true;
  startX = e.pageX - slider.offsetLeft;
@@ -436,11 +476,14 @@ function logOut() {
 }
 function openProfile(id) {
 	fetchData(false, false, id).then(res => {
+		document.getElementById('profileImg').src = res[0].profile_picture;
+		document.getElementById('profileBioD').innerHTML = res[0].profile_bio;
+		document.getElementById('profileId').innerHTML = id;
+		document.getElementById('profileId').innerHTML += ` &middot; ${res[0].profile_pronouns}`;
 		document.getElementById('profileData').innerHTML = `<li><label class='username'>Credits:</label><label class='credits'>${res[0].credits}</label></li>
 		<br><li><label class='username'>Best Time:</label><label class='credits'>${res[0].Time}</label></li>
 		<br><li><label class='username'>Mazes Complete:</label><label class='credits'>${res[0].maze_complete}</label></li>
 		<br><li><label class='username'>Online Streak:</label><label class='credits'>${res[0].streak}</label></li>`;
-		document.getElementById('profileId').innerHTML = id;
 		const cont = document.getElementById('profileAch');
 	   cont.innerHTML = '';
        res[0].achieve.forEach(a => {
@@ -623,7 +666,7 @@ function fetchData(leader = false, by, id) {
    url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time&order=Time.asc";
  }
  if (id) {
-   url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak`
+   url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak,profile_picture,profile_bio,profile_pronouns`
  }
  const options = {
    method: 'GET',
@@ -715,8 +758,6 @@ function fetchData(leader = false, by, id) {
        link.href = canvas.toDataURL("image/png");
        link.click();
    }
-
-
    function togglePanel(id) {
        ['settingsPanel', 'shopPanel', 'leaderPanel', 'achPanel'].forEach(p => {
            const el = document.getElementById(p);
@@ -834,7 +875,10 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
      Time: btime,
 	 streak: streak,
 	 last_bonus: lastBonus,
-	 achieve: ach
+	 achieve: ach,
+	 profile_picture: profileImgData,
+	 profile_bio: profileBio,
+	 profile_pronouns: profilePronouns
    })
  });
 
