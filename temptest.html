@@ -837,11 +837,17 @@ function fetchData(leader = false, by, id) {
        ach.forEach(a => {
          cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#ff6600;'>${a.name}</h4><p>${a.desc}</p></div>`;
        })
+	   if (rank != 'Owner' && rank != 'Admin') {
+		   if (mazeComp > 49 && credits > 499 && btime < 30.1) {rank = 'Apprentice'}
+		   if (mazeComp > 99 && credits > 999 && btime < 15.1) {rank = 'Expert'}
+		   if (mazeComp > 199 && credits > 2499 && btime < 8.1) {rank = 'Master'}
+	   }
 	   cont = document.getElementById('rankContainer');
 	   cont.innerHTML = '';
 	   ranks.forEach(a => {
 		   cont.innerHTML += `<div class="shop-item" style="border-color:${rank == a.name ? '#00ced1' : '#444'}"><h4 style='color:#00ced1;'>${a.name}</h4><p>${a.desc}</p><p>Requirements: ${a.requirement}</p></div>`
 	   })
+	   save()
    }
 
 
