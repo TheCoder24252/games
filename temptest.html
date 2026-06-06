@@ -1257,7 +1257,7 @@ return;
            else if (fmode == 'prim') reward += 10;
            else reward += 15;
 		 if (!p.pos) {reward = 10;}
-		}
+		} else {
          if (p.pos){
            var fsteps = p.steps;
            if (fsteps < 101) {
@@ -1291,7 +1291,7 @@ return;
              mean *= 2;
              reward = reward - mean;
            }
-         } else {reward = 5}
+         } else {reward = 5}}
         }
 
 
