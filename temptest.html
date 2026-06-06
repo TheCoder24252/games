@@ -839,7 +839,7 @@ function fetchData(leader = false, by, id) {
 	   cont = document.getElementById('rankContainer');
 	   cont.innerHTML = '';
 	   ranks.forEach(a => {
-		   cont.innerHTML += `<div class="shop-item" style="border-color:'${f}'"><h4 style='color:#00ced1;'>${a.name}</h4><p>${a.desc}</p></div>`
+		   cont.innerHTML += `<div class="shop-item" style="border-color:${rank == a.name ? '#00ced1' : '#444'}"><h4 style='color:#00ced1;'>${a.name}</h4><p>${a.desc}</p><br><p>${a.requirement}</p></div>`
 	   })
    }
 
