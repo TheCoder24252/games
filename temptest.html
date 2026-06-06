@@ -363,10 +363,12 @@ console.log(yesterday.toDateString());
      { name: 'Rainbow', color: 'rainbow', price: 2000, desc: 'Cycles through colors.' }
    ];
    const ranks = [
-	   {name: 'Owner', desc: 'Get the features of master rank and more'},
-	   {name: 'Admin', desc: 'Automatically get every thing from master rank'},
-	   {name: 'Master', desc: ''},
-	   {name: 'Expert', desc: ''},
+	   {name: 'Owner', desc: 'Be the owner of the game', requirement: {}},
+	   {name: 'Admin', desc: 'Automatically get every thing from master rank',
+	   requirement: 'Ask the owner for the requirements'},
+	   {name: 'Master', desc: 'Get a maximum of 75 credits from each maze and get everything from expert rank'},
+	   {name: 'Expert', desc: 'Get a colored frame for your profile picture and change the color of your username',
+	   requirement: '100+ mazes completed, 1000+ credits, best time under 15 seconds'},
 	   {name: 'Apprentice', desc: 'Change the color of your username that is displayed in the leaderboard and in your profile', 
 		requirement: '50+ mazes completed, 500+ credits, best time less than 30 seconds'},
 	   {name: 'Begginer', desc: 'Earned by default, no extra features'}
@@ -829,11 +831,16 @@ function fetchData(leader = false, by, id) {
    const isMatchS = JSON.stringify(sk1) === JSON.stringify(sk2);
    const isMatchT = JSON.stringify(tr1) === JSON.stringify(tr2);
    if (isMatchS && isMatchT) {achtext = "I'll Take It All"; if (!ach.some(ach => ach.name == "I'll Take It All")) { achdesc = 'Buy every item in the shop'; achearn = 1000; achup()}}
-       const cont = document.getElementById('achContainer');
+       let cont = document.getElementById('achContainer');
 	   cont.innerHTML = '';
        ach.forEach(a => {
          cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#ff6600;'>${a.name}</h4><p>${a.desc}</p></div>`;
        })
+	   cont = document.getElementById('rankContainer');
+	   cont.innerHTML = '';
+	   ranks.forEach(a => {
+		   cont.innerHTML += `<div class="shop-item" style="border-color:'${f}'"><h4 style='color:#00ced1;'>${a.name}</h4><p>${a.desc}</p></div>`
+	   })
    }
 
 
