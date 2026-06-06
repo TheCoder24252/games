@@ -322,7 +322,13 @@
 	lastBonus = gameData.last_bonus;
 	btime = gameData.Time;
 	rank = gameData.rank;
-    credits = gameData.credits;
+	profile = {pronouns: gameData.profile_pronouns, bio: gameData.profile_bio, bg: gameData.profile_background, border: gameData.profile_border, color: gameData.profile_color};
+    document.getElementById('profileBio').value = profile.bio;
+	document.getElementById('profilePronoins').value = profile.pronouns;
+	document.getElementById('profileBg').value = profile.bg;
+	document.getElementById('profileBorder').value = profile.border;
+	document.getElementById('profileColor').value = profile.color;
+	credits = gameData.credits;
     mazeComp = gameData.maze_complete;
     unlockedSkins = gameData.unlocked_skins;
     activeSkin = gameData.active_skin;
