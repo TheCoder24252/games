@@ -385,7 +385,10 @@ let isDownn = false, startXr, startYr, scrollLeftr, scrollTopr;
 const profileUpload = document.getElementById('profileImgUpload');
   const profileInput = document.getElementById('profileInput');
 
-  // Trigger the hidden file input when the button is clicked
+  const music = new Audio('https://thecoder24252.github.io/games/music.mp3);
+
+music.loop = true;
+	music.play()
   profileUpload.addEventListener('click', function() {
     profileInput.click();
   });
