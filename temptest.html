@@ -385,10 +385,21 @@ let isDownn = false, startXr, startYr, scrollLeftr, scrollTopr;
 const profileUpload = document.getElementById('profileImgUpload');
   const profileInput = document.getElementById('profileInput');
 
-  const music = new Audio('https://thecoder24252.github.io/games/music.mp3');
+  const bgMusic = new Audio('Bg-Music-V2.mp3');
+bgMusic.loop = true;
 
-music.loop = true;
-	music.play()
+const playAudioOnActivity = () => {
+    bgMusic.play()
+        .then(() => {
+            // Clean up all listeners immediately so they don't fire again
+            interactions.forEach(event => window.removeEventListener(event, playAudioOnActivity));
+        })
+        .catch(err => console.log("Waiting for a stronger user gesture..."));
+};
+
+// Listen for absolute any common user movement or action
+const interactions = ['click', 'mousedown', 'keydown', 'touchstart', 'scroll'];
+interactions.forEach(event => window.addEventListener(event, playAudioOnActivity, { passive: true }));
   profileUpload.addEventListener('click', function() {
     profileInput.click();
   });
