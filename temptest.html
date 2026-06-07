@@ -762,7 +762,7 @@ function fetchData(leader = false, by, id) {
    url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time,profile_color&order=Time.asc";
  }
  if (id) {
-   url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak,profile_picture,profile_bio,profile_pronouns`
+   url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak,profile_picture,profile_bio,profile_pronouns,profile_color,profile_background,profile_border`
  }
  const options = {
    method: 'GET',
