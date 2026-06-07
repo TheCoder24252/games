@@ -30,6 +30,8 @@
    #settingsPanel { border-right: 4px solid #d24; }
    #shopPanel { border-right: 4px solid #ffc107;cursor: default;user-select: none; }
    #leaderPanel { border-right: 4px solid #001affff;cursor: default;user-select: none; }
+	 #achPanel { border-right: 4px solid #ff6600; }
+	 #rankPanel { border-right: 4px solid #00ced1; }
      #shopPanel:active {cursor: default;}
    .side-panel.open { right: 20px; }
    .prD-container {display: flex;gap: 15px;}
@@ -60,6 +62,7 @@
    .btn-settings { background: #4a5568; margin-top: auto; }
    .btn-danger { background: #333; color: #ffaaaa; font-size: 10px; height: 28px; margin-top: 10px; }
    .btn-sec { background: #555; }
+   .btn-rank {background: #00ced1; color: #000}
    .modal-content-a { background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 300px;}
    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
 	.modal-overlayy { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; justify-content: flex-end; align-items: flex-end; pointer-events: none;}
@@ -165,6 +168,9 @@
 	 <input type="file" id="profileInput" accept="image/*" style="display: none;">
 	 <li><label>Pronouns:</label><input id='profilePronouns' maxlength='15'></li>
 	 <li><label>Bio:</label><input id='profileBio'></li>
+	 <li><label>Profile Background Color:</label><input type='color' id='profileBg'></li>
+	<li><label>Profile Border Color:</label><input type='color' id='profileBorder'></li>
+	<li><label>Profile Username Color:</label><input type='color' id='profileColor'></li>
      <div style="display:flex; gap:10px;">
        <button class="btn btn-gen" style="flex:1" onclick="logOut()">SIGN OUT</button>
        <button class="btn btn-gen" style="flex:1" onclick="document.getElementById('accoModal').style.display='none';document.getElementById('deleteModal').style.display='flex'">DELETE ACCOUNT</button>
@@ -174,7 +180,7 @@
    </div>
  </div>
 <div id="prModal" class="modal-overlay">
-   <div class="modal-content-a">
+   <div class="modal-content-a" id='profileBorderD'>
 	 <img style="border-radius: 50%; width: 200px; height: 200px; object-fit: cover;" id="profileImg">
      <h2 id='profileId'>Profile Data</h2>
 	 <p id="profileBioD" style="font-size: 13px; color: #bbb;"></p>
@@ -201,7 +207,8 @@
        <button id="dailyBtn" class="btn btn-daily" onclick="isRaceMode=false;document.getElementById('p2Stats').style.display = 'none';generate(true)"><span id="dailyBtnText">DAILY CHALLENGE</span></button>
        <button id="raceBtn" class="btn btn-race">2-PLAYER RACE</button>
        <button id="leaderboardBtn" class="btn btn-leader" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#001affff';showLeaderboard(false, true)">LEADERBOARD</button>
-       <button onclick="togglePanel('shopPanel')" class="btn btn-shop">SHOP</button>
+       <button id="rankBtn" class="btn btn-rank" onclick="togglePanel('rankPanel')">VIEW RANKS</button>
+	   <button onclick="togglePanel('shopPanel')" class="btn btn-shop">SHOP</button>
 	   <button id="achBtn" class="btn btn-ach" onclick="togglePanel('achPanel')">VIEW ACHIEVEMENTS</button>
        <button id="downloadBtn" class="btn btn-download" onclick="downloadMaze()">DOWNLOAD MAZE AS A PNG</button>
        <button id="fullscreenBtn" class="btn btn-fullscreen" onclick="toggleFullscreen()">ENTER FULLSCREEN</button>
@@ -260,9 +267,14 @@
    <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('leaderPanel')">CLOSE</button>
  </div>
  <div id="achPanel" class="side-panel">
-     <h3 style="color:#ff6600;">ACHIEVEMENTS</h3>
+     <h3 style="color:#ff6600;">EARNED ACHIEVEMENTS</h3>
      <div id="achContainer" style="overflow-y:auto; flex-grow:1;"></div>
    <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('achPanel')">CLOSE</button>
+ </div>
+<div id="rankPanel" class="side-panel">
+     <h3 style="color:#00ced1;">RANKS</h3>
+     <div id="rankContainer" style="overflow-y:auto; flex-grow:1;"></div>
+   <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('rankPanel')">CLOSE</button>
  </div>
 
 
@@ -296,10 +308,14 @@
    let step1Limit = 250;
    let step2Limit = 250;
 	 let lastBonus;
+	 let rank;
 	 let streak;
    let ach;
 	let profilePronouns;
 	let profileBio;
+	 let profileBg;
+	 let profileBorder;
+	 let profileColor;
 	let customImg = new Image();
    const canvas = document.getElementById('mazeCanvas');
    const ctx = canvas.getContext('2d', { alpha: false });
@@ -311,7 +327,17 @@
     ach = gameData.achieve;
 	lastBonus = gameData.last_bonus;
 	btime = gameData.Time;
-    credits = gameData.credits;
+	rank = gameData.rank;
+	profile = {pronouns: gameData.profile_pronouns, bio: gameData.profile_bio, bg: gameData.profile_background, border: gameData.profile_border, color: gameData.profile_color};
+    document.getElementById('profileBio').value = profile.bio;
+	document.getElementById('profilePronouns').value = profile.pronouns;
+	document.getElementById('profileBg').value = profile.bg;
+	document.getElementById('profileBorder').value = profile.border;
+	document.getElementById('profileColor').value = profile.color;
+	document.getElementById('profileColor').style.display = rank != 'Beginner' ? 'block' : 'none';
+	document.getElementById('profileBg').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'block' : 'none';
+	document.getElementById('profileBorder').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'block' : 'none';
+	credits = gameData.credits;
     mazeComp = gameData.maze_complete;
     unlockedSkins = gameData.unlocked_skins;
     activeSkin = gameData.active_skin;
@@ -353,6 +379,18 @@ console.log(yesterday.toDateString());
      { name: 'Lava', color: '#ff4500', price: 1000, desc: 'Hot molten trail.' },
      { name: 'Rainbow', color: 'rainbow', price: 2000, desc: 'Cycles through colors.' }
    ];
+   const ranks = [
+	   {name: 'Owner', desc: 'Be the owner of the game', requirement: 'Cannot be earned unless you own the game'},
+	   {name: 'Admin', desc: 'Automatically get every thing from master rank',
+	   requirement: 'Ask the owner for the requirements'},
+	   {name: 'Master', desc: 'Get a maximum of 75 credits from each maze and get everything from expert rank',
+	   requirement: '200+ mazes completed, 2500+ credits, best time under 8 seconds'},
+	   {name: 'Expert', desc: 'Set a wallpaper for your profile and change the color of your username',
+	   requirement: '100+ mazes completed, 1000+ credits, best time under 15 seconds'},
+	   {name: 'Apprentice', desc: 'Change the color of your username that is displayed in the leaderboard and in your profile', 
+		requirement: '50+ mazes completed, 500+ credits, best time less than 30 seconds'},
+	   {name: 'Beginner', desc: 'Earned by default, no extra features', requirement: 'Earned by default'}
+   ]
    let p1History = [];
    let p2History = [];
    const slider = document.querySelector('#shopContainer');
@@ -362,7 +400,21 @@ let isDownn = false, startXr, startYr, scrollLeftr, scrollTopr;
 const profileUpload = document.getElementById('profileImgUpload');
   const profileInput = document.getElementById('profileInput');
 
-  // Trigger the hidden file input when the button is clicked
+  const bgMusic = new Audio('music.mp3');
+bgMusic.loop = true;
+
+const playAudioOnActivity = () => {
+    bgMusic.play()
+        .then(() => {
+            // Clean up all listeners immediately so they don't fire again
+            interactions.forEach(event => window.removeEventListener(event, playAudioOnActivity));
+        })
+        .catch(err => console.log("Waiting for a stronger user gesture..."));
+};
+
+// Listen for absolute any common user movement or action
+const interactions = ['click', 'mousedown', 'keydown', 'touchstart', 'scroll'];
+interactions.forEach(event => window.addEventListener(event, playAudioOnActivity, { passive: true }));
   profileUpload.addEventListener('click', function() {
     profileInput.click();
   });
@@ -388,6 +440,18 @@ const profileUpload = document.getElementById('profileImgUpload');
 };
 	 document.getElementById('profileBio').onchange = function(event) {
   profileBio = event.target.value;
+  save()
+};
+	 document.getElementById('profileBg').onchange = function(event) {
+  profileBg = event.target.value;
+  save()
+};
+	 document.getElementById('profileBorder').onchange = function(event) {
+  profileBorder = event.target.value;
+  save()
+};
+	 document.getElementById('profileColor').onchange = function(event) {
+  profileColor = event.target.value;
   save()
 };
 slider.addEventListener('mousedown', (e) => {
@@ -474,13 +538,45 @@ function logOut() {
  localStorage.setItem('Tutorial', true);
  window.location.reload();
 }
+function darkenHexColor(hex, percent) {
+  // Remove the '#' if it is present
+  hex = hex.replace(/^#/, '');
+
+  // Handle shorthand hex like 'fff' or 'bbb'
+  if (hex.length === 3) {
+    hex = hex.split('').map(char => char + char).join('');
+  }
+
+  // Convert hex to decimal RGB values
+  let r = parseInt(hex.substring(0, 2), 16);
+  let g = parseInt(hex.substring(2, 4), 16);
+  let b = parseInt(hex.substring(4, 6), 16);
+
+  // Calculate the reduction factor (e.g., 26.7% darker means multiplying by 0.733)
+  const factor = 1 - (percent / 100);
+
+  // Apply the factor and clamp the values between 0 and 255
+  r = Math.max(0, Math.min(255, Math.floor(r * factor)));
+  g = Math.max(0, Math.min(255, Math.floor(g * factor)));
+  b = Math.max(0, Math.min(255, Math.floor(b * factor)));
+
+  // Convert decimal back to 2-digit hex strings
+  const rHex = r.toString(16).padStart(2, '0');
+  const gHex = g.toString(16).padStart(2, '0');
+  const bHex = b.toString(16).padStart(2, '0');
+
+  return `#${rHex}${gHex}${bHex}`;
+}
 function openProfile(id) {
 	fetchData(false, false, id).then(res => {
 		document.getElementById('profileImg').src = res[0].profile_picture;
 		document.getElementById('profileBioD').innerHTML = res[0].profile_bio;
+		document.getElementById('profileBorderD').style.borderColor = res[0].profile_border;
+		document.getElementById('profileBorderD').style.background = res[0].profile_background;
 		document.getElementById('profileId').innerHTML = id;
+		document.getElementById('profileId').style.color = res[0].profile_color;
 		document.getElementById('profileId').innerHTML += ` &middot; ${res[0].profile_pronouns}`;
-		document.getElementById('profileData').innerHTML = `<li><label class='username'>Credits:</label><label class='credits'>${res[0].credits}</label></li>
+		document.getElementById('profileData').innerHTML = `<li><label class='username'>Rank:</label><label class='credits'>${res[0].rank}</label></li><br><li><label class='username'>Credits:</label><label class='credits'>${res[0].credits}</label></li>
 		<br><li><label class='username'>Best Time:</label><label class='credits'>${res[0].Time}</label></li>
 		<br><li><label class='username'>Mazes Complete:</label><label class='credits'>${res[0].maze_complete}</label></li>
 		<br><li><label class='username'>Online Streak:</label><label class='credits'>${res[0].streak}</label></li>`;
@@ -500,7 +596,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].maze_complete}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].profile_color, 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='credits'>${gameData[hi].maze_complete}</label></li>`;
 	}
 	}
 })
@@ -513,7 +609,7 @@ function showLeaderboard(by, force = false) {
  for (let hi = 0; hi < gameData.length; hi++) {
    if (gameData[hi].Time != 5000) {
 	   if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].Time}s</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].profile_color, 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='credits'>${gameData[hi].Time}s</label></li>`;
 	   }
 	   }
  }
@@ -526,7 +622,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	 if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].credits}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].profile_color, 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='credits'>${gameData[hi].credits}</label></li>`;
 	 }
 	 }
  })};
@@ -634,7 +730,7 @@ async function insertData(AccountUser, password) {
      Usernames: AccountUser,
      passcode: password,
      unlocked_skins: ["Square"],
-     unlocked_trails: "[\"None\"]"
+     unlocked_trails: ["None"]
    })
  });
 
@@ -658,15 +754,15 @@ if (!localStorage.getItem('Tutorial') || localStorage.getItem('Tutorial') == "un
  }
 }
 function fetchData(leader = false, by, id) {
- let url = (leader) ? "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,credits&order=credits.desc" : `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username}`;
+ let url = (leader) ? "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,credits,profile_color&order=credits.desc" : `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username}`;
  if (by == 'maze') {
-   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,maze_complete&order=maze_complete.desc";
+   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,maze_complete,profile_color&order=maze_complete.desc";
  }
  if (by == 'time') {
-   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time&order=Time.asc";
+   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time,profile_color&order=Time.asc";
  }
  if (id) {
-   url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak,profile_picture,profile_bio,profile_pronouns`
+   url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak,rank,profile_picture,profile_bio,profile_pronouns,profile_color,profile_background,profile_border`
  }
  const options = {
    method: 'GET',
@@ -759,7 +855,7 @@ function fetchData(leader = false, by, id) {
        link.click();
    }
    function togglePanel(id) {
-       ['settingsPanel', 'shopPanel', 'leaderPanel', 'achPanel'].forEach(p => {
+       ['settingsPanel', 'shopPanel', 'leaderPanel', 'achPanel', 'rankPanel'].forEach(p => {
            const el = document.getElementById(p);
            if(p === id) el.classList.toggle('open');
            else el.classList.remove('open');
@@ -811,11 +907,22 @@ function fetchData(leader = false, by, id) {
    const isMatchS = JSON.stringify(sk1) === JSON.stringify(sk2);
    const isMatchT = JSON.stringify(tr1) === JSON.stringify(tr2);
    if (isMatchS && isMatchT) {achtext = "I'll Take It All"; if (!ach.some(ach => ach.name == "I'll Take It All")) { achdesc = 'Buy every item in the shop'; achearn = 1000; achup()}}
-       const cont = document.getElementById('achContainer');
+       let cont = document.getElementById('achContainer');
 	   cont.innerHTML = '';
        ach.forEach(a => {
          cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#ff6600;'>${a.name}</h4><p>${a.desc}</p></div>`;
        })
+	   if (rank != 'Owner' && rank != 'Admin') {
+		   if (mazeComp > 49 && credits > 499 && btime < 30.1) {rank = 'Apprentice'}
+		   if (mazeComp > 99 && credits > 999 && btime < 15.1) {rank = 'Expert'}
+		   if (mazeComp > 199 && credits > 2499 && btime < 8.1) {rank = 'Master'}
+	   }
+	   cont = document.getElementById('rankContainer');
+	   cont.innerHTML = '';
+	   ranks.forEach(a => {
+		   cont.innerHTML += `<div class="shop-item" style="border-color:${rank == a.name ? '#00ced1' : '#444'}"><h4 style='color:#00ced1;'>${a.name}</h4><p>${a.desc}</p><p>Requirements: ${a.requirement}</p></div>`
+	   })
+	   save()
    }
 
 
@@ -878,7 +985,10 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 	 achieve: ach,
 	 profile_picture: profileImgData,
 	 profile_bio: profileBio,
-	 profile_pronouns: profilePronouns
+	 profile_pronouns: profilePronouns,
+	 profile_color: profileColor,
+	 profile_background: profileBg,
+	 profile_border: profileBorder
    })
  });
 
@@ -1203,6 +1313,29 @@ return;
            else if (fmode == 'prim') reward += 12;
            else reward += 20;
         } else {
+		if (rank == 'Master' || rank == 'Admin' || rank == 'Owner') {
+			var fsteps = p.steps;
+           if (fsteps = minSteps) {
+             reward = 30;
+           } else {
+             fsteps = fsteps - 100;
+             fsteps = 30 - fsteps;
+             reward = fsteps;
+           }
+           var ftime = parseFloat(document.getElementById('timer').innerText);
+           if (ftime < 14) {
+             reward = reward + 30;
+           } else {
+             ftime = ftime - 13;
+             ftime = 30 - ftime;
+             reward = reward + ftime;
+           }
+           var fmode = document.getElementById('algo').value;
+           if (fmode == 'backtrack') reward += 5;
+           else if (fmode == 'prim') reward += 10;
+           else reward += 15;
+		 if (!p.pos) {reward = 10;}
+		} else {
          if (p.pos){
            var fsteps = p.steps;
            if (fsteps < 101) {
@@ -1236,7 +1369,7 @@ return;
              mean *= 2;
              reward = reward - mean;
            }
-         } else {reward = 5}
+         } else {reward = 5}}
         }
 
 
