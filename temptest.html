@@ -168,6 +168,9 @@
 	 <input type="file" id="profileInput" accept="image/*" style="display: none;">
 	 <li><label>Pronouns:</label><input id='profilePronouns' maxlength='15'></li>
 	 <li><label>Bio:</label><input id='profileBio'></li>
+	 <li><label>Profile Background:</label><input id='profileBg'></li>
+	<li><label>Profile Border:</label><input id='profileBorder'></li>
+	<li><label>Profile Username:</label><input id='profileColor'></li>
      <div style="display:flex; gap:10px;">
        <button class="btn btn-gen" style="flex:1" onclick="logOut()">SIGN OUT</button>
        <button class="btn btn-gen" style="flex:1" onclick="document.getElementById('accoModal').style.display='none';document.getElementById('deleteModal').style.display='flex'">DELETE ACCOUNT</button>
@@ -177,7 +180,7 @@
    </div>
  </div>
 <div id="prModal" class="modal-overlay">
-   <div class="modal-content-a">
+   <div class="modal-content-a" id='profileBorderD'>
 	 <img style="border-radius: 50%; width: 200px; height: 200px; object-fit: cover;" id="profileImg">
      <h2 id='profileId'>Profile Data</h2>
 	 <p id="profileBioD" style="font-size: 13px; color: #bbb;"></p>
@@ -328,6 +331,9 @@
 	document.getElementById('profileBg').value = profile.bg;
 	document.getElementById('profileBorder').value = profile.border;
 	document.getElementById('profileColor').value = profile.color;
+	document.getElementById('profileColor').style.display = rank != 'Beginner' ? 'block' : 'none';
+	document.getElementById('profileBg').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'block' : 'none';
+	document.getElementById('profileBorder').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'block' : 'none';
 	credits = gameData.credits;
     mazeComp = gameData.maze_complete;
     unlockedSkins = gameData.unlocked_skins;
@@ -517,11 +523,43 @@ function logOut() {
  localStorage.setItem('Tutorial', true);
  window.location.reload();
 }
+function darkenHexColor(hex, percent) {
+  // Remove the '#' if it is present
+  hex = hex.replace(/^#/, '');
+
+  // Handle shorthand hex like 'fff' or 'bbb'
+  if (hex.length === 3) {
+    hex = hex.split('').map(char => char + char).join('');
+  }
+
+  // Convert hex to decimal RGB values
+  let r = parseInt(hex.substring(0, 2), 16);
+  let g = parseInt(hex.substring(2, 4), 16);
+  let b = parseInt(hex.substring(4, 6), 16);
+
+  // Calculate the reduction factor (e.g., 26.7% darker means multiplying by 0.733)
+  const factor = 1 - (percent / 100);
+
+  // Apply the factor and clamp the values between 0 and 255
+  r = Math.max(0, Math.min(255, Math.floor(r * factor)));
+  g = Math.max(0, Math.min(255, Math.floor(g * factor)));
+  b = Math.max(0, Math.min(255, Math.floor(b * factor)));
+
+  // Convert decimal back to 2-digit hex strings
+  const rHex = r.toString(16).padStart(2, '0');
+  const gHex = g.toString(16).padStart(2, '0');
+  const bHex = b.toString(16).padStart(2, '0');
+
+  return `#${rHex}${gHex}${bHex}`;
+}
 function openProfile(id) {
 	fetchData(false, false, id).then(res => {
 		document.getElementById('profileImg').src = res[0].profile_picture;
 		document.getElementById('profileBioD').innerHTML = res[0].profile_bio;
+		document.getElementById('profileBorderD').style.borderColor = res[0].profile_border;
+		document.getElementById('profileBorderD').style.background = res[0].profile_background;
 		document.getElementById('profileId').innerHTML = id;
+		document.getElementById('profileId').style.color = res[0].profile_color;
 		document.getElementById('profileId').innerHTML += ` &middot; ${res[0].profile_pronouns}`;
 		document.getElementById('profileData').innerHTML = `<li><label class='username'>Credits:</label><label class='credits'>${res[0].credits}</label></li>
 		<br><li><label class='username'>Best Time:</label><label class='credits'>${res[0].Time}</label></li>
@@ -543,7 +581,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].maze_complete}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' color='${darkenHexColor(gameData[hi].profile_color, 26.7)}' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].maze_complete}</label></li>`;
 	}
 	}
 })
@@ -556,7 +594,7 @@ function showLeaderboard(by, force = false) {
  for (let hi = 0; hi < gameData.length; hi++) {
    if (gameData[hi].Time != 5000) {
 	   if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].Time}s</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' color='${darkenHexColor(gameData[hi].profile_color, 26.7)}' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].Time}s</label></li>`;
 	   }
 	   }
  }
@@ -569,7 +607,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	 if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].credits}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' color='${darkenHexColor(gameData[hi].profile_color, 26.7)}' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].credits}</label></li>`;
 	 }
 	 }
  })};
