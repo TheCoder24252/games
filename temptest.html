@@ -754,12 +754,12 @@ if (!localStorage.getItem('Tutorial') || localStorage.getItem('Tutorial') == "un
  }
 }
 function fetchData(leader = false, by, id) {
- let url = (leader) ? "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,credits&order=credits.desc" : `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username}`;
+ let url = (leader) ? "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,credits,profile_color&order=credits.desc" : `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username}`;
  if (by == 'maze') {
-   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,maze_complete&order=maze_complete.desc";
+   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,maze_complete,profile_color&order=maze_complete.desc";
  }
  if (by == 'time') {
-   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time&order=Time.asc";
+   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time,profile_color&order=Time.asc";
  }
  if (id) {
    url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak,profile_picture,profile_bio,profile_pronouns`
@@ -985,7 +985,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 	 achieve: ach,
 	 profile_picture: profileImgData,
 	 profile_bio: profileBio,
-	 profile_pronouns: profilePronouns
+	 profile_pronouns: profilePronouns,
+	 profile_color: profileColor
    })
  });
 
