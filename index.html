@@ -449,7 +449,6 @@ interactions.forEach(event => window.addEventListener(event, playAudioOnActivity
     profileInput.click();
   });
 function toggleAudio() {
-  bgMusic.muted = !bgMusic.muted;
   if (bgMusic.muted == true) {bgMusic.muted = false;document.getElementById('audioOn').style.display = 'block'; document.getElementById('audioOff').style.display = 'none'
   } else {bgMusic.muted = true; document.getElementById('audioOn').style.display = 'none'; document.getElementById('audioOff').style.display = 'block'}
 }
