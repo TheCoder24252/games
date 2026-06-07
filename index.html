@@ -70,6 +70,22 @@
    .modal-contentt {pointer-events: auto; height: 20%;background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 450px; }
 #shopContainer::-webkit-scrollbar {display: none;}
 #shopContainer{-ms-overflow-style: none;scrollbar-width: none;}
+	 .game-panel {
+  position: fixed;       /* Locks the panel relative to the screen viewport */
+  top: 15px;             /* Distance from the very top edge */
+  left: 15px;            /* Distance from the very left edge */
+  z-index: 9999;         /* Places it safely on top of all game graphics */
+  
+  /* Panel Sizing */
+  width: 160px;
+  
+  /* Internal button layout alignment */
+  display: flex;
+  flex-direction: row;     /* Crucial change: stacks items side-by-side */
+  align-items: center;     /* Centers items vertically relative to each other */
+  gap: 12px;       
+  color: #fff;
+}
 	.no-scrollbar {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;     /* Firefox */
@@ -168,9 +184,9 @@
 	 <input type="file" id="profileInput" accept="image/*" style="display: none;">
 	 <li><label>Pronouns:</label><input id='profilePronouns' maxlength='15'></li>
 	 <li><label>Bio:</label><input id='profileBio'></li>
-	 <li><label>Profile Background Color:</label><input type='color' id='profileBg'></li>
-	<li><label>Profile Border Color:</label><input type='color' id='profileBorder'></li>
-	<li><label>Profile Username Color:</label><input type='color' id='profileColor'></li>
+	 <li id='profiBgS'><label>Profile Background Color:</label><input type='color' id='profileBg'></li>
+	<li id='profileBorderS'><label>Profile Border Color:</label><input type='color' id='profileBorder'></li>
+	<li id='profileColorS'><label>Profile Username Color:</label><input type='color' id='profileColor'></li>
      <div style="display:flex; gap:10px;">
        <button class="btn btn-gen" style="flex:1" onclick="logOut()">SIGN OUT</button>
        <button class="btn btn-gen" style="flex:1" onclick="document.getElementById('accoModal').style.display='none';document.getElementById('deleteModal').style.display='flex'">DELETE ACCOUNT</button>
@@ -192,7 +208,9 @@
      <button class="btn btn-sec" onclick="document.getElementById('prModal').style.display='none'">BACK</button>
    </div>
  </div>
-
+<div class="game-panel">
+    <button class='btn btn-gen'>hi</button>
+</div>
  <div class="viewport">
    <div id="dashPanel" class="dashboard">
      <h3 style="margin:0 0 10px 0; color:#007bff;">DASHBOARD</h3>
@@ -334,9 +352,9 @@
 	document.getElementById('profileBg').value = profile.bg;
 	document.getElementById('profileBorder').value = profile.border;
 	document.getElementById('profileColor').value = profile.color;
-	document.getElementById('profileColor').style.display = rank != 'Beginner' ? 'block' : 'none';
-	document.getElementById('profileBg').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'block' : 'none';
-	document.getElementById('profileBorder').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'block' : 'none';
+	document.getElementById('profileColorS').style.display = rank != 'Beginner' ? 'block' : 'none';
+	document.getElementById('profileBgS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'block' : 'none';
+	document.getElementById('profileBorderS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'block' : 'none';
 	credits = gameData.credits;
     mazeComp = gameData.maze_complete;
     unlockedSkins = gameData.unlocked_skins;
