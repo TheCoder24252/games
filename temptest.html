@@ -168,9 +168,9 @@
 	 <input type="file" id="profileInput" accept="image/*" style="display: none;">
 	 <li><label>Pronouns:</label><input id='profilePronouns' maxlength='15'></li>
 	 <li><label>Bio:</label><input id='profileBio'></li>
-	 <li><label>Profile Background:</label><input id='profileBg'></li>
-	<li><label>Profile Border:</label><input id='profileBorder'></li>
-	<li><label>Profile Username:</label><input id='profileColor'></li>
+	 <li><label>Profile Background Color:</label><input id='profileBg'></li>
+	<li><label>Profile Border Color:</label><input id='profileBorder'></li>
+	<li><label>Profile Username Color:</label><input id='profileColor'></li>
      <div style="display:flex; gap:10px;">
        <button class="btn btn-gen" style="flex:1" onclick="logOut()">SIGN OUT</button>
        <button class="btn btn-gen" style="flex:1" onclick="document.getElementById('accoModal').style.display='none';document.getElementById('deleteModal').style.display='flex'">DELETE ACCOUNT</button>
@@ -313,6 +313,9 @@
    let ach;
 	let profilePronouns;
 	let profileBio;
+	 let profileBg;
+	 let profileBorder;
+	 let profileColor;
 	let customImg = new Image();
    const canvas = document.getElementById('mazeCanvas');
    const ctx = canvas.getContext('2d', { alpha: false });
@@ -327,7 +330,7 @@
 	rank = gameData.rank;
 	profile = {pronouns: gameData.profile_pronouns, bio: gameData.profile_bio, bg: gameData.profile_background, border: gameData.profile_border, color: gameData.profile_color};
     document.getElementById('profileBio').value = profile.bio;
-	document.getElementById('profilePronoins').value = profile.pronouns;
+	document.getElementById('profilePronouns').value = profile.pronouns;
 	document.getElementById('profileBg').value = profile.bg;
 	document.getElementById('profileBorder').value = profile.border;
 	document.getElementById('profileColor').value = profile.color;
@@ -437,6 +440,18 @@ interactions.forEach(event => window.addEventListener(event, playAudioOnActivity
 };
 	 document.getElementById('profileBio').onchange = function(event) {
   profileBio = event.target.value;
+  save()
+};
+	 document.getElementById('profileBg').onchange = function(event) {
+  profileBg = event.target.value;
+  save()
+};
+	 document.getElementById('profileBorder').onchange = function(event) {
+  profileBorder = event.target.value;
+  save()
+};
+	 document.getElementById('profileColor').onchange = function(event) {
+  profileColor = event.target.value;
   save()
 };
 slider.addEventListener('mousedown', (e) => {
