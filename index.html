@@ -364,9 +364,9 @@
 	document.getElementById('profileBg').value = profile.bg;
 	document.getElementById('profileBorder').value = profile.border;
 	document.getElementById('profileColor').value = profile.color;
-	document.getElementById('profileColorS').style.display = rank != 'Beginner' ? 'block' : 'none';
-	document.getElementById('profileBgS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'block' : 'none';
-	document.getElementById('profileBorderS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'block' : 'none';
+	document.getElementById('profileColorS').style.display = rank != 'Beginner' ? 'flex' : 'none';
+	document.getElementById('profileBgS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'flex' : 'none';
+	document.getElementById('profileBorderS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'flex' : 'none';
 	credits = gameData.credits;
     mazeComp = gameData.maze_complete;
     unlockedSkins = gameData.unlocked_skins;
@@ -450,7 +450,7 @@ interactions.forEach(event => window.addEventListener(event, playAudioOnActivity
   });
 function toggleAudio() {
   bgMusic.muted = !bgMusic.muted;
-  if (bgMusic.muted) {bgMusic.muted = false;document.getElementById('audioOn').style.display = 'block'; document.getElementById('audioOff').style.display = 'none'
+  if (bgMusic.muted == true) {bgMusic.muted = false;document.getElementById('audioOn').style.display = 'block'; document.getElementById('audioOff').style.display = 'none'
   } else {bgMusic.muted = true; document.getElementById('audioOn').style.display = 'none'; document.getElementById('audioOff').style.display = 'block'}
 }
   // Handle the file processing when a file is selected
