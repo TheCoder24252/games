@@ -168,9 +168,9 @@
 	 <input type="file" id="profileInput" accept="image/*" style="display: none;">
 	 <li><label>Pronouns:</label><input id='profilePronouns' maxlength='15'></li>
 	 <li><label>Bio:</label><input id='profileBio'></li>
-	 <li><label>Profile Background Color:</label><input id='profileBg'></li>
-	<li><label>Profile Border Color:</label><input id='profileBorder'></li>
-	<li><label>Profile Username Color:</label><input id='profileColor'></li>
+	 <li><label>Profile Background Color:</label><input type='color' id='profileBg'></li>
+	<li><label>Profile Border Color:</label><input type='color' id='profileBorder'></li>
+	<li><label>Profile Username Color:</label><input type='color' id='profileColor'></li>
      <div style="display:flex; gap:10px;">
        <button class="btn btn-gen" style="flex:1" onclick="logOut()">SIGN OUT</button>
        <button class="btn btn-gen" style="flex:1" onclick="document.getElementById('accoModal').style.display='none';document.getElementById('deleteModal').style.display='flex'">DELETE ACCOUNT</button>
