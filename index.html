@@ -73,8 +73,8 @@
 #shopContainer{-ms-overflow-style: none;scrollbar-width: none;}
 	 .game-panel {
   position: fixed;       /* Locks the panel relative to the screen viewport */
-  top: 0;             /* Distance from the very top edge */
-  right: 0;            /* Distance from the very left edge */
+  top: 15px;             /* Distance from the very top edge */
+  right: 15px;            /* Distance from the very left edge */
   z-index: 9999;         /* Places it safely on top of all game graphics */
   
   /* Panel Sizing */
@@ -84,7 +84,7 @@
   display: flex;
   padding: 0;
   flex-direction: row;     /* Crucial change: stacks items side-by-side */
-  align-items: center;     /* Centers items vertically relative to each other */
+  align-items: right;     /* Centers items vertically relative to each other */
   gap: 12px;       
   color: #fff;
 }
@@ -214,6 +214,12 @@
     <button class='mbtn btn-gen' onclick='toggleFullscreen()'><svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
     <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
   </svg> </button>
+	<button class='mbtn btn-gen' onclick='toggleAudio()'><svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <!-- Speaker Body -->
+    <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+    <!-- Sound Waves -->
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/>
+  </svg></button>
 </div>
  <div class="viewport">
    <div id="dashPanel" class="dashboard">
@@ -440,7 +446,9 @@ interactions.forEach(event => window.addEventListener(event, playAudioOnActivity
   profileUpload.addEventListener('click', function() {
     profileInput.click();
   });
-
+function toggleAudio() {
+  bgMusic.muted = !audioElement.muted;
+}
   // Handle the file processing when a file is selected
   profileInput.addEventListener('change', function(event) {
     const file = event.target.files[0];
