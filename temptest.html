@@ -596,7 +596,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].maze_complete}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].profile_color, 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='credits'>${gameData[hi].maze_complete}</label></li>`;
 	}
 	}
 })
@@ -609,7 +609,7 @@ function showLeaderboard(by, force = false) {
  for (let hi = 0; hi < gameData.length; hi++) {
    if (gameData[hi].Time != 5000) {
 	   if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].Time}s</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].profile_color, 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='credits'>${gameData[hi].Time}s</label></li>`;
 	   }
 	   }
  }
@@ -622,7 +622,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	 if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="#bbb");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label class='credits'>${gameData[hi].credits}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].profile_color, 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='credits'>${gameData[hi].credits}</label></li>`;
 	 }
 	 }
  })};
