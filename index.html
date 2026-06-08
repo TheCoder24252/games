@@ -87,24 +87,13 @@
   gap: 12px;       
   color: #fff;
 }
-	.search-container {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  width: 100%;
-  max-width: 350px; /* Adjust width as needed */
-}
-
-/* The actual input field using your exact properties */
 .search-input {
   width: 100%;
-  padding: 10px 12px 10px 40px; /* Extra left padding to clear the icon */
+  padding: 10px 12px 10px 12px; /* Extra left padding to clear the icon */
   font-size: 16px;
-  border-radius: 6px; /* Smooth rounded corners */
+  border-radius: 6px;
   outline: none;
   transition: all 0.2s ease-in-out;
-  
-  /* Your requested properties */
   border: 1px solid #444;
   background: #111;
   color: #fff;
@@ -235,15 +224,7 @@
    <div class="modal-content-a">
 	 <img style="border-radius: 50%; width: 200px; height: 200px; object-fit: cover;" id="profileImg">
      <h2 id='profileId'>Profile Viewer</h2>
-	   <div class="search-container">
-  <svg class="search-icon" xmlns="http://w3.org" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="10" cy="7" r="4"/>
-    <path d="M3 20a7 7 0 0 1 11.23-5.61"/>
-    <circle cx="18" cy="16" r="3"/>
-    <line x1="22" y1="20" x2="20.1" y2="18.2"/>
-  </svg>
 	 <input type="text" class="search-input" id='search' placeholder="Search for Profiles">
-	   </div>
 	   <button class="btn btn-gen" onclick="search()">SEARCH</button>
      <button class="btn btn-sec" onclick="document.getElementById('prsModal').style.display='none'">CLOSE</button>
    </div>
