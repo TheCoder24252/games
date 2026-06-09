@@ -226,7 +226,7 @@
 <div id="prsModal" class="modal-overlay">
    <div class="modal-content-a">
      <h2 id='profileId'>Profile Viewer</h2>
-	 <input type="text" class="search-input" id='search' placeholder="Search for Profiles">
+	 <input type="text" id='search' style="width: 100%; height: 39px;" placeholder="Search for Profiles">
 	   <button class="btn btn-gen" onclick="search()">SEARCH</button>
      <button class="btn btn-sec" onclick="document.getElementById('prsModal').style.display='none'">CLOSE</button>
    </div>
@@ -983,10 +983,14 @@ function fetchData(leader = false, by, id) {
          cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#ff6600;'>${a.name}</h4><p>${a.desc}</p></div>`;
        })
 	   if (rank != 'Owner' && rank != 'Admin') {
-		   if (mazeComp > 49 && credits > 499 && btime < 30.1) {rank = 'Apprentice'}
-		   if (mazeComp > 99 && credits > 999 && btime < 15.1) {rank = 'Expert'}
-		   if (mazeComp > 199 && credits > 2499 && btime < 8.1) {rank = 'Master'}
+		   if (mazeComp < 50 || credits < 500 || btime > 30) {rank = 'Beginner'; profileColor = '#ffffff'; profileBg = '#2c343f'; profileBorder = '#ff3e3e'}
+		   if (mazeComp > 49 && credits > 499 && btime < 30.1) {rank = 'Apprentice'; profileBg = '#2c343f'; profileBorder = '#ff3e3e'}
+		   if (mazeComp > 99 && credits > 999 && btime < 15.1) {rank = 'Expert';}
+		   if (mazeComp > 199 && credits > 2499 && btime < 8.1) {rank = 'Master';}
 	   }
+	   document.getElementById('profileColorS').style.display = rank != 'Beginner' ? 'flex' : 'none';
+	document.getElementById('profileBgS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'flex' : 'none';
+	document.getElementById('profileBorderS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'flex' : 'none';
 	   cont = document.getElementById('rankContainer');
 	   cont.innerHTML = '';
 	   ranks.forEach(a => {
@@ -1058,7 +1062,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 	 profile_pronouns: profilePronouns,
 	 profile_color: profileColor,
 	 profile_background: profileBg,
-	 profile_border: profileBorder
+	 profile_border: profileBorder,
+	 rank: rank
    })
  });
 
