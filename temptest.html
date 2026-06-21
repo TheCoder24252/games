@@ -403,7 +403,7 @@
    const ctx = canvas.getContext('2d', { alpha: false });
    let currentLayout = null, gameActive = false, startTime = null, timerInterval = null;
    let isRaceMode = false, isDaily = false;
-   let p1 = { pos: 0, steps: 0, name: "P1" }, p2 = { pos: 0, steps: 0, name: "P2" };
+   let p1 = { pos: 0, steps: 0, name: "P1", dir: 'u'}, p2 = { pos: 0, steps: 0, name: "P2", dir: 'u'};
    console.log('STOP TRYING TO BREAK MY GAME');
    fetchData().then(res => {gameData = res[0];
     ach = gameData.achieve;
@@ -1270,11 +1270,24 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
     else if(activeSkin === 'Diamond') { 
         ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); 
     }
-    else if(activeSkin === 'Triangle') { 
+    else if(activeSkin === 'Triangle') {
         ctx.beginPath(); 
+		if (dir == 'u') {
         ctx.moveTo(x + pw/2, y + 2);      // Top vertex (centered)
         ctx.lineTo(x + pw - 2, y + pw - 2); // Bottom right vertex
-        ctx.lineTo(x + 2, y + pw - 2);      // Bottom left vertex
+        ctx.lineTo(x + 2, y + pw - 2);}      // Bottom left vertex
+		if (dir == 'd') {
+        ctx.moveTo(x + 2, y + 2);           // Top left vertex
+ctx.lineTo(x + pw - 2, y + 2);      // Top right vertex
+ctx.lineTo(x + pw / 2, y + pw - 2);}
+		if (dir == 'r') {
+        ctx.moveTo(x + 2, y + 2);           // Top left vertex
+ctx.lineTo(x + pw - 2, y + pw / 2); // Right vertex (tip pointing right)
+ctx.lineTo(x + 2, y + pw - 2);}
+		if (dir == 'l') {
+        ctx.moveTo(x + 2, y + 2);           // Top left vertex
+ctx.lineTo(x + pw - 2, y + 2);      // Top right vertex
+ctx.lineTo(x + pw / 2, y + pw - 2);}
         ctx.fill(); 
     }
     else if(activeSkin === 'Custom' && customImgData) { 
@@ -1394,6 +1407,10 @@ return;
                p2History.push(p.pos);
                if(p2History.length > 10) p2History.shift();
              }
+			 if (t - p.pos === w) {p.dir == 'd'}
+			 if (p.pos - t === w) {p.dir == 'u'}
+			 if (t - p.pos === 1) {p.dir == 'r'}
+			 if (p.pos - t === 1) {p.dir == 'l'}
              p.pos = t;
              p.steps++;
              draw();
