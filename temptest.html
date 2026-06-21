@@ -1272,7 +1272,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
     }
     else if(activeSkin === 'Triangle') {
         ctx.beginPath(); 
-		if (p.dir == 'u') {
+		if (dir == 'u') {
         ctx.moveTo(x + pw/2, y + 2);      // Top vertex (centered)
         ctx.lineTo(x + pw - 2, y + pw - 2); // Bottom right vertex
         ctx.lineTo(x + 2, y + pw - 2);}      // Bottom left vertex
