@@ -1259,24 +1259,32 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 
 
    function drawPlayer(pos, color) {
-       if(!currentLayout) return;
-       const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
-       const x = (pos % currentLayout.w) * (pw + ww) + pw, y = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
-       ctx.fillStyle = color;
-       if(activeSkin === 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
-       else if(activeSkin === 'Diamond') { ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); }
-       else if(activeSkin === 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
-	   else if(activeSkin === 'Triangle'){ 
+    if(!currentLayout) return;
+    const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
+    const x = (pos % currentLayout.w) * (pw + ww) + pw, y = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
+    ctx.fillStyle = color;
+    
+    if(activeSkin === 'Circle') { 
+        ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); 
+    }
+    else if(activeSkin === 'Diamond') { 
+        ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); 
+    }
+    else if(activeSkin === 'Triangle') { 
+        ctx.beginPath(); 
+        ctx.moveTo(x + pw/2, y + 2);      // Top vertex (centered)
+        ctx.lineTo(x + pw - 2, y + pw - 2); // Bottom right vertex
+        ctx.lineTo(x + 2, y + pw - 2);      // Bottom left vertex
+        ctx.fill(); 
+    }
+    else if(activeSkin === 'Custom' && customImgData) { 
+        ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); 
+    }
+    else { 
+        ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); 
+    }
+}
 
-ctx.beginPath();       // Starts a new path profile
-ctx.moveTo(x, y + 2);   // Move pen to Vertex 1 (Top Point: x=100, y=50)
-ctx.lineTo(x - 2, y - 2);  // Draw line to Vertex 2 (Bottom Right: x=150, y=150)
-ctx.lineTo(x + 2, y - 2);   // Draw line to Vertex 3 (Bottom Left: x=50, y=150)
-
-// 4. Fill the area bounded by your path
-ctx.fill();  }
-       else { ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); }
-   }
 
 
    function draw() {
