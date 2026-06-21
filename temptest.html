@@ -19,6 +19,7 @@
 	
 	-->
 <head>
+ <meta name="google-site-verification" content="i8Do3et83PUuGYTzkZ40zRfqiyXmnKyFTZbORas8oiU" />
  <link rel="icon" type="image/x-icon" href="./Maze-Logo.png">
  <title>Maze Game</title>
  <style>
@@ -31,7 +32,7 @@
    #shopPanel { border-right: 4px solid #ffc107;cursor: default;user-select: none; }
    #leaderPanel { border-right: 4px solid #001affff;cursor: default;user-select: none; }
 	 #achPanel { border-right: 4px solid #ff6600; }
-	 #rankPanel { border-right: 4px solid #00ced1; }
+	 #rankPanel { border-right: 4px solid #007bff; }
      #shopPanel:active {cursor: default;}
    .side-panel.open { right: 20px; }
    .prD-container {display: flex;gap: 15px;}
@@ -49,6 +50,7 @@
    label { font-size: 11px; font-weight: bold; color: #bbb; }
    input, select { width: 85px; height: 24px; border: 1px solid #444; background: #111; color: #fff; border-radius: 4px; font-size: 11px; }
    .btn { width: 100%; color: white; cursor: pointer; margin-top: 8px; font-size: 12px; height: 36px; border-radius: 6px; border: none; font-weight: bold; transition: 0.1s; display: flex; align-items: center; justify-content: center; text-decoration: none; text-align: center; }
+   .mbtn { width: 36px; color: white; cursor: pointer; margin-top: 8px; font-size: 12px; height: 36px; border-radius: 6px; border: none; font-weight: bold; transition: 0.1s; display: flex; align-items: center; justify-content: center; text-decoration: none; text-align: center; }
    .btn:active { transform: scale(0.96); }
    .btn-gen { background: #d24; }
    .btn-shop { background: #ffc107; color: #000; }
@@ -62,7 +64,6 @@
    .btn-settings { background: #4a5568; margin-top: auto; }
    .btn-danger { background: #333; color: #ffaaaa; font-size: 10px; height: 28px; margin-top: 10px; }
    .btn-sec { background: #555; }
-   .btn-rank {background: #00ced1; color: #000}
    .modal-content-a { background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 300px;}
    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
 	.modal-overlayy { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; justify-content: flex-end; align-items: flex-end; pointer-events: none;}
@@ -70,6 +71,37 @@
    .modal-contentt {pointer-events: auto; height: 20%;background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 450px; }
 #shopContainer::-webkit-scrollbar {display: none;}
 #shopContainer{-ms-overflow-style: none;scrollbar-width: none;}
+	 .game-panel {
+  position: fixed;       /* Locks the panel relative to the screen viewport */
+  top: 15px;             /* Distance from the very top edge */
+  right: 15px;            /* Distance from the very left edge */
+  z-index: 9999;         /* Places it safely on top of all game graphics */
+  
+  /* Panel Sizing */
+  width: 160px;
+  
+  /* Internal button layout alignment */
+  display: flex;
+  padding: 0;
+  flex-direction: row;     /* Crucial change: stacks items side-by-side */
+  align-items: right;     /* Centers items vertically relative to each other */
+  gap: 12px;       
+  color: #fff;
+}
+.search-input {
+   height: 36px;
+	margin-top: 8px;
+  width: 100%;
+ display: flex; align-items: center; justify-content: center; text-decoration: none; text-align: center;
+  padding: 10px 12px 10px 12px; 
+  font-size: 16px;
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid #444;
+  background: #111;
+  color: #fff;
+}
 	.no-scrollbar {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;     /* Firefox */
@@ -168,9 +200,9 @@
 	 <input type="file" id="profileInput" accept="image/*" style="display: none;">
 	 <li><label>Pronouns:</label><input id='profilePronouns' maxlength='15'></li>
 	 <li><label>Bio:</label><input id='profileBio'></li>
-	 <li><label>Profile Background Color:</label><input type='color' id='profileBg'></li>
-	<li><label>Profile Border Color:</label><input type='color' id='profileBorder'></li>
-	<li><label>Profile Username Color:</label><input type='color' id='profileColor'></li>
+	 <li id='profileBgS'><label>Profile Background Color:</label><input type='color' id='profileBg'></li>
+	<li id='profileBorderS'><label>Profile Border Color:</label><input type='color' id='profileBorder'></li>
+	<li id='profileColorS'><label>Profile Username Color:</label><input type='color' id='profileColor'></li>
      <div style="display:flex; gap:10px;">
        <button class="btn btn-gen" style="flex:1" onclick="logOut()">SIGN OUT</button>
        <button class="btn btn-gen" style="flex:1" onclick="document.getElementById('accoModal').style.display='none';document.getElementById('deleteModal').style.display='flex'">DELETE ACCOUNT</button>
@@ -189,10 +221,62 @@
      <div id="profileData" style="font-size: 13px; color: #bbb;" class='prB'></div>
 	 <div id="profileAch" style="font-size: 13px; color: #bbb; max-height: 14vh;overflow-y: auto;" class='prB'></div>
 	</div>
-     <button class="btn btn-sec" onclick="document.getElementById('prModal').style.display='none'">BACK</button>
+     <button class="btn btn-sec" onclick="document.getElementById('prModal').style.display='none'">CLOSE</button>
    </div>
  </div>
-
+ <div id="downModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>What do you want to download?</h2>
+	 <button class="btn btn-gen" onclick="document.getElementById('downModal').style.display='none';document.getElementById('appModal').style.display='flex'">DOWNLOAD MAZE GAME APP</button>
+	 <button class="btn btn-gen" onclick="document.getElementById('downModal').style.display='none';downloadMaze()">DOWNLOAD PNG OF A MAZE</button>
+     <button class="btn btn-sec" onclick="document.getElementById('downModal').style.display='none'">EXIT</button>
+   </div>
+ </div>
+	<div id="appModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>App Download Options</h2>
+	 <button class="btn btn-gen" onclick="document.getElementById('appModal').style.display='none';downloadApp('winexe')">DOWNLOAD WINDOWS EXE SETUP</button>
+	 <button class="btn btn-gen" onclick="document.getElementById('appModal').style.display='none';downloadApp('macapp')">DOWNLOAD MACOS ZIPPED APP FILE</button>
+	 <button class="btn btn-gen" onclick="document.getElementById('appModal').style.display='none';downloadApp('macdmg')">DOWNLOAD MACOS APP DMG INSTALLER</button>
+     <button class="btn btn-sec" onclick="document.getElementById('appModal').style.display='none'">EXIT</button>
+   </div>
+ </div>
+<div id="prsModal" class="modal-overlay">
+   <div class="modal-content-a">
+     <h2 id='profileId'>Profile Viewer</h2>
+	 <input type="text" id='search' style="width: 100%; height: 39px;" placeholder="Search for Profiles">
+	   <button class="btn btn-gen" onclick="search()">SEARCH</button>
+     <button class="btn btn-sec" onclick="document.getElementById('prsModal').style.display='none'">CLOSE</button>
+   </div>
+ </div>
+<div class="game-panel">
+    <button class='mbtn btn-gen' onclick='toggleFullscreen()'><svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+  </svg> </button>
+	<button class='mbtn btn-gen' onclick='toggleAudio()'><svg xmlns="http://w3.org" id="audioOn" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/>
+  </svg><svg id='audioOff' style='display:none;' xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <path d="M11 5L7.54 7.77M6 9H2v6h4l5 4V11"/>
+    <path d="M15.54 8.46a5 5 0 0 1 .46 5.54M19.07 4.93a10 10 0 0 1 1 10.14"/>
+    <line x1="23" y1="1" x2="1" y2="23"/>
+  </svg></button>
+	<button class='mbtn btn-gen' onclick='let isRunningInApp = window.process && window.process.type === "renderer"; if (isRunningInApp) {downloadMaze()} else {document.getElementById("downModal").style.display="flex"}'>
+		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <line x1="12" y1="3" x2="12" y2="15"/>
+    <polyline points="5 10 12 17 19 10"/>
+    <path d="M19 21H5"/>
+  </svg>
+	</button>
+	<button class='mbtn btn-gen' onclick='document.getElementById("prsModal").style.display="flex"'>
+		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <circle cx="10" cy="7" r="4"/>
+    <path d="M3 20a7 7 0 0 1 11.23-5.61"/>
+    <circle cx="18" cy="16" r="3"/>
+    <line x1="22" y1="20" x2="20.1" y2="18.2"/>
+  </svg>
+	</button>
+</div>
  <div class="viewport">
    <div id="dashPanel" class="dashboard">
      <h3 style="margin:0 0 10px 0; color:#007bff;">DASHBOARD</h3>
@@ -207,11 +291,9 @@
        <button id="dailyBtn" class="btn btn-daily" onclick="isRaceMode=false;document.getElementById('p2Stats').style.display = 'none';generate(true)"><span id="dailyBtnText">DAILY CHALLENGE</span></button>
        <button id="raceBtn" class="btn btn-race">2-PLAYER RACE</button>
        <button id="leaderboardBtn" class="btn btn-leader" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#001affff';showLeaderboard(false, true)">LEADERBOARD</button>
-       <button id="rankBtn" class="btn btn-rank" onclick="togglePanel('rankPanel')">VIEW RANKS</button>
 	   <button onclick="togglePanel('shopPanel')" class="btn btn-shop">SHOP</button>
 	   <button id="achBtn" class="btn btn-ach" onclick="togglePanel('achPanel')">VIEW ACHIEVEMENTS</button>
-       <button id="downloadBtn" class="btn btn-download" onclick="downloadMaze()">DOWNLOAD MAZE AS A PNG</button>
-       <button id="fullscreenBtn" class="btn btn-fullscreen" onclick="toggleFullscreen()">ENTER FULLSCREEN</button>
+       <button id="rankBtn" class="btn btn-download" onclick="togglePanel('rankPanel')">VIEW RANKS</button>
        <a href="https://vitalsaw-studios.w3spaces.com" style="display:none;" target="_blank" class="btn btn-more">MORE VITALSAW STUDIO GAMES</a>
      </div>
      <button onclick="togglePanel('settingsPanel')" class="btn btn-settings">SETTINGS</button>
@@ -272,7 +354,7 @@
    <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('achPanel')">CLOSE</button>
  </div>
 <div id="rankPanel" class="side-panel">
-     <h3 style="color:#00ced1;">RANKS</h3>
+     <h3 style="color:#007bff;">RANKS</h3>
      <div id="rankContainer" style="overflow-y:auto; flex-grow:1;"></div>
    <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('rankPanel')">CLOSE</button>
  </div>
@@ -334,9 +416,9 @@
 	document.getElementById('profileBg').value = profile.bg;
 	document.getElementById('profileBorder').value = profile.border;
 	document.getElementById('profileColor').value = profile.color;
-	document.getElementById('profileColor').style.display = rank != 'Beginner' ? 'block' : 'none';
-	document.getElementById('profileBg').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'block' : 'none';
-	document.getElementById('profileBorder').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'block' : 'none';
+	document.getElementById('profileColorS').style.display = rank != 'Beginner' ? 'flex' : 'none';
+	document.getElementById('profileBgS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'flex' : 'none';
+	document.getElementById('profileBorderS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'flex' : 'none';
 	credits = gameData.credits;
     mazeComp = gameData.maze_complete;
     unlockedSkins = gameData.unlocked_skins;
@@ -369,6 +451,7 @@ console.log(yesterday.toDateString());
 	draw()});
 	const skins = [
      { name: 'Square', price: 0, desc: 'Classic block.' },
+	 { name: 'Triangle', price: 500, desc: 'Sharp corners.' },
      { name: 'Circle', price: 750, desc: 'Smooth sphere.' },
      { name: 'Diamond', price: 1000, desc: 'Sharp edges.' },
      { name: 'Custom', price: 2500, desc: 'Upload your own image!' }
@@ -418,8 +501,14 @@ interactions.forEach(event => window.addEventListener(event, playAudioOnActivity
   profileUpload.addEventListener('click', function() {
     profileInput.click();
   });
-
-  // Handle the file processing when a file is selected
+function toggleAudio() {
+  if (bgMusic.muted == true) {bgMusic.muted = false;document.getElementById('audioOn').style.display = 'block'; document.getElementById('audioOff').style.display = 'none'
+  } else {bgMusic.muted = true; document.getElementById('audioOn').style.display = 'none'; document.getElementById('audioOff').style.display = 'block'}
+}
+ function search() {
+	 document.getElementById('prsModal').style.display='none';
+	 openProfile(document.getElementById('search').value);
+ }
   profileInput.addEventListener('change', function(event) {
     const file = event.target.files[0];
 
@@ -854,6 +943,17 @@ function fetchData(leader = false, by, id) {
        link.href = canvas.toDataURL("image/png");
        link.click();
    }
+   function downloadApp(appType) {
+	   let appDownload;
+	   if (appType == 'macapp') {appDownload = 'https://github.com/TheCoder24252/games/releases/download/Maze_Game_App_Zip/Maze.Game.zip'}
+	   else if (appType == 'macdmg') {appDownload = 'https://github.com/TheCoder24252/games/releases/download/Maze_Game_App/Maze.Game-1.0.0-arm64.dmg'}
+	   else if (appType == 'winexe') {appDownload = 'https://github.com/TheCoder24252/games/releases/download/Maze_Game_EXE/Maze.Game.Setup.1.0.0.exe'}
+       const link = document.createElement('a');
+link.href = appDownload; // Relative path to your DMG file
+link.target = '_blank';                    // Opens in a new tab to prevent disrupting the current page
+link.click();
+
+   }
    function togglePanel(id) {
        ['settingsPanel', 'shopPanel', 'leaderPanel', 'achPanel', 'rankPanel'].forEach(p => {
            const el = document.getElementById(p);
@@ -913,14 +1013,18 @@ function fetchData(leader = false, by, id) {
          cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#ff6600;'>${a.name}</h4><p>${a.desc}</p></div>`;
        })
 	   if (rank != 'Owner' && rank != 'Admin') {
-		   if (mazeComp > 49 && credits > 499 && btime < 30.1) {rank = 'Apprentice'}
-		   if (mazeComp > 99 && credits > 999 && btime < 15.1) {rank = 'Expert'}
-		   if (mazeComp > 199 && credits > 2499 && btime < 8.1) {rank = 'Master'}
+		   if (mazeComp < 50 || credits < 500 || btime > 30) {rank = 'Beginner'; profileColor = '#ffffff'; profileBg = '#2c343f'; profileBorder = '#ff3e3e'}
+		   if (mazeComp > 49 && credits > 499 && btime < 30.1) {rank = 'Apprentice'; profileBg = '#2c343f'; profileBorder = '#ff3e3e'}
+		   if (mazeComp > 99 && credits > 999 && btime < 15.1) {rank = 'Expert';}
+		   if (mazeComp > 199 && credits > 2499 && btime < 8.1) {rank = 'Master';}
 	   }
+	   document.getElementById('profileColorS').style.display = rank != 'Beginner' ? 'flex' : 'none';
+	document.getElementById('profileBgS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'flex' : 'none';
+	document.getElementById('profileBorderS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'flex' : 'none';
 	   cont = document.getElementById('rankContainer');
 	   cont.innerHTML = '';
 	   ranks.forEach(a => {
-		   cont.innerHTML += `<div class="shop-item" style="border-color:${rank == a.name ? '#00ced1' : '#444'}"><h4 style='color:#00ced1;'>${a.name}</h4><p>${a.desc}</p><p>Requirements: ${a.requirement}</p></div>`
+		   cont.innerHTML += `<div class="shop-item" style="border-color:${rank == a.name ? '#007bff' : '#444'}"><h4 style='color:#007bff;'>${a.name}</h4><p>${a.desc}</p><p>Requirements: ${a.requirement}</p></div>`
 	   })
 	   save()
    }
@@ -988,7 +1092,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 	 profile_pronouns: profilePronouns,
 	 profile_color: profileColor,
 	 profile_background: profileBg,
-	 profile_border: profileBorder
+	 profile_border: profileBorder,
+	 rank: rank
    })
  });
 
@@ -1161,6 +1266,21 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
        if(activeSkin === 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
        else if(activeSkin === 'Diamond') { ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); }
        else if(activeSkin === 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
+	   else if(activeSkin === 'Triangle'){ ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); 
+										 const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
+
+// 2. Set the desired background fill color
+ctx.fillStyle = '#ff5733'; 
+
+// 3. Draw the path for the triangle
+ctx.beginPath();       // Starts a new path profile
+ctx.moveTo(x, y + 2);   // Move pen to Vertex 1 (Top Point: x=100, y=50)
+ctx.lineTo(x - 2, y - 2);  // Draw line to Vertex 2 (Bottom Right: x=150, y=150)
+ctx.lineTo(x + 2, y - 2);   // Draw line to Vertex 3 (Bottom Left: x=50, y=150)
+
+// 4. Fill the area bounded by your path
+ctx.fill();  }
        else { ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); }
    }
 
