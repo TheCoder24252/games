@@ -1162,7 +1162,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
        document.getElementById('titletext').innerHTML = '2 Player Race';
      }
 
-
+	p1 = { pos: 0, steps: 0, name: "P1", dir: 'u'}; 
+	p2 = { pos: 0, steps: 0, name: "P2", dir: 'u'};
      p1History = [];
      p2History = [];
      const w = parseInt(document.getElementById('width').value);
@@ -1270,23 +1271,28 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
     }
     else if(activeSkin === 'Triangle') {
         ctx.beginPath(); 
-		if (dir == 'u') {
-        ctx.moveTo(x + pw/2, y + 2);      // Top vertex (centered)
-        ctx.lineTo(x + pw - 2, y + pw - 2); // Bottom right vertex
-        ctx.lineTo(x + 2, y + pw - 2);}      // Bottom left vertex
-		if (dir == 'd') {
-        ctx.moveTo(x + 2, y + 2);           // Top left vertex
-ctx.lineTo(x + pw - 2, y + 2);      // Top right vertex
-ctx.lineTo(x + pw / 2, y + pw - 2);}
-		if (dir == 'r') {
-        ctx.moveTo(x + 2, y + 2);           // Top left vertex
-ctx.lineTo(x + pw - 2, y + pw / 2); // Right vertex (tip pointing right)
-ctx.lineTo(x + 2, y + pw - 2);}
-		if (dir == 'l') {
-        ctx.moveTo(x + 2, y + 2);           // Top left vertex
-ctx.lineTo(x + pw - 2, y + 2);      // Top right vertex
-ctx.lineTo(x + pw / 2, y + pw - 2);}
-        ctx.fill(); 
+if (dir === 'u') {
+    ctx.moveTo(x + pw / 2, y + 2);        // Top vertex (centered)
+    ctx.lineTo(x + pw - 2, y + pw - 2);   // Bottom right vertex
+    ctx.lineTo(x + 2, y + pw - 2);        // Bottom left vertex
+} 
+else if (dir === 'd') {
+    ctx.moveTo(x + 2, y + 2);             // Top left vertex
+    ctx.lineTo(x + pw - 2, y + 2);        // Top right vertex
+    ctx.lineTo(x + pw / 2, y + pw - 2);   // Bottom vertex (tip pointing down)
+} 
+else if (dir === 'r') {
+    ctx.moveTo(x + 2, y + 2);             // Top left vertex
+    ctx.lineTo(x + pw - 2, y + pw / 2);   // Right vertex (tip pointing right)
+    ctx.lineTo(x + 2, y + pw - 2);        // Bottom left vertex
+} 
+else if (dir === 'l') {
+    ctx.moveTo(x + 2, y + pw / 2);        // Left vertex (tip pointing left)
+    ctx.lineTo(x + pw - 2, y + 2);        // Top right vertex
+    ctx.lineTo(x + pw - 2, y + pw - 2);   // Bottom right vertex
+}
+ctx.fill();
+ 
     }
     else if(activeSkin === 'Custom' && customImgData) { 
         ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); 
