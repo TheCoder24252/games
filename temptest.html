@@ -996,7 +996,7 @@ link.click();
            container.innerHTML += `<div class="shop-item" style="border-color:${active ? '#007bff' : '#444'}"><h4 style='color:#007bff;'>${t.name}</h4><p>${t.desc}</p>${unlocked ? `<button class="btn btn-sec" onclick="setTrail('${t.name}')" ${active ? 'disabled' : ''}>${active ? 'EQUIPPED' : 'EQUIP'}</button>` : `<button class="btn btn-shop" onclick="buyTrail('${t.name}', ${t.price})">BUY: ${t.price}</button>`}</div>`;
        });
 	   let achtext; let achdesc; let achearn; let achrew; const achup = () => {ach.push({name: achtext, desc: achdesc}); credits += achearn} 
-	   const skineg = ["Square","Circle","Diamond","Custom"];
+	   const skineg = ["Square","Circle","Diamond","Custom","Triangle"];
    const sk1 = [...unlockedSkins].sort((a, b) => a.localeCompare(b));
    const sk2 = [...skineg].sort((a, b) => a.localeCompare(b));
    
@@ -1258,7 +1258,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 }
 
 
-   function drawPlayer(pos, color) {
+   function drawPlayer(pos, color, dir) {
     if(!currentLayout) return;
     const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
     const x = (pos % currentLayout.w) * (pw + ww) + pw, y = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
@@ -1272,7 +1272,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
     }
     else if(activeSkin === 'Triangle') {
         ctx.beginPath(); 
-		if (dir == 'u') {
+		if (p.dir == 'u') {
         ctx.moveTo(x + pw/2, y + 2);      // Top vertex (centered)
         ctx.lineTo(x + pw - 2, y + pw - 2); // Bottom right vertex
         ctx.lineTo(x + 2, y + pw - 2);}      // Bottom left vertex
@@ -1352,8 +1352,8 @@ ctx.lineTo(x + pw / 2, y + pw - 2);}
      ctx.fillStyle = "#ff0000";
      ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);
     
-     drawPlayer(p1.pos, document.getElementById('playerColor').value);
-     if (isRaceMode) drawPlayer(p2.pos, document.getElementById('player2Color').value);
+     drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);
+     if (isRaceMode) drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir);
      if (limitSteps == true) {
        if (step1Limit != false && step2Limit != false) {
          if (p1.steps < step1Limit) {
