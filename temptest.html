@@ -1411,10 +1411,10 @@ return;
                p2History.push(p.pos);
                if(p2History.length > 10) p2History.shift();
              }
-			 if (t - p.pos === w) {p.dir == 'd'}
-			 if (p.pos - t === w) {p.dir == 'u'}
-			 if (t - p.pos === 1) {p.dir == 'r'}
-			 if (p.pos - t === 1) {p.dir == 'l'}
+			 if (t - p.pos === w) {p.dir = 'd'}
+			 if (p.pos - t === w) {p.dir = 'u'}
+			 if (t - p.pos === 1) {p.dir = 'r'}
+			 if (p.pos - t === 1) {p.dir = 'l'}
              p.pos = t;
              p.steps++;
              draw();
