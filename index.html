@@ -941,10 +941,12 @@ function fetchData(leader = false, by, id) {
        link.href = canvas.toDataURL("image/png");
        link.click();
    }
-   function downloadApp() {
-	   
+   function downloadApp(appType) {
+	   let appDownload;
+	   if (appType == 'macapp') {appDownload = 'https://github.com/TheCoder24252/games/releases/download/Maze_Game_App_Zip/Maze.Game.zip'}
+	   else if (appType == 'macdmg') {appDownload = 'https://github.com/TheCoder24252/games/releases/download/Maze_Game_App/Maze.Game-1.0.0-arm64.dmg'}
        const link = document.createElement('a');
-link.href = 'https://thecoder24252.github.io/games'; // Relative path to your DMG file
+link.href = appDownload; // Relative path to your DMG file
 link.target = '_blank';                    // Opens in a new tab to prevent disrupting the current page
 link.click();
 
