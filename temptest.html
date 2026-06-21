@@ -1266,14 +1266,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
        if(activeSkin === 'Circle') { ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); }
        else if(activeSkin === 'Diamond') { ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); }
        else if(activeSkin === 'Custom' && customImgData) { ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); }
-	   else if(activeSkin === 'Triangle'){ ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); 
-										 const canvas = document.getElementById('myCanvas');
-const ctx = canvas.getContext('2d');
+	   else if(activeSkin === 'Triangle'){ 
 
-// 2. Set the desired background fill color
-ctx.fillStyle = '#ff5733'; 
-
-// 3. Draw the path for the triangle
 ctx.beginPath();       // Starts a new path profile
 ctx.moveTo(x, y + 2);   // Move pen to Vertex 1 (Top Point: x=100, y=50)
 ctx.lineTo(x - 2, y - 2);  // Draw line to Vertex 2 (Bottom Right: x=150, y=150)
