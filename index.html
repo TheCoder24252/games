@@ -20,7 +20,7 @@
 	-->
 <head>
  <meta name="google-site-verification" content="i8Do3et83PUuGYTzkZ40zRfqiyXmnKyFTZbORas8oiU" />
-<meta name="description" content="TheCoder24252's maze game. Welcome to Maze Game this game includes lots of features such as leaderboards, shops, achievements, daily challenges and even accounts. Go to https://thecoder24252.github.io/games/ to play maze game and for more info about the game go to https://thecodergames.gitbook.io/maze-game-wiki for the maze game wiki page.">
+ <meta name="description" content="Play the ultimate maze game by TheCoder24252! Unlock ranks, earn achievements, and climb the leaderboards.">
  <link rel="icon" type="image/x-icon" href="./Maze-Logo.png">
  <title>Maze Game</title>
  <style>
@@ -242,6 +242,16 @@
      <button class="btn btn-sec" onclick="document.getElementById('appModal').style.display='none'">EXIT</button>
    </div>
  </div>
+<div id="adminModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Admin Rank Application</h2>
+	 <li><label>Why do you want admin rank?</label><input id='apdWhy'></li>
+	 <li><label>How will you help Maze Game grow with admin priviledges?</label><input id='apdHow'></li>
+	 <li><label>What is your favorite feature in the game, and what is one thing you think we should improve?</label><input id='apdFav'></li>
+	 <li><label>A player claims they found a glitch that lets them duplicate items/ranks, but they refuse to tell you how they did it unless you give them a reward. How do you handle this?</label><input id='apdSen'></li>
+	<button class='btn btn-gen' onclick='document.getElementById("adminModal").style.display = "none"; submitApd()'>SUBMIT APPLICATION</button>
+   </div>
+ </div>
 <div id="prsModal" class="modal-overlay">
    <div class="modal-content-a">
      <h2 id='profileId'>Profile Viewer</h2>
@@ -370,6 +380,7 @@
 
 
  <script>
+   let application;
    let wins;
    let attUsername;
    let Username;
@@ -419,6 +430,7 @@
 	lastBonus = gameData.last_bonus;
 	btime = gameData.Time;
 	rank = gameData.rank;
+	application = gameData.apd;
 	profile = {pronouns: gameData.profile_pronouns, bio: gameData.profile_bio, bg: gameData.profile_background, border: gameData.profile_border, color: gameData.profile_color};
     document.getElementById('profileBio').value = profile.bio;
 	document.getElementById('profilePronouns').value = profile.pronouns;
@@ -665,6 +677,10 @@ function darkenHexColor(hex, percent) {
   const bHex = b.toString(16).padStart(2, '0');
 
   return `#${rHex}${gHex}${bHex}`;
+}
+function submitApd() {
+	application = [['Why do you want admin rank?', document.getElementById('apdWhy').value], ['How will you help Maze Game grow with admin priviledges?', document.getElementById('apdHow').value], ['What is your favorite feature in the game, and what is one thing you think we should improve?', document.getElementById('apdFav').value], ['A player claims they found a glitch that lets them duplicate items/ranks, but they refuse to tell you how they did it unless you give them a reward. How do you handle this?', document.getElementById('apdSen').value]]
+	save(true);
 }
 function openProfile(id) {
 	fetchData(false, false, id).then(res => {
@@ -1061,7 +1077,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
    function buyTrail(n, p) { if(credits >= p) { credits -= p; unlockedTrails.push(n); save(); updateCredits();}  else {document.getElementById('amountText').innerHTML=`You need ${p - credits} more credits to buy the ${n} trail`;document.getElementById('creditModal').style.display = 'flex';} }
    function setTrail(n) { activeTrail = n; save(); updateCredits(); draw(); }
 
-   async function save() {
+   async function save(admapp) {
        localStorage.setItem('mazeCredits', credits);
        localStorage.setItem('unlockedSkins', JSON.stringify(unlockedSkins));
        localStorage.setItem('activeSkin', activeSkin);
@@ -1103,7 +1119,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 	 profile_color: profileColor,
 	 profile_background: profileBg,
 	 profile_border: profileBorder,
-	 rank: rank
+	 rank: rank,
+	 apd: application
    })
  });
 
@@ -1111,6 +1128,9 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
  if (response.ok) {
    const updatedRow = await response.json();
    console.log('Game data successfully saved:', updatedRow);
+   if (admapp === true) {
+	   window.location.href = 'https://thecoder24252.github.io/games/'
+   }
  } else {
    const errorData = await response.json();
    console.error('The Game did not get saved:', errorData);
@@ -1598,7 +1618,26 @@ return;
    document.getElementById('generate').onclick = () => { isRaceMode = false; document.getElementById('p2Stats').style.display = 'none'; generate(false); };
    document.getElementById('raceBtn').onclick = () => { isRaceMode = true; document.getElementById('p2Stats').style.display = 'block'; generate(false); };
    updateDailyStatus();
-   window.onload = () => generate();
+   window.onload = () => {
+	   // 1. Get the query string from the current browser URL (?product=shirt&color=blue)
+const queryString = window.location.search;
+
+// 2. Pass the string into the URLSearchParams object
+const urlParams = new URLSearchParams(queryString);
+
+// 3. Extract specific parameters by their key names
+if (urlParams.get('adminapplication') === 'true') {
+	if (localStorage.Username != null && localStorage.Username != undefined) {
+		document.getElementById('howModal').style.display = 'none';
+		document.getElementById('dailyModal').style.display = 'none';
+		document.getElementById('adminModal').style.display = 'flex';
+	} else {
+		window.alert('You need to log in to create an admin application');
+		window.location.href = 'https://thecoder24252.github.io/games/'
+	}
+}
+
+	   generate();}
  </script>
 </body>
 </html>
