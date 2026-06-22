@@ -679,7 +679,7 @@ function darkenHexColor(hex, percent) {
   return `#${rHex}${gHex}${bHex}`;
 }
 function submitApd() {
-	application = [['Why do you want admin rank?', document.getElementById('apdWhy').innerHTML], ['How will you help Maze Game grow with admin priviledges?', document.getElementById('apdHow').innerHTML], ['What is your favorite feature in the game, and what is one thing you think we should improve?', document.getElementById('apdFav').innerHTML], ['A player claims they found a glitch that lets them duplicate items/ranks, but they refuse to tell you how they did it unless you give them a reward. How do you handle this?', document.getElementById('apdSen').innerHTML]]
+	application = [['Why do you want admin rank?', document.getElementById('apdWhy').value], ['How will you help Maze Game grow with admin priviledges?', document.getElementById('apdHow').value], ['What is your favorite feature in the game, and what is one thing you think we should improve?', document.getElementById('apdFav').value], ['A player claims they found a glitch that lets them duplicate items/ranks, but they refuse to tell you how they did it unless you give them a reward. How do you handle this?', document.getElementById('apdSen').value]]
 	save(true);
 }
 function openProfile(id) {
