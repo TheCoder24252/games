@@ -79,7 +79,7 @@
   z-index: 9999;         /* Places it safely on top of all game graphics */
   
   /* Panel Sizing */
-  width: 160px;
+  width: 228px;
   
   /* Internal button layout alignment */
   display: flex;
@@ -262,14 +262,14 @@
     <path d="M15.54 8.46a5 5 0 0 1 .46 5.54M19.07 4.93a10 10 0 0 1 1 10.14"/>
     <line x1="23" y1="1" x2="1" y2="23"/>
   </svg></button>
-	<button class='mbtn btn-gen' onclick='window.location.href="https://thecodergames.gitbook.io/maze-game-wiki"'>
+		<button class='mbtn btn-gen' onclick='document.getElementById("prsModal").style.display="flex"'>
 		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
-    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-    <path d="M6 8h2M7 7v2"/>
-    <circle cx="16" cy="8" r="0.5" fill="currentColor"/>
-    <circle cx="18" cy="10" r="0.5" fill="currentColor"/>
+    <circle cx="10" cy="7" r="4"/>
+    <path d="M3 20a7 7 0 0 1 11.23-5.61"/>
+    <circle cx="18" cy="16" r="3"/>
+    <line x1="22" y1="20" x2="20.1" y2="18.2"/>
   </svg>
+	</button>
 	</button>
 	<button class='mbtn btn-gen' onclick='let isRunningInApp = window.process && window.process.type === "renderer"; if (isRunningInApp) {downloadMaze()} else {document.getElementById("downModal").style.display="flex"}'>
 		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
@@ -278,14 +278,14 @@
     <path d="M19 21H5"/>
   </svg>
 	</button>
-	<button class='mbtn btn-gen' onclick='document.getElementById("prsModal").style.display="flex"'>
+	<button class='mbtn btn-gen' onclick='window.location.href="https://thecodergames.gitbook.io/maze-game-wiki"'>
 		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
-    <circle cx="10" cy="7" r="4"/>
-    <path d="M3 20a7 7 0 0 1 11.23-5.61"/>
-    <circle cx="18" cy="16" r="3"/>
-    <line x1="22" y1="20" x2="20.1" y2="18.2"/>
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+    <path d="M6 8h2M7 7v2"/>
+    <circle cx="16" cy="8" r="0.5" fill="currentColor"/>
+    <circle cx="18" cy="10" r="0.5" fill="currentColor"/>
   </svg>
-	</button>
 </div>
  <div class="viewport">
    <div id="dashPanel" class="dashboard">
