@@ -20,6 +20,7 @@
 	-->
 <head>
  <meta name="google-site-verification" content="i8Do3et83PUuGYTzkZ40zRfqiyXmnKyFTZbORas8oiU" />
+<meta name="description" content="TheCoder24252's maze game. Welcome to Maze Game this game includes lots of features such as leaderboards, shops, achievements, daily challenges and even accounts. Go to https://thecoder24252.github.io/games/ to play maze game and for more info about the game go to https://thecodergames.gitbook.io/maze-game-wiki for the maze game wiki page.">
  <link rel="icon" type="image/x-icon" href="./Maze-Logo.png">
  <title>Maze Game</title>
  <style>
@@ -78,7 +79,7 @@
   z-index: 9999;         /* Places it safely on top of all game graphics */
   
   /* Panel Sizing */
-  width: 160px;
+  width: 228px;
   
   /* Internal button layout alignment */
   display: flex;
@@ -241,6 +242,16 @@
      <button class="btn btn-sec" onclick="document.getElementById('appModal').style.display='none'">EXIT</button>
    </div>
  </div>
+<div id="adminModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Admin Rank Application</h2>
+	 <li><label>Why do you want admin rank?</label><input id='adpWhy'></li>
+	 <li><label>How will you help Maze Game grow with admin priviledges?</label><input id='adpHow'></li>
+	 <li><label>What is your favorite feature in the game, and what is one thing you think we should improve?</label><input id='adpFav'></li>
+	 <li><label>A player claims they found a glitch that lets them duplicate items/ranks, but they refuse to tell you how they did it unless you give them a reward. How do you handle this?</label><input id='adpSen'></li>
+	<button class='btn btn-gen' onclick='document.getElementById("adminModal").style.display = "none"; submitApd()'>SUBMIT APPLICATION</button>
+   </div>
+ </div>
 <div id="prsModal" class="modal-overlay">
    <div class="modal-content-a">
      <h2 id='profileId'>Profile Viewer</h2>
@@ -250,10 +261,10 @@
    </div>
  </div>
 <div class="game-panel">
-    <button class='mbtn btn-gen' onclick='toggleFullscreen()'><svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <button title='Fullscreen' class='mbtn btn-gen' onclick='toggleFullscreen()'><svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
     <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
   </svg> </button>
-	<button class='mbtn btn-gen' onclick='toggleAudio()'><svg xmlns="http://w3.org" id="audioOn" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+	<button tittle='Mute/Unmute Audio' class='mbtn btn-gen' onclick='toggleAudio()'><svg xmlns="http://w3.org" id="audioOn" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
     <path d="M11 5L6 9H2v6h4l5 4V5z"/>
     <path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/>
   </svg><svg id='audioOff' style='display:none;' xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
@@ -261,21 +272,29 @@
     <path d="M15.54 8.46a5 5 0 0 1 .46 5.54M19.07 4.93a10 10 0 0 1 1 10.14"/>
     <line x1="23" y1="1" x2="1" y2="23"/>
   </svg></button>
-	<button class='mbtn btn-gen' onclick='let isRunningInApp = window.process && window.process.type === "renderer"; if (isRunningInApp) {downloadMaze()} else {document.getElementById("downModal").style.display="flex"}'>
-		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
-    <line x1="12" y1="3" x2="12" y2="15"/>
-    <polyline points="5 10 12 17 19 10"/>
-    <path d="M19 21H5"/>
-  </svg>
-	</button>
-	<button class='mbtn btn-gen' onclick='document.getElementById("prsModal").style.display="flex"'>
+		<button title='View Profile' class='mbtn btn-gen' onclick='document.getElementById("prsModal").style.display="flex"'>
 		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
     <circle cx="10" cy="7" r="4"/>
     <path d="M3 20a7 7 0 0 1 11.23-5.61"/>
     <circle cx="18" cy="16" r="3"/>
     <line x1="22" y1="20" x2="20.1" y2="18.2"/>
   </svg>
+		</button>
+	<button title='Download' class='mbtn btn-gen' onclick='let isRunningInApp = window.process && window.process.type === "renderer"; if (isRunningInApp) {downloadMaze()} else {document.getElementById("downModal").style.display="flex"}'>
+		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <line x1="12" y1="3" x2="12" y2="15"/>
+    <polyline points="5 10 12 17 19 10"/>
+    <path d="M19 21H5"/>
+  </svg>
 	</button>
+	<button title='View Maze Game Wiki' class='mbtn btn-gen' onclick='window.location.href="https://thecodergames.gitbook.io/maze-game-wiki"'>
+		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+    <path d="M6 8h2M7 7v2"/>
+    <circle cx="16" cy="8" r="0.5" fill="currentColor"/>
+    <circle cx="18" cy="10" r="0.5" fill="currentColor"/>
+  </svg>
 </div>
  <div class="viewport">
    <div id="dashPanel" class="dashboard">
@@ -361,6 +380,7 @@
 
 
  <script>
+   let application;
    let wins;
    let attUsername;
    let Username;
@@ -410,6 +430,7 @@
 	lastBonus = gameData.last_bonus;
 	btime = gameData.Time;
 	rank = gameData.rank;
+	application = gameData.apd;
 	profile = {pronouns: gameData.profile_pronouns, bio: gameData.profile_bio, bg: gameData.profile_background, border: gameData.profile_border, color: gameData.profile_color};
     document.getElementById('profileBio').value = profile.bio;
 	document.getElementById('profilePronouns').value = profile.pronouns;
@@ -459,6 +480,7 @@ console.log(yesterday.toDateString());
    const trails = [
      { name: 'None', price: 0, desc: 'No trail.' },
      { name: 'Neon Blue', color: '#00f2ff', price: 500, desc: 'A glowing blue path.' },
+	 { name: 'Grass', color: '#28a745', price: 750, desc: 'A a grassy green trail.' },
      { name: 'Lava', color: '#ff4500', price: 1000, desc: 'Hot molten trail.' },
      { name: 'Rainbow', color: 'rainbow', price: 2000, desc: 'Cycles through colors.' }
    ];
@@ -655,6 +677,10 @@ function darkenHexColor(hex, percent) {
   const bHex = b.toString(16).padStart(2, '0');
 
   return `#${rHex}${gHex}${bHex}`;
+}
+function submitApd() {
+	application = [['Why do you want admin rank?', document.getElementById('apdWhy').innerHTML], ['How will you help Maze Game grow with admin priviledges?', document.getElementById('apdHow').innerHTML], ['What is your favorite feature in the game, and what is one thing you think we should improve?', document.getElementById('apdFav').innerHTML], ['A player claims they found a glitch that lets them duplicate items/ranks, but they refuse to tell you how they did it unless you give them a reward. How do you handle this?', document.getElementById('apdSen').innerHTML]]
+	save(true);
 }
 function openProfile(id) {
 	fetchData(false, false, id).then(res => {
@@ -1051,7 +1077,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
    function buyTrail(n, p) { if(credits >= p) { credits -= p; unlockedTrails.push(n); save(); updateCredits();}  else {document.getElementById('amountText').innerHTML=`You need ${p - credits} more credits to buy the ${n} trail`;document.getElementById('creditModal').style.display = 'flex';} }
    function setTrail(n) { activeTrail = n; save(); updateCredits(); draw(); }
 
-   async function save() {
+   async function save(admapp) {
        localStorage.setItem('mazeCredits', credits);
        localStorage.setItem('unlockedSkins', JSON.stringify(unlockedSkins));
        localStorage.setItem('activeSkin', activeSkin);
@@ -1093,7 +1119,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 	 profile_color: profileColor,
 	 profile_background: profileBg,
 	 profile_border: profileBorder,
-	 rank: rank
+	 rank: rank,
+	 apd: application
    })
  });
 
@@ -1101,6 +1128,9 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
  if (response.ok) {
    const updatedRow = await response.json();
    console.log('Game data successfully saved:', updatedRow);
+   if (admapp === true) {
+	   window.location.href = 'https://thecoder24252.github.io/games/'
+   }
  } else {
    const errorData = await response.json();
    console.error('The Game did not get saved:', errorData);
@@ -1344,6 +1374,14 @@ ctx.fill();
 				   else if (randdom == 4) {ctx.fillStyle = '#00ffff'}
 				   else if (randdom == 5) {ctx.fillStyle = '#33cccc'}
 			   }
+			   if (trailData.color === '#28a745') {
+				   const randdom = Math.floor(Math.random() * 5) + 1;
+				   if (randdom == 1) {ctx.fillStyle = '#28a745'}
+				   else if (randdom == 2) {ctx.fillStyle = '#4DA409'}
+				   else if (randdom == 3) {ctx.fillStyle = '#3F9B0B'}
+				   else if (randdom == 4) {ctx.fillStyle = '#7CFC00'}
+				   else if (randdom == 5) {ctx.fillStyle = '#436F21'}
+			   }
                ctx.globalAlpha = 0.5;
                ctx.fillRect(tx + 4, ty + 4, pw - 8, pw - 8);
            });
@@ -1580,7 +1618,28 @@ return;
    document.getElementById('generate').onclick = () => { isRaceMode = false; document.getElementById('p2Stats').style.display = 'none'; generate(false); };
    document.getElementById('raceBtn').onclick = () => { isRaceMode = true; document.getElementById('p2Stats').style.display = 'block'; generate(false); };
    updateDailyStatus();
-   window.onload = () => generate();
+   window.onload = () => {
+	   // 1. Get the query string from the current browser URL (?product=shirt&color=blue)
+const queryString = window.location.search;
+
+// 2. Pass the string into the URLSearchParams object
+const urlParams = new URLSearchParams(queryString);
+
+// 3. Extract specific parameters by their key names
+if (urlParams.get('adminapplication') === true) {
+	if (localstorage.Username != null && localstorage.Username != undefined) {
+		document.getElementById('howModal').style.display = 'none';
+		document.getElementById('dailyModal').style.display = 'none';
+		document.getElementById('adminModal').style.display = 'flex';
+	} else {
+		window.alert('You need to log in to create an admin application');
+		window.location.href = 'https://thecoder24252.github.io/games/'
+	}
+}
+
+console.log(product, color);
+
+	   generate();}
  </script>
 </body>
 </html>
