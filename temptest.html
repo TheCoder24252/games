@@ -1627,7 +1627,7 @@ const urlParams = new URLSearchParams(queryString);
 
 // 3. Extract specific parameters by their key names
 if (urlParams.get('adminapplication') === 'true') {
-	if (localstorage.Username != null && localstorage.Username != undefined) {
+	if (localStorage.Username != null && localStorage.Username != undefined) {
 		document.getElementById('howModal').style.display = 'none';
 		document.getElementById('dailyModal').style.display = 'none';
 		document.getElementById('adminModal').style.display = 'flex';
