@@ -251,10 +251,10 @@
    </div>
  </div>
 <div class="game-panel">
-    <button class='mbtn btn-gen' onclick='toggleFullscreen()'><svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <button title='Fullscreen' class='mbtn btn-gen' onclick='toggleFullscreen()'><svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
     <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
   </svg> </button>
-	<button class='mbtn btn-gen' onclick='toggleAudio()'><svg xmlns="http://w3.org" id="audioOn" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+	<button tittle='Mute/Unmute Audio' class='mbtn btn-gen' onclick='toggleAudio()'><svg xmlns="http://w3.org" id="audioOn" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
     <path d="M11 5L6 9H2v6h4l5 4V5z"/>
     <path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/>
   </svg><svg id='audioOff' style='display:none;' xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
@@ -262,23 +262,22 @@
     <path d="M15.54 8.46a5 5 0 0 1 .46 5.54M19.07 4.93a10 10 0 0 1 1 10.14"/>
     <line x1="23" y1="1" x2="1" y2="23"/>
   </svg></button>
-		<button class='mbtn btn-gen' onclick='document.getElementById("prsModal").style.display="flex"'>
+		<button title='View Profile' class='mbtn btn-gen' onclick='document.getElementById("prsModal").style.display="flex"'>
 		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
     <circle cx="10" cy="7" r="4"/>
     <path d="M3 20a7 7 0 0 1 11.23-5.61"/>
     <circle cx="18" cy="16" r="3"/>
     <line x1="22" y1="20" x2="20.1" y2="18.2"/>
   </svg>
-	</button>
-	</button>
-	<button class='mbtn btn-gen' onclick='let isRunningInApp = window.process && window.process.type === "renderer"; if (isRunningInApp) {downloadMaze()} else {document.getElementById("downModal").style.display="flex"}'>
+		</button>
+	<button title='Download' class='mbtn btn-gen' onclick='let isRunningInApp = window.process && window.process.type === "renderer"; if (isRunningInApp) {downloadMaze()} else {document.getElementById("downModal").style.display="flex"}'>
 		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
     <line x1="12" y1="3" x2="12" y2="15"/>
     <polyline points="5 10 12 17 19 10"/>
     <path d="M19 21H5"/>
   </svg>
 	</button>
-	<button class='mbtn btn-gen' onclick='window.location.href="https://thecodergames.gitbook.io/maze-game-wiki"'>
+	<button title='View Maze Game Wiki' class='mbtn btn-gen' onclick='window.location.href="https://thecodergames.gitbook.io/maze-game-wiki"'>
 		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
