@@ -527,7 +527,11 @@ const playAudioOnActivity = () => {
         })
         .catch(err => console.log("Waiting for a stronger user gesture..."));
 };
-
+window.addEventListener('offline', () => {
+  alert('You need to be connected to the internet to play maze game');
+  window.open('', '_self', '');
+  window.close();
+});
 // Listen for absolute any common user movement or action
 const interactions = ['click', 'mousedown', 'keydown', 'touchstart', 'scroll'];
 interactions.forEach(event => window.addEventListener(event, playAudioOnActivity, { passive: true }));
