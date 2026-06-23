@@ -1072,7 +1072,7 @@ link.click();
 	   cont = document.getElementById('rankContainer');
 	   cont.innerHTML = '';
 	   ranks.forEach(a => {
-		   cont.innerHTML += `<div class="shop-item" style="border-color:${rank == a.name ? '#007bff' : '#444'}"><h4 style='color:#007bff;'>${a.name}</h4><p>${a.desc}</p><p>Requirements: ${a.requirement}</p>${ a.name == 'Admin' ? `<button class='btn btn-download' onclick='window.location.href="https://thecoder24252.github.io/games?adminapplication=true"'>APPLY FOR ADMIN RANK</button>` : ``}</div>`
+		   cont.innerHTML += `<div class="shop-item" style="border-color:${rank == a.name ? '#007bff' : '#444'}"><h4 style='color:#007bff;'>${a.name}</h4><p>${a.desc}</p><p>Requirements: ${a.requirement}</p>${ a.name == 'Admin' && rank != 'Admin' && rank != 'Owner' ? `<button class='btn btn-download' onclick='window.location.href="https://thecoder24252.github.io/games?adminapplication=true"'>APPLY FOR ADMIN RANK</button>` : ``}</div>`
 	   })
 	   save()
    }
