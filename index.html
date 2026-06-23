@@ -1363,7 +1363,6 @@ ctx.fill();
  * @param {boolean} pointyTopped - True for pointy-topped, false for flat-topped.
  */
 function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
-  // Map standard bounding box boundaries
   const left = blX;
   const right = trX;
   const top = trY;
@@ -1372,33 +1371,36 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
   ctx.beginPath();
 
   if (pointyTopped) {
-    // Pointy-topped hexagon touches top/bottom centers, and has split side vertices
     const midX = (left + right) / 2;
-    const quarterHeight = (bottom - top) / 4;
+    const height = bottom - top;
+    // Mathematically perfect vertex height displacement for a regular hexagon
+    const hOffset = height / 4; 
     
-    ctx.moveTo(midX, top);                         // Top center vertex
-    ctx.lineTo(right, top + quarterHeight);        // Upper right vertex
-    ctx.lineTo(right, bottom - quarterHeight);     // Lower right vertex
-    ctx.lineTo(midX, bottom);                      // Bottom center vertex
-    ctx.lineTo(left, bottom - quarterHeight);      // Lower left vertex
-    ctx.lineTo(left, top + quarterHeight);         // Upper left vertex
+    ctx.moveTo(midX, top);                         
+    ctx.lineTo(right, top + hOffset);        
+    ctx.lineTo(right, bottom - hOffset);     
+    ctx.lineTo(midX, bottom);                      
+    ctx.lineTo(left, bottom - hOffset);      
+    ctx.lineTo(left, top + hOffset);         
   } else {
-    // Flat-topped hexagon touches left/right centers, and has split top/bottom vertices
     const midY = (top + bottom) / 2;
-    const quarterWidth = (right - left) / 4;
+    const width = right - left;
+    // Mathematically perfect vertex width displacement for a regular hexagon
+    const wOffset = width / 4; 
     
-    ctx.moveTo(left + quarterWidth, top);          // Top left vertex
-    ctx.lineTo(right - quarterWidth, top);         // Top right vertex
-    ctx.lineTo(right, midY);                       // Right center vertex
-    ctx.lineTo(right - quarterWidth, bottom);      // Bottom right vertex
-    ctx.lineTo(left + quarterWidth, bottom);       // Bottom left vertex
-    ctx.lineTo(left, midY);                        // Left center vertex
+    ctx.moveTo(left + wOffset, top);          
+    ctx.lineTo(right - wOffset, top);         
+    ctx.lineTo(right, midY);                       
+    ctx.lineTo(right - wOffset, bottom);      
+    ctx.lineTo(left + wOffset, bottom);       
+    ctx.lineTo(left, midY);                        
   }
 
   ctx.closePath();
   ctx.fillStyle = color;
   ctx.fill();
 }
+
 
 
 
