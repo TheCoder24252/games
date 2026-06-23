@@ -482,7 +482,8 @@ console.log(yesterday.toDateString());
 	draw()});
 	const skins = [
      { name: 'Square', price: 0, desc: 'Classic block.' },
-	 { name: 'Triangle', price: 500, desc: 'Sharp corners.' },
+	 { name: 'Triangle', price: 250, desc: 'Sharp corners.' },
+	 { name: 'Hexagon', price: 500, desc: 'Lots of edges' },
      { name: 'Circle', price: 750, desc: 'Smooth sphere.' },
      { name: 'Diamond', price: 1000, desc: 'Sharp edges.' },
      { name: 'Custom', price: 2500, desc: 'Upload your own image!' }
@@ -1338,6 +1339,8 @@ else if (dir === 'l') {
     ctx.moveTo(x + 2, y + pw / 2);        // Left vertex (tip pointing left)
     ctx.lineTo(x + pw - 2, y + 2);        // Top right vertex
     ctx.lineTo(x + pw - 2, y + pw - 2);   // Bottom right vertex
+} else (activeSkin === 'Hexagon') {
+	drawBoxHexagon(color, x + pw - 2, y + 2, x + 2, y + pw - 2, true)
 }
 ctx.fill();
  
@@ -1348,6 +1351,54 @@ ctx.fill();
     else { 
         ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); 
     }
+}
+/**
+ * Draws a filled hexagon bounded exactly within a rectangular box.
+ * 
+ * @param {CanvasRenderingContext2D} ctx - The canvas context.
+ * @param {string} color - Fill color.
+ * @param {number} trY - Top-Right Y coordinate (Top boundary).
+ * @param {number} trX - Top-Right X coordinate (Right boundary).
+ * @param {number} blY - Bottom-Left Y coordinate (Bottom boundary).
+ * @param {number} blX - Bottom-Left X coordinate (Left boundary).
+ * @param {boolean} pointyTopped - True for pointy-topped, false for flat-topped.
+ */
+function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
+  // Map standard bounding box boundaries
+  const left = blX;
+  const right = trX;
+  const top = trY;
+  const bottom = blY;
+
+  ctx.beginPath();
+
+  if (pointyTopped) {
+    // Pointy-topped hexagon touches top/bottom centers, and has split side vertices
+    const midX = (left + right) / 2;
+    const quarterHeight = (bottom - top) / 4;
+    
+    ctx.moveTo(midX, top);                         // Top center vertex
+    ctx.lineTo(right, top + quarterHeight);        // Upper right vertex
+    ctx.lineTo(right, bottom - quarterHeight);     // Lower right vertex
+    ctx.lineTo(midX, bottom);                      // Bottom center vertex
+    ctx.lineTo(left, bottom - quarterHeight);      // Lower left vertex
+    ctx.lineTo(left, top + quarterHeight);         // Upper left vertex
+  } else {
+    // Flat-topped hexagon touches left/right centers, and has split top/bottom vertices
+    const midY = (top + bottom) / 2;
+    const quarterWidth = (right - left) / 4;
+    
+    ctx.moveTo(left + quarterWidth, top);          // Top left vertex
+    ctx.lineTo(right - quarterWidth, top);         // Top right vertex
+    ctx.lineTo(right, midY);                       // Right center vertex
+    ctx.lineTo(right - quarterWidth, bottom);      // Bottom right vertex
+    ctx.lineTo(left + quarterWidth, bottom);       // Bottom left vertex
+    ctx.lineTo(left, midY);                        // Left center vertex
+  }
+
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
 }
 
 
