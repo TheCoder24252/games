@@ -1339,7 +1339,7 @@ else if (dir === 'l') {
     ctx.moveTo(x + 2, y + pw / 2);        // Left vertex (tip pointing left)
     ctx.lineTo(x + pw - 2, y + 2);        // Top right vertex
     ctx.lineTo(x + pw - 2, y + pw - 2);   // Bottom right vertex
-} else (activeSkin === 'Hexagon') {
+} else if (activeSkin === 'Hexagon') {
 	drawBoxHexagon(color, x + pw - 2, y + 2, x + 2, y + pw - 2, true)
 }
 ctx.fill();
