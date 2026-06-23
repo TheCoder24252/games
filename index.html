@@ -535,6 +535,25 @@ window.addEventListener('offline', () => {
   window.open('', '_self', '');
   window.close();
 });
+document.addEventListener('keydown', function(event) {
+  // 1. Normalize the letter key check to handle both lowercase and uppercase 'A'
+  const isAKey = event.key === 'a' || event.key === 'A';
+
+  const checkrUsername = () = > {if (Username == 'TheCoder24252') {return true;} else {return false;}};
+  if (event.ctrlKey && event.shiftKey && isAKey) {
+    event.preventDefault(); // Prevents default browser shortcut conflicts
+    console.log('Control + Shift + A detected!');
+    if (checkrUsername()) {window.open('https://supabase.com/dashboard/project/oqapjpayxyrlwmatreep/editor/17571?schema=public&sort=Time%3Aasc&sort=Usernames%3Aasc')}
+  }
+
+  // 3. Check for: Command + Shift + A (Mac specific)
+  if (event.metaKey && event.shiftKey && isAKey) {
+    event.preventDefault(); // Prevents default browser shortcut conflicts
+    console.log('Command + Shift + A detected!');
+    if (checkrUsername()) {window.open('https://supabase.com/dashboard/project/oqapjpayxyrlwmatreep/editor/17571?schema=public&sort=Time%3Aasc&sort=Usernames%3Aasc')}
+  }
+});
+
 // Listen for absolute any common user movement or action
 const interactions = ['click', 'mousedown', 'keydown', 'touchstart', 'scroll'];
 interactions.forEach(event => window.addEventListener(event, playAudioOnActivity, { passive: true }));
