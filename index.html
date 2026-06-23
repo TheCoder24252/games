@@ -539,7 +539,7 @@ document.addEventListener('keydown', function(event) {
   // 1. Normalize the letter key check to handle both lowercase and uppercase 'A'
   const isAKey = event.key === 'a' || event.key === 'A';
 
-  const checkrUsername = () = > {if (Username == 'TheCoder24252') {return true;} else {return false;}};
+  const checkrUsername = () => {if (Username == 'TheCoder24252') {return true;} else {return false;}};
   if (event.ctrlKey && event.shiftKey && isAKey) {
     event.preventDefault(); // Prevents default browser shortcut conflicts
     console.log('Control + Shift + A detected!');
