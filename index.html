@@ -1723,23 +1723,25 @@ return;
 		updateCredits()
 		save()
    }
-      function animateCanvas() {
+      function animateCanvas(callback) {
     const canvasCont = document.getElementById('canvascont');
     if (!canvasCont) return;
 
-    // The keyframes tell it to start immediately at the top (-100vh) 
-    // and slide down to its normal position (0)
     const keyframes = [
-        { transform: 'translateY(-100vh)' }, // Starts instantly at the top
-        { transform: 'translateY(0)' }        // Slides down to the center
+        { transform: 'translateY(-100vh)' },
+        { transform: 'translateY(0)' }
     ];
 
     const options = {
-        duration: 800, // Time in milliseconds for it to slide down
-        easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)' // Gives it that smooth, bouncy landing
+        duration: 800,
+        easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
     };
 
-    canvasCont.animate(keyframes, options);
+    // Store the animation in a variable
+    const animation = canvasCont.animate(keyframes, options);
+
+    // Run your callback function as soon as the animation completes
+    animation.onfinish = function() {document.getElementById('mazeImg').style.display = 'none';};
 }
    function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); 
        document.getElementById('canvasImg').src = canvas.toDataURL("image/png");	
