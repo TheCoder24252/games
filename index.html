@@ -345,7 +345,7 @@
        </li>
        <li><label>Width:</label><input id="width" type="number" min="15" value="20"/></li>
        <li><label>Height:</label><input id="height" type="number" min="15" value="20"/></li>
-       <li><label>Cell Size:</label><input id="pathwidth" type="number" value="15"/></li>
+       <li><label>Path Size:</label><input id="pathwidth" type="number" value="15"/></li>
        <li><label>Wall Size:</label><input id="wallwidth" type="number" value="4"/></li>
        <li><label>Path Color:</label><input id="pathColor" type="color" value="#1a1e23"/></li>
        <li><label>Wall Color:</label><input id="wallColor" type="color" value="#ff3e3e"/></li>
@@ -480,6 +480,9 @@ console.log(yesterday.toDateString());
 		streak++;
 		credits+= bonus;
 	}
+	gameData.settings.forEach((a) => {
+		document.getElementById(a.id).value = a.value;
+	});
 	updateCredits();
 	save();
 	draw()});
@@ -553,7 +556,9 @@ document.addEventListener('keydown', function(event) {
     if (checkrUsername()) {window.open('https://supabase.com/dashboard/project/oqapjpayxyrlwmatreep/editor/17571?schema=public&sort=Time%3Aasc&sort=Usernames%3Aasc')}
   }
 });
-
+['algo', 'pathwidth', 'wallwidth', 'pathColor', 'wallColor', 'playerColor', 'player2Color'].forEach((currentValue, index) => {
+  document.getElementById(currentValue).addEventListener('change', (event) => {save();});
+});
 // Listen for absolute any common user movement or action
 const interactions = ['click', 'mousedown', 'keydown', 'touchstart', 'scroll'];
 interactions.forEach(event => window.addEventListener(event, playAudioOnActivity, { passive: true }));
@@ -1129,7 +1134,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
  const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
 
 
-
+ const settings = [{id: 'algo' value: document.getElementById('algo').value}, {id: 'pathwidth' value: document.getElementById('pathwidth').value}, {id: 'wallwidth' value: document.getElementById('wallwidth').value}, {id: 'pathColor' value: document.getElementById('pathColor').value}, {id: 'wallColor' value: document.getElementById('wallColor').value}, {id: 'playerColor' value: document.getElementById('playerColor').value}, {id: 'player2Color' value: document.getElementById('player2Color').value}]
 
  const urL = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username} `;
 
@@ -1162,7 +1167,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 	 profile_border: profileBorder,
 	 rank: rank,
 	 apd: application,
-	 ideas: ideas
+	 ideas: ideas,
+	 settings: settings
    })
  });
 
