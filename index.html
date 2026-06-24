@@ -485,7 +485,7 @@ console.log(yesterday.toDateString());
 	});
 	updateCredits();
 	save();
-	draw()});
+	generate()});
 	const skins = [
      { name: 'Square', price: 0, desc: 'Classic block.' },
 	 { name: 'Triangle', price: 250, desc: 'Sharp corners.' },
@@ -764,7 +764,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].profile_color, 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='credits'>${gameData[hi].maze_complete}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='credits'>${gameData[hi].maze_complete}</label></li>`;
 	}
 	}
 })
@@ -777,7 +777,7 @@ function showLeaderboard(by, force = false) {
  for (let hi = 0; hi < gameData.length; hi++) {
    if (gameData[hi].Time != 5000) {
 	   if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].profile_color, 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='credits'>${gameData[hi].Time}s</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='credits'>${gameData[hi].Time}s</label></li>`;
 	   }
 	   }
  }
@@ -790,7 +790,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	 if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].profile_color, 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='credits'>${gameData[hi].credits}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='credits'>${gameData[hi].credits}</label></li>`;
 	 }
 	 }
  })};
@@ -922,12 +922,12 @@ if (!localStorage.getItem('Tutorial') || localStorage.getItem('Tutorial') == "un
  }
 }
 function fetchData(leader = false, by, id) {
- let url = (leader) ? "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,credits,profile_color&order=credits.desc" : `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username}`;
+ let url = (leader) ? "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,credits,profile_color,rank&order=credits.desc" : `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username}`;
  if (by == 'maze') {
-   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,maze_complete,profile_color&order=maze_complete.desc";
+   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,maze_complete,profile_color,rank&order=maze_complete.desc";
  }
  if (by == 'time') {
-   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time,profile_color&order=Time.asc";
+   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time,profile_color,rank&order=Time.asc";
  }
  if (id) {
    url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak,rank,profile_picture,profile_bio,profile_pronouns,profile_color,profile_background,profile_border`
