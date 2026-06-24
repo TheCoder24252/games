@@ -392,6 +392,7 @@
 
 
  <script>
+   let fMaze = true;
    let application;
    let wins;
    let attUsername;
@@ -1215,7 +1216,13 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
        document.getElementById('wallwidth').value = 8;
        document.getElementById('titletext').innerHTML = "Tutorial Level";
        document.getElementById('dashPanel').style.display = "none";
-     }
+     } else {
+		 if (fMaze != true) {
+		 document.getElementById('canvasImg').src = canvas.toDataURL("image/png");	
+	   document.getElementById('mazeImg').style.display = 'block';
+		animateCanvas();
+		 } else {fMaze = true}
+	 }
      if(isDaily) {
 		Pmode = document.getElementById('algo').value;
          const today = new Date();
@@ -1744,9 +1751,6 @@ return;
     animation.onfinish = function() {document.getElementById('mazeImg').style.display = 'none';};
 }
    function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); 
-       document.getElementById('canvasImg').src = canvas.toDataURL("image/png");	
-	   document.getElementById('mazeImg').style.display = 'block';
-		animateCanvas();
    }
    document.getElementById('generate').onclick = () => { isRaceMode = false; document.getElementById('p2Stats').style.display = 'none'; generate(false); };
    document.getElementById('raceBtn').onclick = () => { isRaceMode = true; document.getElementById('p2Stats').style.display = 'block'; generate(false); };
