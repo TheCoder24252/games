@@ -38,7 +38,7 @@
    .side-panel.open { right: 20px; }
    .prD-container {display: flex;gap: 15px;}
    .prB {flex: 1;padding: 20px;}
-   canvas { background: #000; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 4px; image-rendering: pixelated; max-height: 75vh; max-width: 50vw; }
+   canvas { background: #000; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 4px; max-height: 75vh; max-width: 50vw; image-rendering: pixelated; }
    .stat-box { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #007bff; }
    .stat-box2 { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #007bff; }
    .stat-label { font-size: 9px; color: #888; text-transform: uppercase; }
@@ -73,6 +73,7 @@
    .modal-contentt {pointer-events: auto; height: 20%;background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 450px; }
 #shopContainer::-webkit-scrollbar {display: none;}
 #shopContainer{-ms-overflow-style: none;scrollbar-width: none;}
+# canvasImg {box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 4px; max-height: 75vh; max-width: 50vw;}
 	 .game-panel {
   position: fixed;       /* Locks the panel relative to the screen viewport */
   top: 15px;             /* Distance from the very top edge */
@@ -330,7 +331,8 @@
    </div>
 
 
-   <div class="maze-container"><canvas id="mazeCanvas"></canvas></div>
+   <div class="maze-container" id='canvascont'><canvas id="mazeCanvas"></canvas>
+	   <div class="maze-container" id='mazeImg' style='display:none;'><img id='canvasImg'></div>
 
 
    <div id="settingsPanel" class="side-panel">
@@ -1721,8 +1723,29 @@ return;
 		updateCredits()
 		save()
    }
-      
-   function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); }
+      function animateCanvas() {
+    const canvasCont = document.getElementById('canvascont');
+    if (!canvasCont) return;
+
+    // The keyframes tell it to start immediately at the top (-100vh) 
+    // and slide down to its normal position (0)
+    const keyframes = [
+        { transform: 'translateY(-100vh)' }, // Starts instantly at the top
+        { transform: 'translateY(0)' }        // Slides down to the center
+    ];
+
+    const options = {
+        duration: 800, // Time in milliseconds for it to slide down
+        easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)' // Gives it that smooth, bouncy landing
+    };
+
+    canvasCont.animate(keyframes, options);
+}
+   function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); 
+       document.getElementById('canvasImg').src = canvas.toDataURL("image/png");	
+	   document.getElementById('mazeImg').style.display = 'block';
+		animateCanvas();
+   }
    document.getElementById('generate').onclick = () => { isRaceMode = false; document.getElementById('p2Stats').style.display = 'none'; generate(false); };
    document.getElementById('raceBtn').onclick = () => { isRaceMode = true; document.getElementById('p2Stats').style.display = 'block'; generate(false); };
    updateDailyStatus();
