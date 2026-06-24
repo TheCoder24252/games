@@ -732,10 +732,17 @@ function openProfile(id) {
 	fetchData(false, false, id).then(res => {
 		document.getElementById('profileImg').src = res[0].profile_picture;
 		document.getElementById('profileBioD').innerHTML = res[0].profile_bio;
+		if (res[0].rank != 'Beginner' && res[0].rank != 'Apprentice') {
 		document.getElementById('profileBorderD').style.borderColor = res[0].profile_border;
 		document.getElementById('profileBorderD').style.background = res[0].profile_background;
+		} else {
+			document.getElementById('profileBorderD').style.borderColor = 'rgb(255, 62, 62)';
+		document.getElementById('profileBorderD').style.background = 'rgb(44, 52, 63)';
+		}
 		document.getElementById('profileId').innerHTML = id;
+		if (res[0].rank != 'Beginner') {
 		document.getElementById('profileId').style.color = res[0].profile_color;
+		} else {document.getElementById('profileId').style.color = '#ffffff'}
 		document.getElementById('profileId').innerHTML += ` &middot; ${res[0].profile_pronouns}`;
 		document.getElementById('profileData').innerHTML = `<li><label class='username'>Rank:</label><label class='credits'>${res[0].rank}</label></li><br><li><label class='username'>Credits:</label><label class='credits'>${res[0].credits}</label></li>
 		<br><li><label class='username'>Best Time:</label><label class='credits'>${res[0].Time}</label></li>
@@ -1134,7 +1141,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
  const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
 
 
- const settings = [{id: 'algo' value: document.getElementById('algo').value}, {id: 'pathwidth' value: document.getElementById('pathwidth').value}, {id: 'wallwidth' value: document.getElementById('wallwidth').value}, {id: 'pathColor' value: document.getElementById('pathColor').value}, {id: 'wallColor' value: document.getElementById('wallColor').value}, {id: 'playerColor' value: document.getElementById('playerColor').value}, {id: 'player2Color' value: document.getElementById('player2Color').value}]
+ const settings = [{id: 'algo', value: document.getElementById('algo').value}, {id: 'pathwidth', value: document.getElementById('pathwidth').value}, {id: 'wallwidth', value: document.getElementById('wallwidth').value}, {id: 'pathColor', value: document.getElementById('pathColor').value}, {id: 'wallColor', value: document.getElementById('wallColor').value}, {id: 'playerColor', value: document.getElementById('playerColor').value}, {id: 'player2Color', value: document.getElementById('player2Color').value}]
 
  const urL = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username} `;
 
