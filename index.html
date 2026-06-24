@@ -1216,13 +1216,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
        document.getElementById('wallwidth').value = 8;
        document.getElementById('titletext').innerHTML = "Tutorial Level";
        document.getElementById('dashPanel').style.display = "none";
-     } else {
-		 if (fMaze != true) {
-		 document.getElementById('canvasImg').src = canvas.toDataURL("image/png");	
-	   document.getElementById('mazeImg').style.display = 'block';
-		animateCanvas();
-		 } else {fMaze = true}
-	 }
+     }
      if(isDaily) {
 		Pmode = document.getElementById('algo').value;
          const today = new Date();
@@ -1329,6 +1323,12 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
        if (step2Limit < minSteps) {step2Limit = minSteps + 1; document.getElementById('step2LimitAmount').value = minSteps + 1}
      }
      draw();
+	 if (!tutorial) {
+	 if (fMaze != true) {
+		 document.getElementById('canvasImg').src = canvas.toDataURL("image/png");	
+	   document.getElementById('mazeImg').style.display = 'block';
+		animateCanvas();
+		 } else {fMaze = true}}
    }
    function calculateMinSteps(adj, startNode, endNode) {
    let queue = [[startNode, 0]];
