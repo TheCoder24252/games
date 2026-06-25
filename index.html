@@ -345,6 +345,12 @@
            <option value="huntkill">Hard</option>
          </select>
        </li>
+	   <li><label>Variation:</label>
+         <select id="variation">
+           <option value="none">None</option>
+           <option value="fog">Fog Of War</option>
+         </select>
+       </li>
        <li><label>Width:</label><input id="width" type="number" min="15" value="20"/></li>
        <li><label>Height:</label><input id="height" type="number" min="15" value="20"/></li>
        <li><label>Path Size:</label><input id="pathwidth" type="number" value="15"/></li>
@@ -1397,18 +1403,38 @@ ctx.fill();
 	} else { 
         ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); 
     }
+	// Only run this if the player selected the "Fog of War" variation
+if (document.getElementById('variation').value == 'fog') {
+    // 1. Save the clean canvas state
+    ctx.save();
+
+    // 2. Create a radial gradient centered on the player
+    // playerX and playerY should be the center coordinates of your player icon
+    let playerX = x + pw / 2; 
+    let playerY = y + pw / 2;
+    let visionRadius = 80; // Change this number to make the vision circle bigger or smaller
+
+    let fogGradient = ctx.createRadialGradient(
+        playerX, playerY, visionRadius * 0.4, // Inner circle (fully visible)
+        playerX, playerY, visionRadius        // Outer circle (fades to dark)
+    );
+
+    // Transparent in the middle, solid black at the edges
+    fogGradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
+    fogGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+    // 3. Use 'destination-in' to mask the maze out
+    ctx.globalCompositeOperation = 'destination-in';
+    ctx.fillStyle = fogGradient;
+    
+    // Draw the mask over the entire maze area
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 4. Restore the normal canvas operations for the next frame
+    ctx.restore();
 }
-/**
- * Draws a filled hexagon bounded exactly within a rectangular box.
- * 
- * @param {CanvasRenderingContext2D} ctx - The canvas context.
- * @param {string} color - Fill color.
- * @param {number} trY - Top-Right Y coordinate (Top boundary).
- * @param {number} trX - Top-Right X coordinate (Right boundary).
- * @param {number} blY - Bottom-Left Y coordinate (Bottom boundary).
- * @param {number} blX - Bottom-Left X coordinate (Left boundary).
- * @param {boolean} pointyTopped - True for pointy-topped, false for flat-topped.
- */
+
+}
 function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
   const left = blX;
   const right = trX;
