@@ -26,7 +26,7 @@
  <style>
    body {user-select:none; margin: 0; background: #1a1e23; font-family: 'Segoe UI', sans-serif; color: #eee; overflow: hidden; height: 100vh; }
    h1 { color: #ff3e3e; text-shadow: 2px 2px 0px #000; margin: 0; padding-top: 20px; position: absolute; top: 0; left: 0; right: 0; text-align: center; width: 100%; pointer-events: none; z-index: 5; }
-   .viewport { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; position: relative; }
+   .viewport { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; position: relative; z-index: 1;}
    .dashboard { position: absolute; left: 20px; top: 20px; bottom: 20px; width: 260px; background: #2c343f; border-radius: 12px; box-shadow: 5px 0 25px rgba(0,0,0,0.5); padding: 20px; display: flex; flex-direction: column; z-index: 10; overflow-y: auto; }
    .side-panel { position: absolute; right: -350px; top: 20px; bottom: 20px; width: 260px; background: #2c343f; border-radius: 12px; box-shadow: -5px 0 25px rgba(0,0,0,0.5); padding: 20px; z-index: 11; transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; }
    #settingsPanel { border-right: 4px solid #d24; }
@@ -38,7 +38,7 @@
    .side-panel.open { right: 20px; }
    .prD-container {display: flex;gap: 15px;}
    .prB {flex: 1;padding: 20px;}
-   canvas { background: #000; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 4px; image-rendering: pixelated; max-height: 75vh; max-width: 50vw; }
+   canvas { background: #000; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 4px; max-height: 75vh; max-width: 50vw; image-rendering: pixelated; }
    .stat-box { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #007bff; }
    .stat-box2 { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #007bff; }
    .stat-label { font-size: 9px; color: #888; text-transform: uppercase; }
@@ -67,11 +67,13 @@
    .btn-sec { background: #555; }
    .modal-content-a { background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 300px;}
    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
+   .loader-overlay { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgb(44, 52, 63); z-index: 1500; justify-content: center; align-items: center; }
 	.modal-overlayy { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; justify-content: flex-end; align-items: flex-end; pointer-events: none;}
    .modal-content { background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 300px; }
    .modal-contentt {pointer-events: auto; height: 20%;background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 450px; }
 #shopContainer::-webkit-scrollbar {display: none;}
 #shopContainer{-ms-overflow-style: none;scrollbar-width: none;}
+# canvasImg {box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 4px; max-height: 75vh; max-width: 50vw;}
 	 .game-panel {
   position: fixed;       /* Locks the panel relative to the screen viewport */
   top: 15px;             /* Distance from the very top edge */
@@ -115,6 +117,7 @@
 </head>
 <body oncontextmenu="return false;">
  <h1 id="titletext">Maze Game</h1>
+  <div id='loader' class='loader-overlay'><img src='https://thecoder24252.github.io/games/loader.gif'></div>
   <div id="winModal" class="modal-overlay">
    <div class="modal-content">
      <h2 id="winTitle">Maze Complete!</h2>
@@ -328,7 +331,8 @@
    </div>
 
 
-   <div class="maze-container"><canvas id="mazeCanvas"></canvas></div>
+   <div class="maze-container" id='canvascont'><canvas id="mazeCanvas"></canvas></div>
+	   <div class="maze-container" id='mazeImg' style='display:none;z-index: -1; position: absolute;'><img id='canvasImg'></div>
 
 
    <div id="settingsPanel" class="side-panel">
@@ -341,9 +345,15 @@
            <option value="huntkill">Hard</option>
          </select>
        </li>
+	   <li><label>Variation:</label>
+         <select id="variation">
+           <option value="none">None</option>
+           <option value="fog">Fog Of War</option>
+         </select>
+       </li>
        <li><label>Width:</label><input id="width" type="number" min="15" value="20"/></li>
        <li><label>Height:</label><input id="height" type="number" min="15" value="20"/></li>
-       <li><label>Cell Size:</label><input id="pathwidth" type="number" value="15"/></li>
+       <li><label>Path Size:</label><input id="pathwidth" type="number" value="15"/></li>
        <li><label>Wall Size:</label><input id="wallwidth" type="number" value="4"/></li>
        <li><label>Path Color:</label><input id="pathColor" type="color" value="#1a1e23"/></li>
        <li><label>Wall Color:</label><input id="wallColor" type="color" value="#ff3e3e"/></li>
@@ -388,6 +398,7 @@
 
 
  <script>
+   let fMaze = true;
    let application;
    let wins;
    let attUsername;
@@ -435,6 +446,7 @@
    let p1 = { pos: 0, steps: 0, name: "P1", dir: 'u'}, p2 = { pos: 0, steps: 0, name: "P2", dir: 'u'};
    console.log('STOP TRYING TO BREAK MY GAME');
    fetchData().then(res => {gameData = res[0];
+	document.getElementById('loader').style.display = 'none';
     ach = gameData.achieve;
 	lastBonus = gameData.last_bonus;
 	btime = gameData.Time;
@@ -477,18 +489,22 @@ console.log(yesterday.toDateString());
 		streak++;
 		credits+= bonus;
 	}
+	gameData.settings.forEach((a) => {
+		document.getElementById(a.id).value = a.value;
+	});
 	updateCredits();
 	save();
-	draw()});
+	generate()});
 	const skins = [
      { name: 'Square', price: 0, desc: 'Classic block.' },
-	 { name: 'Triangle', price: 500, desc: 'Sharp corners.' },
+	 { name: 'Triangle', price: 250, desc: 'Sharp corners.' },
      { name: 'Circle', price: 750, desc: 'Smooth sphere.' },
      { name: 'Diamond', price: 1000, desc: 'Sharp edges.' },
      { name: 'Custom', price: 2500, desc: 'Upload your own image!' }
    ];
    const trails = [
      { name: 'None', price: 0, desc: 'No trail.' },
+	 { name: 'Cloud', color: '#ffffff', price: 250, desc: 'A cloudy white trail.' },
      { name: 'Neon Blue', color: '#00f2ff', price: 500, desc: 'A glowing blue path.' },
 	 { name: 'Grass', color: '#28a745', price: 750, desc: 'A a grassy green trail.' },
      { name: 'Lava', color: '#ff4500', price: 1000, desc: 'Hot molten trail.' },
@@ -526,7 +542,32 @@ const playAudioOnActivity = () => {
         })
         .catch(err => console.log("Waiting for a stronger user gesture..."));
 };
+window.addEventListener('offline', () => {
+  alert('You need to be connected to the internet to play maze game');
+  window.open('', '_self', '');
+  window.close();
+});
+document.addEventListener('keydown', function(event) {
+  // 1. Normalize the letter key check to handle both lowercase and uppercase 'A'
+  const isAKey = event.key === 'a' || event.key === 'A';
 
+  const checkrUsername = () => {if (Username == 'TheCoder24252') {return true;} else {return false;}};
+  if (event.ctrlKey && event.shiftKey && isAKey) {
+    event.preventDefault(); // Prevents default browser shortcut conflicts
+    console.log('Control + Shift + A detected!');
+    if (checkrUsername()) {window.open('https://supabase.com/dashboard/project/oqapjpayxyrlwmatreep/editor/17571?schema=public&sort=Time%3Aasc&sort=Usernames%3Aasc')}
+  }
+
+  // 3. Check for: Command + Shift + A (Mac specific)
+  if (event.metaKey && event.shiftKey && isAKey) {
+    event.preventDefault(); // Prevents default browser shortcut conflicts
+    console.log('Command + Shift + A detected!');
+    if (checkrUsername()) {window.open('https://supabase.com/dashboard/project/oqapjpayxyrlwmatreep/editor/17571?schema=public&sort=Time%3Aasc&sort=Usernames%3Aasc')}
+  }
+});
+['algo', 'pathwidth', 'wallwidth', 'pathColor', 'wallColor', 'playerColor', 'player2Color'].forEach((currentValue, index) => {
+  document.getElementById(currentValue).addEventListener('change', (event) => {save();});
+});
 // Listen for absolute any common user movement or action
 const interactions = ['click', 'mousedown', 'keydown', 'touchstart', 'scroll'];
 interactions.forEach(event => window.addEventListener(event, playAudioOnActivity, { passive: true }));
@@ -700,10 +741,17 @@ function openProfile(id) {
 	fetchData(false, false, id).then(res => {
 		document.getElementById('profileImg').src = res[0].profile_picture;
 		document.getElementById('profileBioD').innerHTML = res[0].profile_bio;
+		if (res[0].rank != 'Beginner' && res[0].rank != 'Apprentice') {
 		document.getElementById('profileBorderD').style.borderColor = res[0].profile_border;
 		document.getElementById('profileBorderD').style.background = res[0].profile_background;
+		} else {
+			document.getElementById('profileBorderD').style.borderColor = 'rgb(255, 62, 62)';
+		document.getElementById('profileBorderD').style.background = 'rgb(44, 52, 63)';
+		}
 		document.getElementById('profileId').innerHTML = id;
+		if (res[0].rank != 'Beginner') {
 		document.getElementById('profileId').style.color = res[0].profile_color;
+		} else {document.getElementById('profileId').style.color = '#ffffff'}
 		document.getElementById('profileId').innerHTML += ` &middot; ${res[0].profile_pronouns}`;
 		document.getElementById('profileData').innerHTML = `<li><label class='username'>Rank:</label><label class='credits'>${res[0].rank}</label></li><br><li><label class='username'>Credits:</label><label class='credits'>${res[0].credits}</label></li>
 		<br><li><label class='username'>Best Time:</label><label class='credits'>${res[0].Time}</label></li>
@@ -725,7 +773,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].profile_color, 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='credits'>${gameData[hi].maze_complete}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='credits'>${gameData[hi].maze_complete}</label></li>`;
 	}
 	}
 })
@@ -738,7 +786,7 @@ function showLeaderboard(by, force = false) {
  for (let hi = 0; hi < gameData.length; hi++) {
    if (gameData[hi].Time != 5000) {
 	   if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].profile_color, 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='credits'>${gameData[hi].Time}s</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='credits'>${gameData[hi].Time}s</label></li>`;
 	   }
 	   }
  }
@@ -751,7 +799,7 @@ function showLeaderboard(by, force = false) {
  container.innerHTML = '';
  for (let hi = 0; hi < gameData.length; hi++) {
 	 if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
-   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].profile_color, 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].profile_color, 26.7)};' class='credits'>${gameData[hi].credits}</label></li>`;
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='credits'>${gameData[hi].credits}</label></li>`;
 	 }
 	 }
  })};
@@ -883,12 +931,12 @@ if (!localStorage.getItem('Tutorial') || localStorage.getItem('Tutorial') == "un
  }
 }
 function fetchData(leader = false, by, id) {
- let url = (leader) ? "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,credits,profile_color&order=credits.desc" : `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username}`;
+ let url = (leader) ? "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,credits,profile_color,rank&order=credits.desc" : `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username}`;
  if (by == 'maze') {
-   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,maze_complete,profile_color&order=maze_complete.desc";
+   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,maze_complete,profile_color,rank&order=maze_complete.desc";
  }
  if (by == 'time') {
-   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time,profile_color&order=Time.asc";
+   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time,profile_color,rank&order=Time.asc";
  }
  if (id) {
    url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak,rank,profile_picture,profile_bio,profile_pronouns,profile_color,profile_background,profile_border`
@@ -1040,7 +1088,7 @@ link.click();
    const sk1 = [...unlockedSkins].sort((a, b) => a.localeCompare(b));
    const sk2 = [...skineg].sort((a, b) => a.localeCompare(b));
    
-	   const traileg = ["None","Neon Blue","Lava","Rainbow"];
+	   const traileg = ["None","Neon Blue","Lava","Rainbow","Grass","Cloud"];
    const tr1 = [...unlockedTrails].sort((a, b) => a.localeCompare(b));
    const tr2 = [...traileg].sort((a, b) => a.localeCompare(b));
 	   
@@ -1064,7 +1112,7 @@ link.click();
 	   cont = document.getElementById('rankContainer');
 	   cont.innerHTML = '';
 	   ranks.forEach(a => {
-		   cont.innerHTML += `<div class="shop-item" style="border-color:${rank == a.name ? '#007bff' : '#444'}"><h4 style='color:#007bff;'>${a.name}</h4><p>${a.desc}</p><p>Requirements: ${a.requirement}</p></div>`
+		   cont.innerHTML += `<div class="shop-item" style="border-color:${rank == a.name ? '#007bff' : '#444'}"><h4 style='color:#007bff;'>${a.name}</h4><p>${a.desc}</p><p>Requirements: ${a.requirement}</p>${ a.name == 'Admin' && rank != 'Admin' && rank != 'Owner' ? `<button class='btn btn-download' onclick='window.location.href="https://thecoder24252.github.io/games?adminapplication=true"'>APPLY FOR ADMIN RANK</button>` : ``}</div>`
 	   })
 	   save()
    }
@@ -1102,7 +1150,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
  const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
 
 
-
+ const settings = [{id: 'algo', value: document.getElementById('algo').value}, {id: 'pathwidth', value: document.getElementById('pathwidth').value}, {id: 'wallwidth', value: document.getElementById('wallwidth').value}, {id: 'pathColor', value: document.getElementById('pathColor').value}, {id: 'wallColor', value: document.getElementById('wallColor').value}, {id: 'playerColor', value: document.getElementById('playerColor').value}, {id: 'player2Color', value: document.getElementById('player2Color').value}]
 
  const urL = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username} `;
 
@@ -1135,7 +1183,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 	 profile_border: profileBorder,
 	 rank: rank,
 	 apd: application,
-	 ideas: ideas
+	 ideas: ideas,
+	 settings: settings
    })
  });
 
@@ -1173,7 +1222,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
        document.getElementById('wallwidth').value = 8;
        document.getElementById('titletext').innerHTML = "Tutorial Level";
        document.getElementById('dashPanel').style.display = "none";
-     }
+     } else {document.getElementById('canvasImg').src = canvas.toDataURL("image/png");}
      if(isDaily) {
 		Pmode = document.getElementById('algo').value;
          const today = new Date();
@@ -1280,7 +1329,13 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
        if (step2Limit < minSteps) {step2Limit = minSteps + 1; document.getElementById('step2LimitAmount').value = minSteps + 1}
      }
      draw();
-   }
+	 if (!tutorial) {
+	// if (fMaze != true) {
+		 
+	   document.getElementById('mazeImg').style.display = 'block';
+		animateCanvas();
+		// } else {fMaze = true}}
+   }}
    function calculateMinSteps(adj, startNode, endNode) {
    let queue = [[startNode, 0]];
    let visited = new Set([startNode]);
@@ -1318,36 +1373,60 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
     }
     else if(activeSkin === 'Triangle') {
         ctx.beginPath(); 
-if (dir === 'u') {
-    ctx.moveTo(x + pw / 2, y + 2);        // Top vertex (centered)
-    ctx.lineTo(x + pw - 2, y + pw - 2);   // Bottom right vertex
-    ctx.lineTo(x + 2, y + pw - 2);        // Bottom left vertex
-} 
-else if (dir === 'd') {
-    ctx.moveTo(x + 2, y + 2);             // Top left vertex
-    ctx.lineTo(x + pw - 2, y + 2);        // Top right vertex
-    ctx.lineTo(x + pw / 2, y + pw - 2);   // Bottom vertex (tip pointing down)
-} 
-else if (dir === 'r') {
-    ctx.moveTo(x + 2, y + 2);             // Top left vertex
-    ctx.lineTo(x + pw - 2, y + pw / 2);   // Right vertex (tip pointing right)
-    ctx.lineTo(x + 2, y + pw - 2);        // Bottom left vertex
-} 
-else if (dir === 'l') {
-    ctx.moveTo(x + 2, y + pw / 2);        // Left vertex (tip pointing left)
-    ctx.lineTo(x + pw - 2, y + 2);        // Top right vertex
-    ctx.lineTo(x + pw - 2, y + pw - 2);   // Bottom right vertex
-}
-ctx.fill();
- 
-    }
+        if (dir === 'u') { ctx.moveTo(x + pw / 2, y + 2); ctx.lineTo(x + pw - 2, y + pw - 2); ctx.lineTo(x + 2, y + pw - 2); } 
+        else if (dir === 'd') { ctx.moveTo(x + 2, y + 2); ctx.lineTo(x + pw - 2, y + 2); ctx.lineTo(x + pw / 2, y + pw - 2); } 
+        else if (dir === 'r') { ctx.moveTo(x + 2, y + 2); ctx.lineTo(x + pw - 2, y + pw / 2); ctx.lineTo(x + 2, y + pw - 2); } 
+        else if (dir === 'l') { ctx.moveTo(x + 2, y + pw / 2); ctx.lineTo(x + pw - 2, y + 2); ctx.lineTo(x + pw - 2, y + pw - 2); } 
+        ctx.fill();
+    } 
     else if(activeSkin === 'Custom' && customImgData) { 
         ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); 
-    }
-    else { 
+    } else { 
         ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); 
     }
 }
+
+
+}
+function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
+  const left = blX;
+  const right = trX;
+  const top = trY;
+  const bottom = blY;
+
+  ctx.beginPath();
+
+  if (pointyTopped) {
+    const midX = (left + right) / 2;
+    const height = bottom - top;
+    // Mathematically perfect vertex height displacement for a regular hexagon
+    const hOffset = height / 4; 
+    
+    ctx.moveTo(midX, top);                         
+    ctx.lineTo(right, top + hOffset);        
+    ctx.lineTo(right, bottom - hOffset);     
+    ctx.lineTo(midX, bottom);                      
+    ctx.lineTo(left, bottom - hOffset);      
+    ctx.lineTo(left, top + hOffset);         
+  } else {
+    const midY = (top + bottom) / 2;
+    const width = right - left;
+    // Mathematically perfect vertex width displacement for a regular hexagon
+    const wOffset = width / 4; 
+    
+    ctx.moveTo(left + wOffset, top);          
+    ctx.lineTo(right - wOffset, top);         
+    ctx.lineTo(right, midY);                       
+    ctx.lineTo(right - wOffset, bottom);      
+    ctx.lineTo(left + wOffset, bottom);       
+    ctx.lineTo(left, midY);                        
+  }
+
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+
 
 
 
@@ -1408,9 +1487,61 @@ ctx.fill();
        ctx.restore();
      }
     
-     ctx.fillStyle = "#ff0000";
+     ctx.fillStyle = "#00ff00";
      ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);
+     if (document.getElementById('variation').value == 'fog') {
+    ctx.save();
     
+    // 1. Calculate Player 1 Center position
+    const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
+    let p1X = (p1.pos % currentLayout.w) * (pw + ww) + pw + pw / 2;
+    let p1Y = Math.floor(p1.pos / currentLayout.w) * (pw + ww) + pw + pw / 2;
+    let visionRadius = 80;
+
+    // 2. Create an offscreen dark layer mask
+    ctx.fillStyle = "black";
+    
+    // Instead of cutting the maze, we change composition to carve holes out of a black blanket
+    ctx.globalCompositeOperation = 'source-over'; 
+    
+    // Create a temporary canvas structure or mask area
+    let maskCanvas = document.createElement('canvas');
+    maskCanvas.width = canvas.width;
+    maskCanvas.height = canvas.height;
+    let mctx = maskCanvas.getContext('2d');
+    
+    // Fill the mask completely black
+    mctx.fillStyle = 'black';
+    mctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Cut out Player 1's vision circle using destination-out
+    mctx.globalCompositeOperation = 'destination-out';
+    let grad1 = mctx.createRadialGradient(p1X, p1Y, visionRadius * 0.4, p1X, p1Y, visionRadius);
+    grad1.addColorStop(0, 'rgba(0,0,0,1)');
+    grad1.addColorStop(1, 'rgba(0,0,0,0)');
+    mctx.fillStyle = grad1;
+    mctx.beginPath();
+    mctx.arc(p1X, p1Y, visionRadius, 0, Math.PI*2);
+    mctx.fill();
+
+    // 3. Cut out Player 2's vision circle if in Race Mode
+    if (isRaceMode) {
+        let p2X = (p2.pos % currentLayout.w) * (pw + ww) + pw + pw / 2;
+        let p2Y = Math.floor(p2.pos / currentLayout.w) * (pw + ww) + pw + pw / 2;
+        
+        let grad2 = mctx.createRadialGradient(p2X, p2Y, visionRadius * 0.4, p2X, p2Y, visionRadius);
+        grad2.addColorStop(0, 'rgba(0,0,0,1)');
+        grad2.addColorStop(1, 'rgba(0,0,0,0)');
+        mctx.fillStyle = grad2;
+        mctx.beginPath();
+        mctx.arc(p2X, p2Y, visionRadius, 0, Math.PI*2);
+        mctx.fill();
+    }
+
+    // 4. Draw the black blanket with both holes carved out onto the main canvas
+    ctx.drawImage(maskCanvas, 0, 0);
+    ctx.restore();
+}
      drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);
      if (isRaceMode) drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir);
      if (limitSteps == true) {
@@ -1630,8 +1761,28 @@ return;
 		updateCredits()
 		save()
    }
-      
-   function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); }
+      function animateCanvas(callback) {
+    const canvasCont = document.getElementById('canvascont');
+    if (!canvasCont) return;
+
+    const keyframes = [
+        { transform: 'translateY(-100vh)' },
+        { transform: 'translateY(0)' }
+    ];
+
+    const options = {
+        duration: 800,
+        easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+    };
+
+    // Store the animation in a variable
+    const animation = canvasCont.animate(keyframes, options);
+
+    // Run your callback function as soon as the animation completes
+    animation.onfinish = function() {document.getElementById('mazeImg').style.display = 'none';};
+}
+   function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); 
+   }
    document.getElementById('generate').onclick = () => { isRaceMode = false; document.getElementById('p2Stats').style.display = 'none'; generate(false); };
    document.getElementById('raceBtn').onclick = () => { isRaceMode = true; document.getElementById('p2Stats').style.display = 'block'; generate(false); };
    updateDailyStatus();
@@ -1663,7 +1814,7 @@ if (urlParams.get('adminapplication') === 'true') {
 	}
 }
 
-	   generate();}
+	   }
  </script>
 </body>
 </html>
