@@ -1373,68 +1373,21 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
     }
     else if(activeSkin === 'Triangle') {
         ctx.beginPath(); 
-if (dir === 'u') {
-    ctx.moveTo(x + pw / 2, y + 2);        // Top vertex (centered)
-    ctx.lineTo(x + pw - 2, y + pw - 2);   // Bottom right vertex
-    ctx.lineTo(x + 2, y + pw - 2);        // Bottom left vertex
-} 
-else if (dir === 'd') {
-    ctx.moveTo(x + 2, y + 2);             // Top left vertex
-    ctx.lineTo(x + pw - 2, y + 2);        // Top right vertex
-    ctx.lineTo(x + pw / 2, y + pw - 2);   // Bottom vertex (tip pointing down)
-} 
-else if (dir === 'r') {
-    ctx.moveTo(x + 2, y + 2);             // Top left vertex
-    ctx.lineTo(x + pw - 2, y + pw / 2);   // Right vertex (tip pointing right)
-    ctx.lineTo(x + 2, y + pw - 2);        // Bottom left vertex
-} 
-else if (dir === 'l') {
-    ctx.moveTo(x + 2, y + pw / 2);        // Left vertex (tip pointing left)
-    ctx.lineTo(x + pw - 2, y + 2);        // Top right vertex
-    ctx.lineTo(x + pw - 2, y + pw - 2);   // Bottom right vertex
-} 
-ctx.fill();
- 
+        if (dir === 'u') { ctx.moveTo(x + pw / 2, y + 2); ctx.lineTo(x + pw - 2, y + pw - 2); ctx.lineTo(x + 2, y + pw - 2); } 
+        else if (dir === 'd') { ctx.moveTo(x + 2, y + 2); ctx.lineTo(x + pw - 2, y + 2); ctx.lineTo(x + pw / 2, y + pw - 2); } 
+        else if (dir === 'r') { ctx.moveTo(x + 2, y + 2); ctx.lineTo(x + pw - 2, y + pw / 2); ctx.lineTo(x + 2, y + pw - 2); } 
+        else if (dir === 'l') { ctx.moveTo(x + 2, y + pw / 2); ctx.lineTo(x + pw - 2, y + 2); ctx.lineTo(x + pw - 2, y + pw - 2); } 
+        ctx.fill();
     } 
     else if(activeSkin === 'Custom' && customImgData) { 
         ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); 
-    } else if (activeSkin === 'Hexagon') {
-	drawBoxHexagon(color, x + pw - 2, y + 2, x + 2, y + pw - 2, false)
-	} else { 
+    } else { 
         ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); 
     }
-	// Only run this if the player selected the "Fog of War" variation
-if (document.getElementById('variation').value == 'fog') {
-    // 1. Save the clean canvas state
-    ctx.save();
-
-    // 2. Create a radial gradient centered on the player
-    // playerX and playerY should be the center coordinates of your player icon
-    let playerX = x + pw / 2; 
-    let playerY = y + pw / 2;
-    let visionRadius = 80; // Change this number to make the vision circle bigger or smaller
-
-    let fogGradient = ctx.createRadialGradient(
-        playerX, playerY, visionRadius * 0.4, // Inner circle (fully visible)
-        playerX, playerY, visionRadius        // Outer circle (fades to dark)
-    );
-
-    // Transparent in the middle, solid black at the edges
-    fogGradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
-    fogGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-
-    // 3. Use 'destination-in' to mask the maze out
-    ctx.globalCompositeOperation = 'destination-in';
-    ctx.fillStyle = fogGradient;
-    
-    // Draw the mask over the entire maze area
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // 4. Restore the normal canvas operations for the next frame
-    ctx.restore();
 }
 
-}
+
+
 function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
   const left = blX;
   const right = trX;
@@ -1534,9 +1487,61 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
        ctx.restore();
      }
     
-     ctx.fillStyle = "#ff0000";
+     ctx.fillStyle = "#00ff00";
      ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);
+     if (document.getElementById('variation').value == 'fog') {
+    ctx.save();
     
+    // 1. Calculate Player 1 Center position
+    const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
+    let p1X = (p1.pos % currentLayout.w) * (pw + ww) + pw + pw / 2;
+    let p1Y = Math.floor(p1.pos / currentLayout.w) * (pw + ww) + pw + pw / 2;
+    let visionRadius = 80;
+
+    // 2. Create an offscreen dark layer mask
+    ctx.fillStyle = "black";
+    
+    // Instead of cutting the maze, we change composition to carve holes out of a black blanket
+    ctx.globalCompositeOperation = 'source-over'; 
+    
+    // Create a temporary canvas structure or mask area
+    let maskCanvas = document.createElement('canvas');
+    maskCanvas.width = canvas.width;
+    maskCanvas.height = canvas.height;
+    let mctx = maskCanvas.getContext('2d');
+    
+    // Fill the mask completely black
+    mctx.fillStyle = 'black';
+    mctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Cut out Player 1's vision circle using destination-out
+    mctx.globalCompositeOperation = 'destination-out';
+    let grad1 = mctx.createRadialGradient(p1X, p1Y, visionRadius * 0.4, p1X, p1Y, visionRadius);
+    grad1.addColorStop(0, 'rgba(0,0,0,1)');
+    grad1.addColorStop(1, 'rgba(0,0,0,0)');
+    mctx.fillStyle = grad1;
+    mctx.beginPath();
+    mctx.arc(p1X, p1Y, visionRadius, 0, Math.PI*2);
+    mctx.fill();
+
+    // 3. Cut out Player 2's vision circle if in Race Mode
+    if (isRaceMode) {
+        let p2X = (p2.pos % currentLayout.w) * (pw + ww) + pw + pw / 2;
+        let p2Y = Math.floor(p2.pos / currentLayout.w) * (pw + ww) + pw + pw / 2;
+        
+        let grad2 = mctx.createRadialGradient(p2X, p2Y, visionRadius * 0.4, p2X, p2Y, visionRadius);
+        grad2.addColorStop(0, 'rgba(0,0,0,1)');
+        grad2.addColorStop(1, 'rgba(0,0,0,0)');
+        mctx.fillStyle = grad2;
+        mctx.beginPath();
+        mctx.arc(p2X, p2Y, visionRadius, 0, Math.PI*2);
+        mctx.fill();
+    }
+
+    // 4. Draw the black blanket with both holes carved out onto the main canvas
+    ctx.drawImage(maskCanvas, 0, 0);
+    ctx.restore();
+}
      drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);
      if (isRaceMode) drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir);
      if (limitSteps == true) {
@@ -1695,7 +1700,7 @@ return;
            }
          } else {reward = 5}}
         }
-
+		if (document.getElementById('variation').value == 'fog') {reward = 60}
 
         reward = Math.round(reward);
         if (p.pos) {
