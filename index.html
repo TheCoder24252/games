@@ -263,6 +263,14 @@
 	<button class='btn btn-gen' onclick='document.getElementById("ideaModal").style.display = "none"; submitIdea()'>SUBMIT IDEA</button>
    </div>
  </div>
+ <div id="bugModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Submit an idea for a maze game update</h2>
+	 <li><label>What was the bug</label><input id='bugWhat'></li>
+	 <li><label>What happened leading up to when you noticed the bug</label><input id='bugLead'></li>
+	<button class='btn btn-gen' onclick='document.getElementById("ideaModal").style.display = "none"; submitBug()'>SUBMIT IDEA</button>
+   </div>
+ </div>
 <div id="prsModal" class="modal-overlay">
    <div class="modal-content-a">
      <h2 id='profileId'>Profile Viewer</h2>
@@ -438,6 +446,7 @@
 	 let profileBg;
 	 let profileBorder;
 	 let profileColor;
+	 let bugs;
 	let customImg = new Image();
    const canvas = document.getElementById('mazeCanvas');
    const ctx = canvas.getContext('2d', { alpha: false });
@@ -470,6 +479,7 @@
     customImgData = gameData.custom_icon;
     activeTrail = gameData.active_trail;
 	streak = gameData.streak;
+	bugs = gameData.bugs;
     unlockedTrails = gameData.unlocked_trails;
 	let todayDate = new Date().toDateString();
 	const yesterday = new Date();
@@ -735,6 +745,10 @@ function submitApd() {
 }
 function submitIdea() {
 	ideas.push({what: document.getElementById('ideaWhat').value, why: document.getElementById('ideaWhy').value});
+	save(false, true)
+}
+function submitIdea() {
+	bugs.push({what: document.getElementById('bugWhat').value, leading: document.getElementById('bugLead').value});
 	save(false, true)
 }
 function openProfile(id) {
@@ -1184,7 +1198,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 	 rank: rank,
 	 apd: application,
 	 ideas: ideas,
-	 settings: settings
+	 settings: settings,
+	 bugs: bugs
    })
  });
 
@@ -1808,6 +1823,15 @@ if (urlParams.get('adminapplication') === 'true') {
 		document.getElementById('howModal').style.display = 'none';
 		document.getElementById('dailyModal').style.display = 'none';
 		document.getElementById('ideaModal').style.display = 'flex';
+	} else {
+		window.alert('You need to log in to create an update idea');
+		window.location.href = 'https://thecoder24252.github.io/games/'
+	}
+} else if (urlParams.get('bug') === 'true') {
+	if (localStorage.Username != null && localStorage.Username != undefined) {
+		document.getElementById('howModal').style.display = 'none';
+		document.getElementById('dailyModal').style.display = 'none';
+		document.getElementById('bugModal').style.display = 'flex';
 	} else {
 		window.alert('You need to log in to create an update idea');
 		window.location.href = 'https://thecoder24252.github.io/games/'
