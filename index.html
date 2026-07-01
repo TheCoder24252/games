@@ -1290,7 +1290,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
        document.getElementById('titletext').style.color = '#6f42c1';
        document.getElementById('titletext').innerHTML = '2 Player Race';
      }
-    isPreviewActive = true;
+radarX = 0;
+isPreviewActive = true;
 	p1 = { pos: 0, steps: 0, name: "P1", dir: 'u'}; 
 	p2 = { pos: 0, steps: 0, name: "P2", dir: 'u'};
      p1History = [];
