@@ -454,6 +454,7 @@ let isPreviewActive = true;
    let step2Limit = 250;
 	 let lastBonus;
 	 let rank;
+	 let pvLoop;
 	 let streak;
    let ach;
 	let profilePronouns;
@@ -1287,7 +1288,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
        document.getElementById('titletext').style.color = '#6f42c1';
        document.getElementById('titletext').innerHTML = '2 Player Race';
      }
-
+    isPreviewActive = true;
 	p1 = { pos: 0, steps: 0, name: "P1", dir: 'u'}; 
 	p2 = { pos: 0, steps: 0, name: "P2", dir: 'u'};
      p1History = [];
@@ -1572,34 +1573,7 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
     ctx.drawImage(maskCanvas, 0, 0);
     ctx.restore();
 }
-	   if (document.getElementById('variation').value === 'blindfold' && isPreviewActive) {
-    ctx.save();
-    
-    // 1. Draw a dark shadow over the whole canvas
-    ctx.fillStyle = "rgba(0, 0, 0, 0.92)"; // Almost completely black
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // 2. Carve out a vertical "light beam" using destination-out
-    ctx.globalCompositeOperation = 'destination-out';
-    
-    let beamWidth = 60; // Size of the visible window
-    ctx.fillStyle = "white";
-    ctx.fillRect(radarX, 0, beamWidth, canvas.height);
-    
-    ctx.restore();
-    
-    // 3. Move the beam across the screen
-    radarX += 5; // Increase this number to make the sweep faster
-    
-    // If it reaches the end of the screen, turn off the preview and hide everything
-    if (radarX > canvas.width) {
-        isPreviewActive = false;
-    }
-} else if (document.getElementById('variation').value === 'blindfold' && !isPreviewActive) {
-    // Game has started! Keep the screen pitch black except for the player icon
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
+	   if (document.getElementById('variation').value == 'blindfold') {pvLoop = setInterval(bhE, 50)}
      drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);
      if (isRaceMode) drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir);
 
@@ -1674,7 +1648,7 @@ return;
 
 
    function win(p) {
-        gameActive = false; clearInterval(timerInterval);
+        gameActive = false; clearInterval(timerInterval); if (document.getElementById('variation').value == 'blindfold') {clearInterval(pvLoop)}
         let reward = 50;
         if(isDaily) {
            lastDailyDate = new Date().toDateString();
@@ -1883,6 +1857,47 @@ if (urlParams.get('adminapplication') === 'true') {
 }
 
 	   }
+	function bhE() {
+		if (document.getElementById('variation').value === 'blindfold') {
+    ctx.save();
+
+    if (isPreviewActive) {
+        // 1. Create a temporary offscreen layer so we don't accidentally erase the maze
+        let maskCanvas = document.createElement('canvas');
+        maskCanvas.width = canvas.width;
+        maskCanvas.height = canvas.height;
+        let mctx = maskCanvas.getContext('2d');
+
+        // 2. Fill the temporary layer with solid black
+        mctx.fillStyle = "black";
+        mctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // 3. Carve a perfectly transparent window out of the black layer
+        mctx.globalCompositeOperation = 'destination-out';
+        
+        let beamWidth = 80; // Make this wider or narrower to change the view window
+        mctx.fillStyle = "white"; // The color doesn't matter, destination-out just uses the shape
+        mctx.fillRect(radarX, 0, beamWidth, canvas.height);
+
+        // 4. Draw our carved black mask on top of the main canvas
+        ctx.drawImage(maskCanvas, 0, 0);
+
+        // 5. Move the radar line forward for the next frame
+        radarX += 4; // Lower this number if it moves too fast across your screen
+
+        // If the beam finishes sweeping across the screen, turn off the preview mode
+        if (radarX > canvas.width) {
+            isPreviewActive = false;
+        }
+    } else {
+        // 6. The 3-second preview is over! The maze goes pitch black.
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    ctx.restore();
+}
+	}
  </script>
 </body>
 </html>
