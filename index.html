@@ -435,6 +435,8 @@ let isPreviewActive = true;
      document.getElementById('accModal').style.display = 'flex';
    }
 	 let ideas;
+	 const maskCanvas = document.createElement('canvas');
+const mctx = maskCanvas.getContext('2d');
    let intervalID;
    let gameData;
 	let Ptime = 'Backtrack';
@@ -1858,46 +1860,46 @@ if (urlParams.get('adminapplication') === 'true') {
 
 	   }
 	function bhE() {
-		if (document.getElementById('variation').value === 'blindfold') {
-    ctx.save();
+    if (document.getElementById('variation').value === 'blindfold') {
+        ctx.save();
 
-    if (isPreviewActive) {
-        // 1. Create a temporary offscreen layer so we don't accidentally erase the maze
-        let maskCanvas = document.createElement('canvas');
-        maskCanvas.width = canvas.width;
-        maskCanvas.height = canvas.height;
-        let mctx = maskCanvas.getContext('2d');
+        if (isPreviewActive) {
+            // 1. Match the offscreen canvas size to your main canvas
+            if (maskCanvas.width !== canvas.width || maskCanvas.height !== canvas.height) {
+                maskCanvas.width = canvas.width;
+                maskCanvas.height = canvas.height;
+            }
 
-        // 2. Fill the temporary layer with solid black
-        mctx.fillStyle = "black";
-        mctx.fillRect(0, 0, canvas.width, canvas.height);
+            // 2. Reset and clear the mask layer for this frame
+            mctx.globalCompositeOperation = 'source-over';
+            mctx.fillStyle = "black";
+            mctx.fillRect(0, 0, maskCanvas.width, maskCanvas.height);
 
-        // 3. Carve a perfectly transparent window out of the black layer
-        mctx.globalCompositeOperation = 'destination-out';
-        
-        let beamWidth = 80; // Make this wider or narrower to change the view window
-        mctx.fillStyle = "white"; // The color doesn't matter, destination-out just uses the shape
-        mctx.fillRect(radarX, 0, beamWidth, canvas.height);
+            // 3. Carve the transparent radar slice out of the black paint
+            mctx.globalCompositeOperation = 'destination-out';
+            let beamWidth = 100; // Wider beam makes it easier to track the paths
+            mctx.fillStyle = "white"; 
+            mctx.fillRect(radarX, 0, beamWidth, maskCanvas.height);
 
-        // 4. Draw our carved black mask on top of the main canvas
-        ctx.drawImage(maskCanvas, 0, 0);
+            // 4. Slap the finished mask over the main canvas maze
+            ctx.drawImage(maskCanvas, 0, 0);
 
-        // 5. Move the radar line forward for the next frame
-        radarX += 4; // Lower this number if it moves too fast across your screen
+            // 5. Move the radar line forward across the width
+            radarX += 6; 
 
-        // If the beam finishes sweeping across the screen, turn off the preview mode
-        if (radarX > canvas.width) {
-            isPreviewActive = false;
+            // If it hits the edge, end preview mode and switch to complete darkness
+            if (radarX > canvas.width) {
+                isPreviewActive = false;
+            }
+        } else {
+            // The radar sweep finished! The maze goes pitch black.
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
-    } else {
-        // 6. The 3-second preview is over! The maze goes pitch black.
-        ctx.fillStyle = "black";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
 
-    ctx.restore();
+        ctx.restore();
+    }
 }
-	}
  </script>
 </body>
 </html>
