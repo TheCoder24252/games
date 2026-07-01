@@ -1864,38 +1864,42 @@ if (urlParams.get('adminapplication') === 'true') {
     if (document.getElementById('variation').value === 'blindfold') {
         ctx.save();
 
+        // Dynamically get the exact matching size of your main canvas layout
+        const targetWidth = canvas.width;
+        const targetHeight = canvas.height;
+
         if (isPreviewActive) {
-            // 1. Match the offscreen canvas size to your main canvas
-            if (maskCanvas.width !== canvas.width || maskCanvas.height !== canvas.height) {
-                maskCanvas.width = canvas.width;
-                maskCanvas.height = canvas.height;
+            // 1. Sync the offscreen mask size perfectly
+            if (maskCanvas.width !== targetWidth || maskCanvas.height !== targetHeight) {
+                maskCanvas.width = targetWidth;
+                maskCanvas.height = targetHeight;
             }
 
-            // 2. Reset and clear the mask layer for this frame
+            // 2. Clear and fill the mask layer with solid black
             mctx.globalCompositeOperation = 'source-over';
             mctx.fillStyle = "black";
-            mctx.fillRect(0, 0, maskCanvas.width, maskCanvas.height);
+            mctx.fillRect(0, 0, targetWidth, targetHeight);
 
             // 3. Carve the transparent radar slice out of the black paint
             mctx.globalCompositeOperation = 'destination-out';
-            let beamWidth = 100; // Wider beam makes it easier to track the paths
+            let beamWidth = 120; // Slightly wider makes paths easier to trace!
             mctx.fillStyle = "white"; 
-            mctx.fillRect(radarX, 0, beamWidth, maskCanvas.height);
+            mctx.fillRect(radarX, 0, beamWidth, targetHeight);
 
-            // 4. Slap the finished mask over the main canvas maze
+            // 4. Draw the finished mask perfectly over the main canvas
             ctx.drawImage(maskCanvas, 0, 0);
 
-            // 5. Move the radar line forward across the width
+            // 5. Move the radar line forward relative to the maze resolution
             radarX += 6; 
 
-            // If it hits the edge, end preview mode and switch to complete darkness
-            if (radarX > canvas.width) {
+            // FIX: Only stop when it completely crosses the entire targetWidth
+            if (radarX > targetWidth) {
                 isPreviewActive = false;
             }
         } else {
-            // The radar sweep finished! The maze goes pitch black.
+            // The radar sweep completely finished! The maze goes pitch black.
             ctx.fillStyle = "black";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillRect(0, 0, targetWidth, targetHeight);
         }
 
         ctx.restore();
