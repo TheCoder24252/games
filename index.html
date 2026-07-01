@@ -367,8 +367,9 @@
        </li>
 	   <li><label>Variation:</label>
          <select id="variation">
-           <option value="none">None</option>
+           <option value="none">Default</option>
            <option value="fog">Fog Of War</option>
+		   <option value="blindfold">Blind Fold</option>
          </select>
        </li>
        <li><label>Width:</label><input id="width" type="number" min="15" value="20"/></li>
@@ -418,6 +419,8 @@
 
 
  <script>
+	let radarX = 0;
+let isPreviewActive = true;
    let fMaze = true;
    let application;
    let wins;
@@ -1569,8 +1572,37 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
     ctx.drawImage(maskCanvas, 0, 0);
     ctx.restore();
 }
+	   if (document.getElementById('variation').value === 'blindfold' && isPreviewActive) {
+    ctx.save();
+    
+    // 1. Draw a dark shadow over the whole canvas
+    ctx.fillStyle = "rgba(0, 0, 0, 0.92)"; // Almost completely black
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // 2. Carve out a vertical "light beam" using destination-out
+    ctx.globalCompositeOperation = 'destination-out';
+    
+    let beamWidth = 60; // Size of the visible window
+    ctx.fillStyle = "white";
+    ctx.fillRect(radarX, 0, beamWidth, canvas.height);
+    
+    ctx.restore();
+    
+    // 3. Move the beam across the screen
+    radarX += 5; // Increase this number to make the sweep faster
+    
+    // If it reaches the end of the screen, turn off the preview and hide everything
+    if (radarX > canvas.width) {
+        isPreviewActive = false;
+    }
+} else if (document.getElementById('variation').value === 'blindfold' && !isPreviewActive) {
+    // Game has started! Keep the screen pitch black except for the player icon
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
      drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);
      if (isRaceMode) drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir);
+
      if (limitSteps == true) {
        if (step1Limit != false && step2Limit != false) {
          if (p1.steps < step1Limit) {
