@@ -117,6 +117,24 @@
  </style>
 <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/06/26/13/20260626135044-XEF4N2MN.js" defer></script>
+<script defer>
+	window.addEventListener('load', () => {
+        
+        let playerUsername = localStorage.Username || 'Guest User';
+        if (window.botpress) {
+          window.botpress.init({
+            "botId": "e7373cd6-1ff5-4b77-aa83-1f5cb5117525",
+            "configuration": {
+              "userId": playerUsername, 
+              "userProfile": {
+                "name": playerUsername
+              }
+            }
+          });
+        }
+      });
+
+</script>
 </head>
 <body oncontextmenu="return false;">
  <h1 id="titletext">Maze Game</h1>
