@@ -120,6 +120,16 @@
 <script defer>
   
         let playerUsername = localStorage.Username || 'Guest User';
+	   window.botpress.on('webchat:initialized', () => {
+  console.log('Webchat has been initialized. Loading user...')
+  window.botpress.updateUser({
+    data: {
+      firstName: playerUsername,
+      lastName: '(Player)',
+      email: '',
+    },
+  })
+})
         if (window.botpress) {
           window.botpress.init({
   "botId": "dfaa4d90-759e-40a5-aac3-ddd89085c45c",
@@ -153,15 +163,21 @@
     "mainCardEnabled": false,
     "conversationStartersEnabled": false,
     "conversationStarters": [],
-    "conversationStartersDisplayStyle": "cards"
+    "conversationStartersDisplayStyle": "cards",
   },
-  "clientId": "e7373cd6-1ff5-4b77-aa83-1f5cb5117525",
-  "userId": playerUsername,
-  "userProfile": {
-    "name": playerUsername
-  },
+  "clientId": "e7373cd6-1ff5-4b77-aa83-1f5cb5117525"
 });
         }
+	window.botpress.on('webchat:initialized', () => {
+  console.log('Webchat has been initialized. Loading user...')
+  window.botpress.updateUser({
+    data: {
+      firstName: playerUsername,
+      lastName: '(Player)',
+      email: '',
+    },
+  })
+})
 </script>
 </head>
 <body oncontextmenu="return false;">
