@@ -118,22 +118,46 @@
 <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
 <script src="https://files.bpcontent.cloud/2026/06/26/13/20260626135044-XEF4N2MN.js" defer></script>
 <script defer>
-	window.addEventListener('load', () => {
-        
+  
         let playerUsername = localStorage.Username || 'Guest User';
         if (window.botpress) {
           window.botpress.init({
-            "botId": "e7373cd6-1ff5-4b77-aa83-1f5cb5117525",
-            "configuration": {
-              "userId": playerUsername, 
-              "userProfile": {
-                "name": playerUsername
-              }
-            }
-          });
+  "botId": "dfaa4d90-759e-40a5-aac3-ddd89085c45c",
+  "configuration": {
+    "version": "v2",
+    "composerPlaceholder": "",
+    "botName": "Maze Game Support Assistant",
+    "botAvatar": "https://files.bpcontent.cloud/2026/06/26/14/20260626143031-XRL36SXU.png",
+    "botDescription": "",
+    "website": {},
+    "email": {},
+    "phone": {},
+    "termsOfService": {},
+    "privacyPolicy": {},
+    "color": "#ff3e3e",
+    "variant": "solid",
+    "headerVariant": "solid",
+    "themeMode": "dark",
+    "fontFamily": "inter",
+    "radius": 2.5,
+    "feedbackEnabled": false,
+    "footer": "Developed by TheCoder24252 | Bot Version 1.2.2",
+    "soundEnabled": false,
+    "toggleChatId": "toggleBot",
+    "proactiveMessageEnabled": false,
+    "proactiveBubbleMessage": "Hi! 👋 Need help?",
+    "proactiveBubbleTriggerType": "afterDelay",
+    "proactiveBubbleDelayTime": 10,
+    "conversationHistory": false,
+    "homePageEnabled": false,
+    "mainCardEnabled": false,
+    "conversationStartersEnabled": false,
+    "conversationStarters": [],
+    "conversationStartersDisplayStyle": "cards"
+  },
+  "clientId": "e7373cd6-1ff5-4b77-aa83-1f5cb5117525"
+});
         }
-      });
-
 </script>
 </head>
 <body oncontextmenu="return false;">
