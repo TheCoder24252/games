@@ -1116,6 +1116,7 @@ function fetchData(leader = false, by, id) {
        }
    }
    setInterval(updateDailyStatus, 1000);
+   setInterval(updateDiscordPresence, 15000);
 
 
    function downloadMaze() {
@@ -1159,7 +1160,37 @@ link.click();
        window.location.reload()
    }
 
-
+function updateDiscordPresence() {
+	let rpcDetails;
+	let rpcState = '';
+    if (isDaily) {rpcDetails = 'Playing the daily challenge'
+	} else if (isRaceMode) {
+		const algo = document.getElementById('algo').value;
+		if (algo == 'backtrack') {rpcDetails = `Playing a 2 player race on easy difficulty`}
+		if (algo == 'prim') {rpcDetails = `Playing a 2 player race on medium difficulty`}
+		if (algo == 'huntkill') {rpcDetails = `Playing a 2 player race on hard difficulty`}
+	} else {
+		const algo = document.getElementById('algo').value;
+		if (algo == 'backtrack') {rpcDetails = `Playing a maze on easy difficulty`}
+		if (algo == 'prim') {rpcDetails = `Playing a maze on medium difficulty`}
+		if (algo == 'huntkill') {rpcDetails = `Playing a maze on hard difficulty`}
+	}
+	if (document.getElementById('winModal').style.display == 'flex') {
+		rpcDetails = `Finished a maze`;
+		rpcState = `${document.getElementById('finalStats')} | ${document.getElementById('rewardText')}`
+	}
+    if (window.electronAPI) {
+        window.electronAPI.updatePresence({
+            details: rpcDetails,
+            state: rpcState,
+            largeImage: "default_logo", // Must match Discord Dev Portal asset key
+            largeImageText: "TheCoder24252's Maze Game", // Custom hover title
+            smallImage: "", // Optional extra corner badge key
+            smallImageText: "", // Optional badge hover text
+            startTime: undefined // Restarts the elapsed timer if true
+        });
+    }
+}
    function updateCredits() {
        document.getElementById('creditDisplay').innerText = credits;
        const container = document.getElementById('shopContainer');
