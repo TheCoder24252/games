@@ -1,0 +1,1971 @@
+<!DOCTYPE html>
+<html id='html'>
+<!--
+	
+	
+	
+	
+	
+	
+	STOP TRYING TO BREAK MY GAME
+	
+	
+	
+	
+
+	
+	
+	
+	
+	-->
+<head>
+ <meta name="google-site-verification" content="i8Do3et83PUuGYTzkZ40zRfqiyXmnKyFTZbORas8oiU" />
+ <meta name="description" content="Play the ultimate maze game by TheCoder24252! Unlock ranks, earn achievements, and climb the leaderboards.">
+ <link rel="icon" type="image/x-icon" href="./Maze-Logo.png">
+ <title>Maze Game</title>
+ <style>
+   body {user-select:none; margin: 0; background: #1a1e23; font-family: 'Segoe UI', sans-serif; color: #eee; overflow: hidden; height: 100vh; }
+   h1 { color: #ff3e3e; text-shadow: 2px 2px 0px #000; margin: 0; padding-top: 20px; position: absolute; top: 0; left: 0; right: 0; text-align: center; width: 100%; pointer-events: none; z-index: 5; }
+   .viewport { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; position: relative; z-index: 1;}
+   .dashboard { position: absolute; left: 20px; top: 20px; bottom: 20px; width: 260px; background: #2c343f; border-radius: 12px; box-shadow: 5px 0 25px rgba(0,0,0,0.5); padding: 20px; display: flex; flex-direction: column; z-index: 10; overflow-y: auto; }
+   .side-panel { position: absolute; right: -350px; top: 20px; bottom: 20px; width: 260px; background: #2c343f; border-radius: 12px; box-shadow: -5px 0 25px rgba(0,0,0,0.5); padding: 20px; z-index: 11; transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; }
+   #settingsPanel { border-right: 4px solid #d24; }
+   #shopPanel { border-right: 4px solid #ffc107;cursor: default;user-select: none; }
+   #leaderPanel { border-right: 4px solid #001affff;cursor: default;user-select: none; }
+	 #achPanel { border-right: 4px solid #ff6600; }
+	 #rankPanel { border-right: 4px solid #007bff; }
+     #shopPanel:active {cursor: default;}
+   .side-panel.open { right: 20px; }
+   .prD-container {display: flex;gap: 15px;}
+   .prB {flex: 1;padding: 20px;}
+   canvas { background: #000; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 4px; max-height: 75vh; max-width: 50vw; image-rendering: pixelated; }
+   .stat-box { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #007bff; }
+   .stat-box2 { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #007bff; }
+   .stat-label { font-size: 9px; color: #888; text-transform: uppercase; }
+   .stat-value { font-size: 18px; font-weight: bold; font-family: monospace; }
+   .shop-item { background: #1a1e23; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #444; }
+   .shop-item h4 { margin: 0; color: #ffc107; font-size: 14px; }
+   .shop-item p { margin: 5px 0; font-size: 11px; color: #aaa; }
+   .controls { list-style: none; padding: 0; margin: 0; }
+   li { margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+   label { font-size: 11px; font-weight: bold; color: #bbb; }
+   input, select { width: 85px; height: 24px; border: 1px solid #444; background: #111; color: #fff; border-radius: 4px; font-size: 11px; }
+   .btn { width: 100%; color: white; cursor: pointer; margin-top: 8px; font-size: 12px; height: 36px; border-radius: 6px; border: none; font-weight: bold; transition: 0.1s; display: flex; align-items: center; justify-content: center; text-decoration: none; text-align: center; }
+   .mbtn { width: 36px; color: white; cursor: pointer; margin-top: 8px; font-size: 12px; height: 36px; border-radius: 6px; border: none; font-weight: bold; transition: 0.1s; display: flex; align-items: center; justify-content: center; text-decoration: none; text-align: center; }
+   .btn:active { transform: scale(0.96); }
+   .btn-gen { background: #d24; }
+   .btn-shop { background: #ffc107; color: #000; }
+   .btn-more { background: #ff5500; }
+   .btn-daily { background: #28a745; }
+   .btn-race { background: #6f42c1; }
+   .btn-download { background: #007bff; }
+   .btn-leader { background: #001affff; }
+   .btn-ach { background: #ff6600; }
+   .btn-fullscreen { background: #187a2fff; }
+   .btn-settings { background: #4a5568; margin-top: auto; }
+   .btn-danger { background: #333; color: #ffaaaa; font-size: 10px; height: 28px; margin-top: 10px; }
+   .btn-sec { background: #555; }
+   .modal-content-a { background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 300px;}
+   .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
+   .loader-overlay { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgb(44, 52, 63); z-index: 1500; justify-content: center; align-items: center; }
+	.modal-overlayy { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; justify-content: flex-end; align-items: flex-end; pointer-events: none;}
+   .modal-content { background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 300px; }
+   .modal-contentt {pointer-events: auto; height: 20%;background: #2c343f; padding: 30px; border-radius: 15px; border: 2px solid #ff3e3e; text-align: center; width: 450px; }
+#shopContainer::-webkit-scrollbar {display: none;}
+#shopContainer{-ms-overflow-style: none;scrollbar-width: none;}
+# canvasImg {box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 4px; max-height: 75vh; max-width: 50vw;}
+	 .game-panel {
+  position: fixed;       /* Locks the panel relative to the screen viewport */
+  top: 15px;             /* Distance from the very top edge */
+  right: 15px;            /* Distance from the very left edge */
+  z-index: 9999;         /* Places it safely on top of all game graphics */
+  
+  /* Panel Sizing */
+  width: 264px;
+  
+  /* Internal button layout alignment */
+  display: flex;
+  padding: 0;
+  flex-direction: row;     /* Crucial change: stacks items side-by-side */
+  align-items: right;     /* Centers items vertically relative to each other */
+  gap: 12px;       
+  color: #fff;
+}
+.search-input {
+   height: 36px;
+	margin-top: 8px;
+  width: 100%;
+ display: flex; align-items: center; justify-content: center; text-decoration: none; text-align: center;
+  padding: 10px 12px 10px 12px; 
+  font-size: 16px;
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid #444;
+  background: #111;
+  color: #fff;
+}
+	.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;             /* Chrome, Safari, and Opera */
+}
+ </style>
+<script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2026/06/26/13/20260626135044-XEF4N2MN.js" defer></script>
+<script defer>
+  
+        let playerUsername = localStorage.Username || 'Guest User';
+	   window.botpress.on('webchat:initialized', () => {
+  console.log('Webchat has been initialized. Loading user...')
+  window.botpress.updateUser({
+    data: {
+      firstName: playerUsername,
+      lastName: '(Player)',
+      email: '',
+    },
+  })
+})
+        if (window.botpress) {
+          window.botpress.init({
+  "botId": "dfaa4d90-759e-40a5-aac3-ddd89085c45c",
+  "configuration": {
+    "version": "v2",
+    "composerPlaceholder": "",
+    "botName": "Maze Game Support Assistant",
+    "botAvatar": "https://files.bpcontent.cloud/2026/06/26/14/20260626143031-XRL36SXU.png",
+    "botDescription": "",
+    "website": {},
+    "email": {},
+    "phone": {},
+    "termsOfService": {},
+    "privacyPolicy": {},
+    "color": "#ff3e3e",
+    "variant": "solid",
+    "headerVariant": "solid",
+    "themeMode": "dark",
+    "fontFamily": "inter",
+    "radius": 2.5,
+    "feedbackEnabled": false,
+    "footer": "Developed by TheCoder24252 | Bot Version 1.2.2",
+    "soundEnabled": false,
+    "toggleChatId": "toggleBot",
+    "proactiveMessageEnabled": false,
+    "proactiveBubbleMessage": "Hi! 👋 Need help?",
+    "proactiveBubbleTriggerType": "afterDelay",
+    "proactiveBubbleDelayTime": 10,
+    "conversationHistory": false,
+    "homePageEnabled": false,
+    "mainCardEnabled": false,
+    "conversationStartersEnabled": false,
+    "conversationStarters": [],
+    "conversationStartersDisplayStyle": "cards",
+  },
+  "clientId": "e7373cd6-1ff5-4b77-aa83-1f5cb5117525"
+});
+        }
+	window.botpress.on('webchat:initialized', () => {
+  console.log('Webchat has been initialized. Loading user...')
+  window.botpress.updateUser({
+    data: {
+      firstName: playerUsername,
+      lastName: '(Player)',
+      email: '',
+    },
+  })
+})
+</script>
+</head>
+<body oncontextmenu="return false;">
+ <h1 id="titletext">Maze Game</h1>
+  <div id='loader' class='loader-overlay'><img src='https://thecoder24252.github.io/games/loader.gif'></div>
+  <div id="winModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2 id="winTitle">Maze Complete!</h2>
+     <p id="finalStats" style="font-family: monospace; color: #00ffcc;"></p>
+     <p id="rewardText" style="color:#ffc107; font-weight:bold;">+50 CREDITS</p>
+     <button id="replay" class="btn btn-gen" onclick="playAgain()">PLAY AGAIN</button>
+   </div>
+ </div>
+ <div id="howModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2 id="welcomeTitle">Maze Game Tutorial</h2>
+     <p id="instructions" style="color:white; font-weight:bold;"></p>
+     <button id="startgame" class="btn btn-gen" onclick="localStorage.setItem('Tutorial', true);document.getElementById('howModal').style.display ='none';playAgain()">Skip Tutorial</button>
+     <button id="viewTutorial" class="btn btn-gen" onclick="tutorial()">View Tutorial</button>
+     <button style="display:none" id="nextBTN" class="btn btn-gen" onclick="tutorialA()">Next</button>
+     <button style="display:none;" id="tutorialLevel" class="btn btn-gen" onclick="localStorage.setItem('Tutorial', true);document.getElementById('howModal').style.display ='none';generate(false,false,true)">Play tutorial level</button>
+   </div>
+ </div>
+ <div id="welModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2 id="logInTitle">Create Account</h2>
+     <p style="color:white; font-weight:bold;" id="instructText">Please set a username and passcode to create an account</p>
+     <p id="invalidText" style="color:red;"></p>
+     <input id="username" style="width: 100%; height: 39px;" type="text" placeholder="Username"></input>
+     <input id="passCode" style="width: 100%; height: 39px;" type="password" placeholder="Passcode"></input>
+     <input id="confirmPass" style="width: 100%; height: 39px;" type="password" placeholder="Confirm Passcode"></input>
+     <button onclick="logIn(document.getElementById('username').value, document.getElementById('passCode').value)" id="logInBtn" style="display:none;" class="btn btn-gen">Log In</button>
+     <button onclick="insertData(document.getElementById('username').value, document.getElementById('passCode').value)" id="createButton" disabled style="background:#555;cursor:not-allowed;" class="btn btn-gen">Create Account</button>
+   </div>
+ </div>
+ <div id="accModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Welcome to the Maze Game</h2>
+     <button onclick="logPrep()" id="accButton" class="btn btn-gen">Log in</button>
+     <button onclick="intervalID = setInterval(checkAccount, 1000);document.getElementById('accModal').style.display = 'none';document.getElementById('welModal').style.display = 'flex';" id="logButton" class="btn btn-gen">Create Account</button>
+   </div>
+ </div>
+<div id="dailyModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Daily Bonus</h2>
+     <p id="bonusText" style="color:#ffc107; font-weight:bold;">+10 CREDITS</p>
+	<p id="streakText" style="color:white; font-weight:bold;"></p>
+	<button onclick="document.getElementById('dailyModal').style.display = 'none'" id="okbButton" class="btn btn-gen">Ok</button>
+   </div>
+ </div>
+ <div id="loseModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2 id="loseTitle">You took too many steps!</h2>
+     <p style="color:#ffc107; font-weight:bold;">+0 CREDITS</p>
+     <button class="btn btn-gen" onclick="document.getElementById('loseModal').style.display='none';playAgain();">PLAY AGAIN</button>
+   </div>
+ </div>
+ <div id="creditModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2 id="winTitle">You dont have enough credits!</h2>
+     <p id="amountText" style="color:#ffc107; font-weight:bold;">You need amount more credits to buy the name trail/icon</p>
+     <p style="color:#ffc107; font-weight:bold;">Get more credits by playing more mazes and daily challenges</p>
+     <button class="btn btn-gen" onclick="document.getElementById('creditModal').style.display='none';">OK</button>
+   </div>
+ </div>
+<div class="modal-overlayy">
+   <div class="modal-contentt">
+     <h2 id="winTitle">Request!</h2>
+     <p id="amountText" style="color:#ffc107; font-weight:bold;">You need amount more credits to buy the name trail/icon</p>
+     <p style="color:#ffc107; font-weight:bold;">Get more credits by playing more mazes and daily challenges</p>
+     <button class="btn btn-gen" onclick="document.getElementById('creditModal').style.display='none';">OK</button>
+   </div>
+ </div>
+
+ <div id="deleteModal" class="modal-overlay">
+   <div class="modal-content" style="border-color: #555;">
+     <h3>Reset Game?</h3>
+     <p style="font-size: 13px; color: #bbb;">Wipes credits, skins, and records.</p>
+     <div style="display:flex; gap:10px; margin-top:20px;">
+       <button class="btn btn-sec" style="flex:1" onclick="closeDeleteModal()">CANCEL</button>
+       <button class="btn btn-gen" style="flex:1" onclick="confirmFullReset()">DELETE ALL</button>
+     </div>
+   </div>
+ </div>
+ <div id="accoModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Account Data</h2>
+     <p id="accData" style="font-size: 13px; color: #bbb;"></p>
+	 <input type="file" id="profileInput" accept="image/*" style="display: none;">
+	 <li><label>Pronouns:</label><input id='profilePronouns' maxlength='15'></li>
+	 <li><label>Bio:</label><input id='profileBio'></li>
+	 <li id='profileBgS'><label>Profile Background Color:</label><input type='color' id='profileBg'></li>
+	<li id='profileBorderS'><label>Profile Border Color:</label><input type='color' id='profileBorder'></li>
+	<li id='profileColorS'><label>Profile Username Color:</label><input type='color' id='profileColor'></li>
+     <div style="display:flex; gap:10px;">
+       <button class="btn btn-gen" style="flex:1" onclick="logOut()">SIGN OUT</button>
+       <button class="btn btn-gen" style="flex:1" onclick="document.getElementById('accoModal').style.display='none';document.getElementById('deleteModal').style.display='flex'">DELETE ACCOUNT</button>
+     </div>
+	 <button class="btn btn-sec" id="profileImgUpload">Upload Profile Picture</button>
+     <button class="btn btn-sec" onclick="document.getElementById('accoModal').style.display='none'">BACK</button>
+   </div>
+ </div>
+<div id="prModal" class="modal-overlay">
+   <div class="modal-content-a" id='profileBorderD'>
+	 <img style="border-radius: 50%; width: 200px; height: 200px; object-fit: cover;" id="profileImg">
+     <h2 id='profileId'>Profile Data</h2>
+	 <p id="profileBioD" style="font-size: 13px; color: #bbb;"></p>
+	 <p id="profilePronounsD" style="font-size: 13px; color: #bbb;"></p>
+	 <div class="prD-container">
+     <div id="profileData" style="font-size: 13px; color: #bbb;" class='prB'></div>
+	 <div id="profileAch" style="font-size: 13px; color: #bbb; max-height: 14vh;overflow-y: auto;" class='prB'></div>
+	</div>
+     <button class="btn btn-sec" onclick="document.getElementById('prModal').style.display='none'">CLOSE</button>
+   </div>
+ </div>
+ <div id="downModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>What do you want to download?</h2>
+	 <button class="btn btn-gen" onclick="document.getElementById('downModal').style.display='none';document.getElementById('appModal').style.display='flex'">DOWNLOAD MAZE GAME APP</button>
+	 <button class="btn btn-gen" onclick="document.getElementById('downModal').style.display='none';downloadMaze()">DOWNLOAD PNG OF A MAZE</button>
+     <button class="btn btn-sec" onclick="document.getElementById('downModal').style.display='none'">EXIT</button>
+   </div>
+ </div>
+	<div id="appModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>App Download Options</h2>
+	 <button class="btn btn-gen" onclick="document.getElementById('appModal').style.display='none';downloadApp('winexe')">DOWNLOAD WINDOWS EXE SETUP</button>
+	 <button class="btn btn-gen" onclick="document.getElementById('appModal').style.display='none';downloadApp('macapp')">DOWNLOAD MACOS ZIPPED APP FILE</button>
+	 <button class="btn btn-gen" onclick="document.getElementById('appModal').style.display='none';downloadApp('macdmg')">DOWNLOAD MACOS APP DMG INSTALLER</button>
+     <button class="btn btn-sec" onclick="document.getElementById('appModal').style.display='none'">EXIT</button>
+   </div>
+ </div>
+<div id="adminModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Admin Rank Application</h2>
+	 <li><label>Why do you want admin rank?</label><input id='apdWhy'></li>
+	 <li><label>How will you help Maze Game grow with admin priviledges?</label><input id='apdHow'></li>
+	 <li><label>What is your favorite feature in the game, and what is one thing you think we should improve?</label><input id='apdFav'></li>
+	 <li><label>A player claims they found a glitch that lets them duplicate items/ranks, but they refuse to tell you how they did it unless you give them a reward. How do you handle this?</label><input id='apdSen'></li>
+	<button class='btn btn-gen' onclick='document.getElementById("adminModal").style.display = "none"; submitApd()'>SUBMIT APPLICATION</button>
+   </div>
+ </div>
+<div id="ideaModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Submit an idea for a maze game update</h2>
+	 <li><label>In lots of detail explain what you would want to get added to maze game</label><input id='ideaWhat'></li>
+	 <li><label>Why do you think this will this be a good addition to maze game?</label><input id='ideaWhy'></li>
+	<button class='btn btn-gen' onclick='document.getElementById("ideaModal").style.display = "none"; submitIdea()'>SUBMIT IDEA</button>
+   </div>
+ </div>
+ <div id="bugModal" class="modal-overlay">
+   <div class="modal-content">
+     <h2>Report a Bug</h2>
+	 <li><label>What was the bug</label><input id='bugWhat'></li>
+	 <li><label>What happened leading up to when you noticed the bug</label><input id='bugLead'></li>
+	<button class='btn btn-gen' onclick='document.getElementById("bugModal").style.display = "none"; submitBug()'>SUBMIT IDEA</button>
+   </div>
+ </div>
+<div id="prsModal" class="modal-overlay">
+   <div class="modal-content-a">
+     <h2 id='profileId'>Profile Viewer</h2>
+	 <input type="text" id='search' style="width: 100%; height: 39px;" placeholder="Search for Profiles">
+	   <button class="btn btn-gen" onclick="search()">SEARCH</button>
+     <button class="btn btn-sec" onclick="document.getElementById('prsModal').style.display='none'">CLOSE</button>
+   </div>
+ </div>
+<div class="game-panel">
+    <button title='Fullscreen' class='mbtn btn-gen' onclick='toggleFullscreen()'><svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+  </svg> </button>
+	<button tittle='Mute/Unmute Audio' class='mbtn btn-gen' onclick='toggleAudio()'><svg xmlns="http://w3.org" id="audioOn" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+    <path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"/>
+  </svg><svg id='audioOff' style='display:none;' xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <path d="M11 5L7.54 7.77M6 9H2v6h4l5 4V11"/>
+    <path d="M15.54 8.46a5 5 0 0 1 .46 5.54M19.07 4.93a10 10 0 0 1 1 10.14"/>
+    <line x1="23" y1="1" x2="1" y2="23"/>
+  </svg></button>
+		<button title='View Profile' class='mbtn btn-gen' onclick='document.getElementById("prsModal").style.display="flex"'>
+		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <circle cx="10" cy="7" r="4"/>
+    <path d="M3 20a7 7 0 0 1 11.23-5.61"/>
+    <circle cx="18" cy="16" r="3"/>
+    <line x1="22" y1="20" x2="20.1" y2="18.2"/>
+  </svg>
+		</button>
+	<button title='Download' class='mbtn btn-gen' onclick='let isRunningInApp = window.process && window.process.type === "renderer"; if (isRunningInApp) {downloadMaze()} else {document.getElementById("downModal").style.display="flex"}'>
+		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <line x1="12" y1="3" x2="12" y2="15"/>
+    <polyline points="5 10 12 17 19 10"/>
+    <path d="M19 21H5"/>
+  </svg>
+	</button>
+	<button title='Help' class='mbtn btn-gen' id='toggleBot'>
+		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+    <circle cx="10" cy="12" r="1" fill="currentColor"/>
+    <circle cx="14" cy="12" r="1" fill="currentColor"/>
+    <path d="M10 15h4"/>
+  </svg>
+	</button>
+	<button title='View Maze Game Wiki' class='mbtn btn-gen' onclick='window.location.href="https://thecodergames.gitbook.io/maze-game-wiki"'>
+		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+    <path d="M6 8h2M7 7v2"/>
+    <circle cx="16" cy="8" r="0.5" fill="currentColor"/>
+    <circle cx="18" cy="10" r="0.5" fill="currentColor"/>
+  </svg>
+	</button>
+</div>
+ <div class="viewport">
+   <div id="dashPanel" class="dashboard">
+     <h3 style="margin:0 0 10px 0; color:#007bff;">DASHBOARD</h3>
+     <div class="stat-box" style="border-left-color:#ffc107;"><div class="stat-label">Credits</div><div id="creditDisplay" class="stat-value">0</div></div>
+     <div class="stat-box" style="border-left-color:#ff3e3e;"><div class="stat-label">Timer</div><div id="timer" class="stat-value">00:00.0</div></div>
+     <div class="stat-box"><div class="stat-label" id="p1Label">P1 Steps</div><div id="p1Steps" class="stat-value">0</div></div>
+     <div id="p2Stats" style="display:none;" class="stat-box2" style="border-left-color:#28a745;"><div class="stat-label" id="p2Label">P2 Steps</div><div id="p2Steps" class="stat-value">0</div></div>
+
+
+     <div style="margin-top: 10px;">
+       <button id="generate" class="btn btn-gen">GENERATE NEW</button>
+       <button id="dailyBtn" class="btn btn-daily" onclick="isRaceMode=false;document.getElementById('p2Stats').style.display = 'none';generate(true)"><span id="dailyBtnText">DAILY CHALLENGE</span></button>
+       <button id="raceBtn" class="btn btn-race">2-PLAYER RACE</button>
+       <button id="leaderboardBtn" class="btn btn-leader" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#001affff';showLeaderboard(false, true)">LEADERBOARD</button>
+	   <button onclick="togglePanel('shopPanel')" class="btn btn-shop">SHOP</button>
+	   <button id="achBtn" class="btn btn-ach" onclick="togglePanel('achPanel')">VIEW ACHIEVEMENTS</button>
+       <button id="rankBtn" class="btn btn-download" onclick="togglePanel('rankPanel')">VIEW RANKS</button>
+       <a href="https://vitalsaw-studios.w3spaces.com" style="display:none;" target="_blank" class="btn btn-more">MORE VITALSAW STUDIO GAMES</a>
+     </div>
+     <button onclick="togglePanel('settingsPanel')" class="btn btn-settings">SETTINGS</button>
+     <button onclick="openAccountModal()" class="btn btn-danger">ACCOUNT</button>
+   </div>
+
+
+   <div class="maze-container" id='canvascont'><canvas id="mazeCanvas"></canvas></div>
+	   <div class="maze-container" id='mazeImg' style='display:none;z-index: -1; position: absolute;'><img id='canvasImg'></div>
+
+
+   <div id="settingsPanel" class="side-panel">
+     <h3 style="color:#d24;">SETTINGS</h3>
+     <ul class="controls">
+       <li><label>Difficulty:</label>
+         <select id="algo">
+           <option value="backtrack">Easy</option>
+           <option value="prim">Medium</option>
+           <option value="huntkill">Hard</option>
+         </select>
+       </li>
+	   <li><label>Variation:</label>
+         <select id="variation">
+           <option value="none">Default</option>
+           <option value="fog">Fog Of War</option>
+		   <!--<option value="blindfold">Blind Fold</option>-->
+         </select>
+       </li>
+       <li><label>Width:</label><input id="width" type="number" min="15" value="20"/></li>
+       <li><label>Height:</label><input id="height" type="number" min="15" value="20"/></li>
+       <li><label>Path Size:</label><input id="pathwidth" type="number" value="15"/></li>
+       <li><label>Wall Size:</label><input id="wallwidth" type="number" value="4"/></li>
+       <li><label>Path Color:</label><input id="pathColor" type="color" value="#1a1e23"/></li>
+       <li><label>Wall Color:</label><input id="wallColor" type="color" value="#ff3e3e"/></li>
+       <li><label>P1 Color:</label><input id="playerColor" type="color" value="#007bff"/></li>
+       <li><label>P2 Color:</label><input id="player2Color" type="color" value="#28a745"/></li>
+       <li><label>Limit Steps:</label><input id="limitSteps" type="checkbox"/></li>
+       <li id="stepLimit" style="display:none;"><label>P1 Limit:</label><input id="stepLimitAmount" type="number" value="250"/></li>
+       <li id="step2Limit" style="display:none;"><label>P2 Limit:</label><input id="step2LimitAmount" type="number" value="250"/></li>
+     </ul>
+     <button class="btn btn-sec" style="margin-top:auto;height:36px;" onclick="togglePanel('settingsPanel')">CLOSE</button>
+   </div>
+
+
+   <div id="shopPanel" class="side-panel">
+     <h3 style="color:#ffc107;">SHOP</h3>
+     <div id="shopContainer" style="overflow-y:auto; flex-grow:1;"></div>
+     <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('shopPanel')">CLOSE</button>
+   </div>
+ </div>
+ <div id="leaderPanel" class="side-panel">
+     <h3 style="color:#001affff;">LEADERBOARD</h3>
+     <div id="leaderContainer" style="overflow-y:auto; flex-grow:1;">
+       <div id="leaderTabs" style="position: sticky; top: 0;">
+     <button id="creditTab" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#001affff';showLeaderboard()" style="background:#001affff" class="btn">Credits</button>
+     <button id="bestTab" onclick="document.getElementById('mazeTab').style.background = '#555';document.getElementById('creditTab').style.background = '#555';document.getElementById('bestTab').style.background = '#001affff';showLeaderboard('time')" style="background:#555" class="btn">Best Time</button>
+     <button id="mazeTab" onclick="document.getElementById('bestTab').style.background = '#555';document.getElementById('creditTab').style.background = '#555';document.getElementById('mazeTab').style.background = '#001affff';showLeaderboard('maze')" style="background:#555" class="btn">Mazes Finished</button>
+   </div>
+   <div id="leaderboard"></div>
+ </div>
+   <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('leaderPanel')">CLOSE</button>
+ </div>
+ <div id="achPanel" class="side-panel">
+     <h3 style="color:#ff6600;">EARNED ACHIEVEMENTS</h3>
+     <div id="achContainer" style="overflow-y:auto; flex-grow:1;"></div>
+   <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('achPanel')">CLOSE</button>
+ </div>
+<div id="rankPanel" class="side-panel">
+     <h3 style="color:#007bff;">RANKS</h3>
+     <div id="rankContainer" style="overflow-y:auto; flex-grow:1;"></div>
+   <button class="btn btn-sec" style="margin-top:auto" onclick="togglePanel('rankPanel')">CLOSE</button>
+ </div>
+
+
+ <script>
+	let radarX = 0;
+let isPreviewActive = true;
+   let fMaze = true;
+   let application;
+   let wins;
+   let attUsername;
+   let Username;
+   if (localStorage.getItem("Username")) {
+     Username = localStorage.getItem("Username");
+     if (!localStorage.getItem('Tutorial') || localStorage.getItem('Tutorial') == "undefined") {
+ document.getElementById('howModal').style.display = 'flex';
+}
+   } else {
+     document.getElementById('accModal').style.display = 'flex';
+   }
+	 let ideas;
+	 const maskCanvas = document.createElement('canvas');
+const mctx = maskCanvas.getContext('2d');
+   let intervalID;
+   let gameData;
+	let Ptime = 'Backtrack';
+	let btime = parseInt(localStorage.getItem('btime')) || 5000;
+	let credits = parseInt(localStorage.getItem('mazeCredits')) || 0;
+	 let mazeComp = parseInt(localStorage.getItem('mazeComp')) || 0;
+	 let unlockedSkins = JSON.parse(localStorage.getItem('unlockedSkins')) || ['Square'];
+	 let activeSkin = localStorage.getItem('activeSkin') || 'Square';
+	 let lastDailyDate = localStorage.getItem('lastDailyDate') || "";
+	 let customImgData = localStorage.getItem('customIcon') || null;
+	 let profileImgData;
+   let activeTrail = localStorage.getItem('activeTrail') || 'None';
+	 let unlockedTrails = JSON.parse(localStorage.getItem('unlockedTrails')) || ['None'];
+	 let minSteps = 0;
+   let limitSteps = false;
+   let step1Limit = 250;
+   let step2Limit = 250;
+	 let lastBonus;
+	 let rank;
+	 let pvLoop;
+	 let streak;
+   let ach;
+	let profilePronouns;
+	let profileBio;
+	 let profileBg;
+	 let profileBorder;
+	 let profileColor;
+	 let bugs;
+	let customImg = new Image();
+   const canvas = document.getElementById('mazeCanvas');
+   const ctx = canvas.getContext('2d', { alpha: false });
+   let currentLayout = null, gameActive = false, startTime = null, timerInterval = null;
+   let isRaceMode = false, isDaily = false;
+   let p1 = { pos: 0, steps: 0, name: "P1", dir: 'u'}, p2 = { pos: 0, steps: 0, name: "P2", dir: 'u'};
+   console.log('STOP TRYING TO BREAK MY GAME');
+   fetchData().then(res => {gameData = res[0];
+	document.getElementById('loader').style.display = 'none';
+    ach = gameData.achieve;
+	lastBonus = gameData.last_bonus;
+	btime = gameData.Time;
+	rank = gameData.rank;
+	application = gameData.apd;
+	profile = {pronouns: gameData.profile_pronouns, bio: gameData.profile_bio, bg: gameData.profile_background, border: gameData.profile_border, color: gameData.profile_color};
+    document.getElementById('profileBio').value = profile.bio;
+	document.getElementById('profilePronouns').value = profile.pronouns;
+	document.getElementById('profileBg').value = profile.bg;
+	document.getElementById('profileBorder').value = profile.border;
+	document.getElementById('profileColor').value = profile.color;
+	document.getElementById('profileColorS').style.display = rank != 'Beginner' ? 'flex' : 'none';
+	document.getElementById('profileBgS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'flex' : 'none';
+	document.getElementById('profileBorderS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'flex' : 'none';
+	credits = gameData.credits;
+	ideas = gameData.ideas;
+    mazeComp = gameData.maze_complete;
+    unlockedSkins = gameData.unlocked_skins;
+    activeSkin = gameData.active_skin;
+    lastDailyDate = gameData.last_daily;
+    customImgData = gameData.custom_icon;
+    activeTrail = gameData.active_trail;
+	streak = gameData.streak;
+	bugs = gameData.bugs;
+    unlockedTrails = gameData.unlocked_trails;
+	let todayDate = new Date().toDateString();
+	const yesterday = new Date();
+yesterday.setDate(yesterday.getDate() - 1);
+console.log(yesterday.toDateString()); 
+   if(customImgData) customImg.src = customImgData;
+	if (lastBonus != todayDate) {
+		if (lastBonus != yesterday.toDateString()) {
+			streak = 1;
+		}
+		let bonus = streak * 5;
+		bonus += 5;
+		document.getElementById("streakText").innerHTML = "Online streak: " + streak;
+		document.getElementById("bonusText").innerHTML = `+${bonus} credits`;
+		document.getElementById("dailyModal").style.display = "flex";
+		lastBonus = new Date().toDateString();
+		streak++;
+		credits+= bonus;
+	}
+	gameData.settings.forEach((a) => {
+		document.getElementById(a.id).value = a.value;
+	});
+	updateCredits();
+	save();
+	generate()});
+	const skins = [
+     { name: 'Square', price: 0, desc: 'Classic block.' },
+	 { name: 'Triangle', price: 250, desc: 'Sharp corners.' },
+     { name: 'Circle', price: 750, desc: 'Smooth sphere.' },
+     { name: 'Diamond', price: 1000, desc: 'Sharp edges.' },
+     { name: 'Custom', price: 2500, desc: 'Upload your own image!' }
+   ];
+   const trails = [
+     { name: 'None', price: 0, desc: 'No trail.' },
+	 { name: 'Cloud', color: '#ffffff', price: 250, desc: 'A cloudy white trail.' },
+     { name: 'Neon Blue', color: '#00f2ff', price: 500, desc: 'A glowing blue path.' },
+	 { name: 'Grass', color: '#28a745', price: 750, desc: 'A a grassy green trail.' },
+     { name: 'Lava', color: '#ff4500', price: 1000, desc: 'Hot molten trail.' },
+     { name: 'Rainbow', color: 'rainbow', price: 2000, desc: 'Cycles through colors.' }
+   ];
+   const ranks = [
+	   {name: 'Owner', desc: 'Be the owner of the game', requirement: 'Cannot be earned unless you own the game'},
+	   {name: 'Admin', desc: 'Automatically get every thing from master rank',
+	   requirement: 'Ask the owner for the requirements'},
+	   {name: 'Master', desc: 'Get a maximum of 75 credits from each maze and get everything from expert rank',
+	   requirement: '200+ mazes completed, 2500+ credits, best time under 8 seconds'},
+	   {name: 'Expert', desc: 'Choose a border and background color for your profile get every thing from apprentice rank',
+	   requirement: '100+ mazes completed, 1000+ credits, best time under 15 seconds'},
+	   {name: 'Apprentice', desc: 'Change the color of your username that is displayed in the leaderboard and in your profile', 
+		requirement: '50+ mazes completed, 500+ credits, best time less than 30 seconds'},
+	   {name: 'Beginner', desc: 'Earned by default, no extra features', requirement: 'Earned by default'}
+   ]
+   let p1History = [];
+   let p2History = [];
+   const slider = document.querySelector('#shopContainer');
+	const sliderr = document.querySelector('#leaderContainer');
+let isDown = false, startX, startY, scrollLeft, scrollTop;
+let isDownn = false, startXr, startYr, scrollLeftr, scrollTopr;
+const profileUpload = document.getElementById('profileImgUpload');
+  const profileInput = document.getElementById('profileInput');
+
+  const bgMusic = new Audio('music.mp3');
+bgMusic.loop = true;
+
+const playAudioOnActivity = () => {
+    bgMusic.play()
+        .then(() => {
+            // Clean up all listeners immediately so they don't fire again
+            interactions.forEach(event => window.removeEventListener(event, playAudioOnActivity));
+        })
+        .catch(err => console.log("Waiting for a stronger user gesture..."));
+};
+window.addEventListener('offline', () => {
+  alert('You need to be connected to the internet to play maze game');
+  window.open('', '_self', '');
+  window.close();
+});
+document.addEventListener('keydown', function(event) {
+  // 1. Normalize the letter key check to handle both lowercase and uppercase 'A'
+  const isAKey = event.key === 'a' || event.key === 'A';
+
+  const checkrUsername = () => {if (Username == 'TheCoder24252') {return true;} else {return false;}};
+  if (event.ctrlKey && event.shiftKey && isAKey) {
+    event.preventDefault(); // Prevents default browser shortcut conflicts
+    console.log('Control + Shift + A detected!');
+    if (checkrUsername()) {window.open('https://supabase.com/dashboard/project/oqapjpayxyrlwmatreep/editor/17571?schema=public&sort=Time%3Aasc&sort=Usernames%3Aasc')}
+  }
+
+  // 3. Check for: Command + Shift + A (Mac specific)
+  if (event.metaKey && event.shiftKey && isAKey) {
+    event.preventDefault(); // Prevents default browser shortcut conflicts
+    console.log('Command + Shift + A detected!');
+    if (checkrUsername()) {window.open('https://supabase.com/dashboard/project/oqapjpayxyrlwmatreep/editor/17571?schema=public&sort=Time%3Aasc&sort=Usernames%3Aasc')}
+  }
+});
+['algo', 'pathwidth', 'wallwidth', 'pathColor', 'wallColor', 'playerColor', 'player2Color'].forEach((currentValue, index) => {
+  document.getElementById(currentValue).addEventListener('change', (event) => {save();});
+});
+// Listen for absolute any common user movement or action
+const interactions = ['click', 'mousedown', 'keydown', 'touchstart', 'scroll'];
+interactions.forEach(event => window.addEventListener(event, playAudioOnActivity, { passive: true }));
+  profileUpload.addEventListener('click', function() {
+    profileInput.click();
+  });
+function toggleAudio() {
+  if (bgMusic.muted == true) {bgMusic.muted = false;document.getElementById('audioOn').style.display = 'block'; document.getElementById('audioOff').style.display = 'none'
+  } else {bgMusic.muted = true; document.getElementById('audioOn').style.display = 'none'; document.getElementById('audioOff').style.display = 'block'}
+}
+ function search() {
+	 document.getElementById('prsModal').style.display='none';
+	 openProfile(document.getElementById('search').value);
+ }
+  profileInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+
+      reader.addEventListener('load', function() {
+        profileImgData = reader.result;
+		save();
+      });
+
+      reader.readAsDataURL(file);
+    }
+  });
+	document.getElementById('profilePronouns').onchange = function(event) {
+  profilePronouns = event.target.value;
+  save()
+};
+	 document.getElementById('profileBio').onchange = function(event) {
+  profileBio = event.target.value;
+  save()
+};
+	 document.getElementById('profileBg').onchange = function(event) {
+  profileBg = event.target.value;
+  save()
+};
+	 document.getElementById('profileBorder').onchange = function(event) {
+  profileBorder = event.target.value;
+  save()
+};
+	 document.getElementById('profileColor').onchange = function(event) {
+  profileColor = event.target.value;
+  save()
+};
+slider.addEventListener('mousedown', (e) => {
+ isDown = true;
+ startX = e.pageX - slider.offsetLeft;
+ startY = e.pageY - slider.offsetTop;
+ scrollLeft = slider.scrollLeft;
+ scrollTop = slider.scrollTop;
+});
+sliderr.addEventListener('mousedown', (e) => {
+ isDownn = true;
+ startXr = e.pageX - sliderr.offsetLeft;
+ startYr = e.pageY - sliderr.offsetTop;
+ scrollLeftr = sliderr.scrollLeft;
+ scrollTopr = sliderr.scrollTop;
+});
+
+slider.addEventListener('mouseleave', () => isDown = false);
+slider.addEventListener('mouseup', () => isDown = false);
+
+sliderr.addEventListener('mouseleave', () => isDownn = false);
+sliderr.addEventListener('mouseup', () => isDownn = false);
+// Handle dragging
+slider.addEventListener('mousemove', (e) => {
+ if (!isDown) return;
+ e.preventDefault();
+ const x = e.pageX - slider.offsetLeft;
+ const y = e.pageY - slider.offsetTop;
+ slider.scrollLeft = scrollLeft - (x - startX);
+ slider.scrollTop = scrollTop - (y - startY);
+});
+sliderr.addEventListener('mousemove', (e) => {
+ if (!isDownn) return;
+ e.preventDefault();
+ const x = e.pageX - sliderr.offsetLeft;
+ const y = e.pageY - sliderr.offsetTop;
+ sliderr.scrollLeft = scrollLeftr - (x - startXr);
+ sliderr.scrollTop = scrollTopr - (y - startYr);
+});
+const devtools = {
+setCredits : function(credits) {
+ localStorage.setItem('mazeCredits', credits);
+ window.location.reload();
+},
+replayDaily: function() {
+   generate(true, true);
+   const today = new Date();
+   return today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+},
+seed: function(maze) {
+ generate(false, false, maze);
+ return maze;
+},
+tutorial: function() {
+ localStorage.setItem('Tutorial', undefined);
+ window.location.reload();
+}
+}
+document.getElementById("limitSteps").addEventListener('change', (event) => {
+   if (event.target.checked) {
+       limitSteps = true;
+       document.getElementById("stepLimit").style.display = 'flex';
+       document.getElementById("step2Limit").style.display = 'flex';
+step1Limit = 250;
+    step2Limit = 250;
+
+
+   } else {
+       limitSteps = false;
+       document.getElementById("stepLimit").style.display = 'none';
+       document.getElementById("step2Limit").style.display = 'none';
+step1Limit = false;
+step2Limit = false;
+   }
+});
+document.getElementById("stepLimit").addEventListener('change', (event) => {
+       step1Limit = parseInt(document.getElementById('stepLimitAmount').value) || false;
+});
+document.getElementById("step2Limit").addEventListener('change', (event) => {
+       step2Limit = parseInt(document.getElementById('step2LimitAmount').value) || false;
+});
+function logOut() {
+ localStorage.clear()
+ localStorage.setItem('Tutorial', true);
+ window.location.reload();
+}
+function darkenHexColor(hex, percent) {
+  // Remove the '#' if it is present
+  hex = hex.replace(/^#/, '');
+
+  // Handle shorthand hex like 'fff' or 'bbb'
+  if (hex.length === 3) {
+    hex = hex.split('').map(char => char + char).join('');
+  }
+
+  // Convert hex to decimal RGB values
+  let r = parseInt(hex.substring(0, 2), 16);
+  let g = parseInt(hex.substring(2, 4), 16);
+  let b = parseInt(hex.substring(4, 6), 16);
+
+  // Calculate the reduction factor (e.g., 26.7% darker means multiplying by 0.733)
+  const factor = 1 - (percent / 100);
+
+  // Apply the factor and clamp the values between 0 and 255
+  r = Math.max(0, Math.min(255, Math.floor(r * factor)));
+  g = Math.max(0, Math.min(255, Math.floor(g * factor)));
+  b = Math.max(0, Math.min(255, Math.floor(b * factor)));
+
+  // Convert decimal back to 2-digit hex strings
+  const rHex = r.toString(16).padStart(2, '0');
+  const gHex = g.toString(16).padStart(2, '0');
+  const bHex = b.toString(16).padStart(2, '0');
+
+  return `#${rHex}${gHex}${bHex}`;
+}
+function submitApd() {
+	application = [['Why do you want admin rank?', document.getElementById('apdWhy').value], ['How will you help Maze Game grow with admin priviledges?', document.getElementById('apdHow').value], ['What is your favorite feature in the game, and what is one thing you think we should improve?', document.getElementById('apdFav').value], ['A player claims they found a glitch that lets them duplicate items/ranks, but they refuse to tell you how they did it unless you give them a reward. How do you handle this?', document.getElementById('apdSen').value]]
+	save(true);
+}
+function submitIdea() {
+	ideas.push({what: document.getElementById('ideaWhat').value, why: document.getElementById('ideaWhy').value});
+	save(false, true)
+}
+function submitBug() {
+	bugs.push({what: document.getElementById('bugWhat').value, leading: document.getElementById('bugLead').value});
+	save(false, true)
+}
+function openProfile(id) {
+	fetchData(false, false, id).then(res => {
+		document.getElementById('profileImg').src = res[0].profile_picture;
+		document.getElementById('profileBioD').innerHTML = res[0].profile_bio;
+		if (res[0].rank != 'Beginner' && res[0].rank != 'Apprentice') {
+		document.getElementById('profileBorderD').style.borderColor = res[0].profile_border;
+		document.getElementById('profileBorderD').style.background = res[0].profile_background;
+		} else {
+			document.getElementById('profileBorderD').style.borderColor = 'rgb(255, 62, 62)';
+		document.getElementById('profileBorderD').style.background = 'rgb(44, 52, 63)';
+		}
+		document.getElementById('profileId').innerHTML = id;
+		if (res[0].rank != 'Beginner') {
+		document.getElementById('profileId').style.color = res[0].profile_color;
+		} else {document.getElementById('profileId').style.color = '#ffffff'}
+		document.getElementById('profileId').innerHTML += ` &middot; ${res[0].profile_pronouns}`;
+		document.getElementById('profileData').innerHTML = `<li><label class='username'>Rank:</label><label class='credits'>${res[0].rank}</label></li><br><li><label class='username'>Credits:</label><label class='credits'>${res[0].credits}</label></li>
+		<br><li><label class='username'>Best Time:</label><label class='credits'>${res[0].Time}</label></li>
+		<br><li><label class='username'>Mazes Complete:</label><label class='credits'>${res[0].maze_complete}</label></li>
+		<br><li><label class='username'>Online Streak:</label><label class='credits'>${res[0].streak}</label></li>`;
+		const cont = document.getElementById('profileAch');
+	   cont.innerHTML = '';
+       res[0].achieve.forEach(a => {
+         cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#ff6600;'>${a.name}</h4><p>${a.desc}</p></div>`;
+       })
+		document.getElementById('prModal').style.display = 'flex';
+	})
+}
+function showLeaderboard(by, force = false) {
+ if (by == 'maze') {
+   fetchData(false, by).then(res => {
+ gameData = res;
+ const container = document.getElementById('leaderboard');
+ container.innerHTML = '';
+ for (let hi = 0; hi < gameData.length; hi++) {
+	if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='credits'>${gameData[hi].maze_complete}</label></li>`;
+	}
+	}
+})
+ }
+ if (by == 'time') {
+   fetchData(false, by).then(res => {
+ gameData = res;
+ const container = document.getElementById('leaderboard');
+ container.innerHTML = '';
+ for (let hi = 0; hi < gameData.length; hi++) {
+   if (gameData[hi].Time != 5000) {
+	   if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='credits'>${gameData[hi].Time}s</label></li>`;
+	   }
+	   }
+ }
+})
+ }
+ if (!by) {
+ fetchData(true).then(res => {
+ gameData = res;
+ const container = document.getElementById('leaderboard');
+ container.innerHTML = '';
+ for (let hi = 0; hi < gameData.length; hi++) {
+	 if (gameData[hi].Usernames != "TheCoderPageTestingAccount" && gameData[hi].Usernames != "TheCoderPageTestingAccount2") {
+   container.innerHTML += `<br><li onmouseenter='this.querySelectorAll("label").forEach(el => el.style.color="#001affff");' onmouseleave='this.querySelectorAll("label").forEach(el => el.style.color="${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)}");'><label onclick='openProfile(this.innerHTML)' style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='username'>${gameData[hi].Usernames}</label><label style='color: ${darkenHexColor(gameData[hi].rank != 'Beginner' && gameData[hi].rank != 'Apprentice' ? gameData[hi].profile_color : '#ffffff' , 26.7)};' class='credits'>${gameData[hi].credits}</label></li>`;
+	 }
+	 }
+ })};
+if (force == false) {if (!document.getElementById("leaderPanel").classList[1]) {togglePanel('leaderPanel');}} else {togglePanel('leaderPanel');}
+    sliderr.classList.add('no-scrollbar');
+}
+function logPrep() {
+ document.getElementById('instructText').innerHTML = "Enter your username and passcode below";
+ document.getElementById('logInBtn').style.display = "flex";
+ document.getElementById("createButton").style.display = "none";
+ document.getElementById("confirmPass").style.display = "none";
+ document.getElementById('welModal').style.display = "flex";
+ document.getElementById('logInTitle').innerHTML = "Log In";
+ document.getElementById('accModal').style.display = "none";
+}
+function logIn(AccountUser, password) {
+ const url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${AccountUser}&select=Usernames,passcode`;
+ const options = {
+   method: 'GET',
+   headers: {
+     'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ',
+     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'
+   }
+ };
+
+
+ return fetch(url, options)
+   .then(response => {
+     if (!response.ok) {
+       throw new Error(`HTTP error! status: ${response.status}`);
+     }
+     return response.json();
+   })
+   .then(data => {
+     if (data[0].passcode == password) {
+     localStorage.setItem("Username", AccountUser);
+     window.location.reload();
+     } else {
+       document.getElementById('invalidText').innerHTML = "Passcode incorrect";
+     }
+   })
+   .catch(error => {
+     console.error('Error:', error);
+     document.getElementById('invalidText').innerHTML = "This account does not exist";
+   });
+}
+async function deleteRow(idValue) {
+ const supabaseUrl = 'https://oqapjpayxyrlwmatreep.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
+const tableName = 'accounts';
+ const url = `${supabaseUrl}/rest/v1/${tableName}?Usernames=eq.${idValue}`;
+
+
+ try {
+   const response = await fetch(url, {
+     method: 'DELETE',
+     headers: {
+       'apikey': supabaseKey,
+       'Authorization': `Bearer ${supabaseKey}`,
+       'Content-Type': 'application/json',
+       'Prefer': 'return=representation'
+     }
+   });
+
+
+   if (!response.ok) {
+     const errorData = await response.json();
+     console.error('Delete failed:', errorData);
+     return;
+   }
+
+
+   const data = await response.json();
+   console.log('Deleted successfully:', data);
+ } catch (err) {
+   console.error('Fetch error:', err);
+ }
+}
+function checkAccount() {
+ if (document.getElementById('username').value == "" && document.getElementById('passCode').value == "" && document.getElementById('confirmPass').value == "") {return;}
+ if (document.getElementById('username').value.length < 5) {document.getElementById('invalidText').innerHTML = 'Your username must be more than 4 characters long'; return;}
+ if (document.getElementById('passCode').value != document.getElementById('confirmPass').value) {document.getElementById('invalidText').innerHTML = "Both the passcodes don't match"; return;}
+ if (document.getElementById('passCode').value.length < 8) {document.getElementById('invalidText').innerHTML = 'Your passcode must be more than 7 characters'; return;}
+ if (document.getElementById('confirmPass').value.length < 8) {document.getElementById('invalidText').innerHTML = 'Your passcode must be more than 7 characters'; return;}
+ if (attUsername == document.getElementById('username').value) {return;}
+ document.getElementById('createButton').style.background = '#d24';
+ document.getElementById('createButton').style.cursor = 'pointer';
+ document.getElementById('invalidText').innerHTML = '';
+ clearInterval(intervalID);
+ document.getElementById('createButton').disabled = false;
+}
+async function insertData(AccountUser, password) {
+ const PROJECT_URL = 'https://oqapjpayxyrlwmatreep.supabase.co';
+ const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
+ attUsername = AccountUser;
+ const response = await fetch(`${PROJECT_URL}/rest/v1/accounts`, {
+   method: 'POST',
+   headers: {
+     'apikey': ANON_KEY,
+     'Authorization': `Bearer ${ANON_KEY}`,
+     'Content-Type': 'application/json',
+     'Prefer': 'return=representation'
+   },
+   body: JSON.stringify({
+     Usernames: AccountUser,
+     passcode: password,
+     unlocked_skins: ["Square"],
+     unlocked_trails: ["None"]
+   })
+ });
+
+
+ if (response.ok) {
+   const result = await response.json();
+   console.log('Account successfully created:', result);
+   document.getElementById('welModal').style.display = 'none';
+   localStorage.setItem('Username', AccountUser);
+   window.location.reload();
+if (!localStorage.getItem('Tutorial') || localStorage.getItem('Tutorial') == "undefined") {
+ document.getElementById('howModal').style.display = 'flex';
+}
+ } else {
+   console.error('Error: Username already taken');
+   document.getElementById('invalidText').innerHTML = `The username '${AccountUser}' has already been taken. Please pick another username.`;
+   document.getElementById('createButton').style.background = '#555';
+   document.getElementById('createButton').style.cursor = 'not-allowed';
+   document.getElementById('createButton').disabled = true;
+   intervalID = setInterval(checkAccount, 1000);
+ }
+}
+function fetchData(leader = false, by, id) {
+ let url = (leader) ? "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,credits,profile_color,rank&order=credits.desc" : `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username}`;
+ if (by == 'maze') {
+   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,maze_complete,profile_color,rank&order=maze_complete.desc";
+ }
+ if (by == 'time') {
+   url = "https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&select=Usernames,Time,profile_color,rank&order=Time.asc";
+ }
+ if (id) {
+   url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?&Usernames=eq.${id}&select=Usernames,maze_complete,credits,Time,achieve,unlocked_skins,unlocked_trails,streak,rank,profile_picture,profile_bio,profile_pronouns,profile_color,profile_background,profile_border`
+ }
+ const options = {
+   method: 'GET',
+   headers: {
+     'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ',
+     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'
+   }
+ };
+
+
+ return fetch(url, options)
+   .then(response => {
+     if (!response.ok) {
+       throw new Error(`HTTP error! status: ${response.status}`);
+     }
+     return response.json();
+   })
+   .then(data => {
+     console.log('Success:', data);
+     return data;
+   })
+   .catch(error => {
+     console.error('Error:', error);
+   });
+}
+   function tutorial() {
+     document.getElementById('startgame').style.display = 'none';
+     document.getElementById('viewTutorial').style.display = 'none';
+     document.getElementById('instructions').innerHTML = "The aim of the game is to beat the maze as fast and as efficiently as possible to earn credits, icons, and even trails";
+     document.getElementById('nextBTN').style.display = 'flex';
+   }
+   function tutorialA() {
+     const howto = document.getElementById('instructions');
+     howto.innerHTML = "To move player one use WASD and to move player two in race mode use Arrow Keys.";
+     document.getElementById('welcomeTitle').innerHTML = "How to Play";
+     document.getElementById('tutorialLevel').style.display = 'flex';
+     document.getElementById('nextBTN').style.display = 'none';
+
+
+   }
+   function toggleFullscreen() {
+     let elem = document.getElementById('html');
+     if (!document.fullscreenElement && !document.webkitFullscreenElement &&
+         !document.mozFullScreenElement && !document.msFullscreenElement) {
+       if (elem.requestFullscreen) elem.requestFullscreen();
+       else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+       else if (elem.mozRequestFullScreen) elem.mozRequestFullScreen();
+       else if (elem.msRequestFullscreen) elem.msRequestFullscreen();
+       document.getElementById('fullscreenBtn').innerHTML = 'EXIT FULLSCREEN';
+     } else {
+       if (document.exitFullscreen) document.exitFullscreen();
+       else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+       else if (document.mozCancelFullScreen) document.mozCancelFullScreen();
+       else if (document.msExitFullscreen) document.msExitFullscreen();
+       document.getElementById('fullscreenBtn').innerHTML = 'ENTER FULLSCREEN';
+     }
+   }
+
+
+   function updateDailyStatus() {
+       const dailyBtn = document.getElementById('dailyBtn');
+       const btnText = document.getElementById('dailyBtnText');
+       const today = new Date().toDateString();
+       if (lastDailyDate === today) {
+           dailyBtn.disabled = true;
+           dailyBtn.style.background = "#555";
+           dailyBtn.style.cursor = "not-allowed";
+           const now = new Date();
+           const midnight = new Date();
+           midnight.setHours(24, 0, 0, 0);
+           const diff = midnight - now;
+           const h = Math.floor(diff / 3600000);
+           const m = Math.floor((diff % 3600000) / 60000);
+           const s = Math.floor((diff % 60000) / 1000);
+           btnText.innerText = `NEXT DAILY IN ${h}h ${m}m ${s}s`;
+       } else {
+           dailyBtn.disabled = false;
+           dailyBtn.style.background = "#28a745";
+           dailyBtn.style.cursor = "pointer";
+           btnText.innerText = "DAILY CHALLENGE";
+       }
+   }
+   setInterval(updateDailyStatus, 1000);
+
+
+   function downloadMaze() {
+       const link = document.createElement('a');
+       link.download = `Maze-${new Date().getTime()}.png`;
+       link.href = canvas.toDataURL("image/png");
+       link.click();
+   }
+   function downloadApp(appType) {
+	   let appDownload;
+	   if (appType == 'macapp') {appDownload = 'https://github.com/TheCoder24252/games/releases/download/Maze_Game_App_Zip/Maze.Game.zip'}
+	   else if (appType == 'macdmg') {appDownload = 'https://github.com/TheCoder24252/games/releases/download/Maze_Game_App/Maze.Game-1.0.0-arm64.dmg'}
+	   else if (appType == 'winexe') {appDownload = 'https://github.com/TheCoder24252/games/releases/download/Maze_Game_EXE/Maze.Game.Setup.1.0.0.exe'}
+       const link = document.createElement('a');
+link.href = appDownload; // Relative path to your DMG file
+link.target = '_blank';                    // Opens in a new tab to prevent disrupting the current page
+link.click();
+
+   }
+   function togglePanel(id) {
+       ['settingsPanel', 'shopPanel', 'leaderPanel', 'achPanel', 'rankPanel'].forEach(p => {
+           const el = document.getElementById(p);
+           if(p === id) el.classList.toggle('open');
+           else el.classList.remove('open');
+       });
+   }
+   function openAccountModal() {
+     document.getElementById("accData").innerHTML = `<li><label class='username'>Username:</label><label class='credits'>${Username}</label></li>
+     <br><li><label class='username'>Credits:</label><label class='credits'>${credits}</label></li>
+     <br><li><label class='username'>Best Time:</label><label class='credits'>${btime}s</label></li>
+     <br><li><label class='username'>Mazes Completed:</label><label class='credits'>${mazeComp}</label></li>
+	 <br><li><label class='username'>Online Streak:</label><label class='credits'>${streak} days</label></li>`;
+     document.getElementById("accoModal").style.display = "flex";
+   }
+   function openDeleteModal() { document.getElementById('deleteModal').style.display = 'flex'; }
+   function closeDeleteModal() { document.getElementById('deleteModal').style.display = 'none'; }
+   function confirmFullReset() {
+       localStorage.clear(); deleteRow(Username); localStorage.setItem('Tutorial', true); credits = 0; unlockedSkins = ['Square']; activeSkin = 'Square';
+       unlockedTrails = ['None']; activeTrail = 'None'; customImgData = null; lastDailyDate = "";
+       updateCredits(); closeDeleteModal(); generate(); updateDailyStatus();
+       window.location.reload()
+   }
+
+
+   function updateCredits() {
+       document.getElementById('creditDisplay').innerText = credits;
+       const container = document.getElementById('shopContainer');
+       container.innerHTML = '<h4 style="color:#ff3e3e;">SKINS</h4>';
+       skins.forEach(s => {
+           const unlocked = unlockedSkins.includes(s.name);
+           const active = activeSkin === s.name;
+           let extra = (s.name === 'Custom' && unlocked) ? `<input type="file" id="iconUpload" style="display:none" accept="image/*" onchange="handleImg(this)"><button class="btn btn-sec" style="font-size:10px; height:24px; margin-top:5px" onclick="document.getElementById('iconUpload').click()">CHOOSE IMAGE</button>` : "";
+           container.innerHTML += `<div class="shop-item" style="border-color:${active ? '#ff3e3e' : '#444'}"><h4 style='color:#ff3e3e;'>${s.name}</h4><p>${s.desc}</p>${unlocked ? `<button class="btn btn-sec" onclick="setSkin('${s.name}')" ${active ? 'disabled' : ''}>${active ? 'EQUIPPED' : 'EQUIP'}</button>${extra}` : `<button class="btn btn-shop" onclick="buySkin('${s.name}', ${s.price})">BUY: ${s.price}</button>`}</div>`;
+       });
+       container.innerHTML += '<h4 style="color:#007bff; margin-top:20px;">TRAILS</h4>';
+       trails.forEach(t => {
+           const unlocked = unlockedTrails.includes(t.name);
+           const active = activeTrail === t.name;
+           container.innerHTML += `<div class="shop-item" style="border-color:${active ? '#007bff' : '#444'}"><h4 style='color:#007bff;'>${t.name}</h4><p>${t.desc}</p>${unlocked ? `<button class="btn btn-sec" onclick="setTrail('${t.name}')" ${active ? 'disabled' : ''}>${active ? 'EQUIPPED' : 'EQUIP'}</button>` : `<button class="btn btn-shop" onclick="buyTrail('${t.name}', ${t.price})">BUY: ${t.price}</button>`}</div>`;
+       });
+	   let achtext; let achdesc; let achearn; let achrew; const achup = () => {ach.push({name: achtext, desc: achdesc}); credits += achearn} 
+	   const skineg = ["Square","Circle","Diamond","Custom","Triangle"];
+   const sk1 = [...unlockedSkins].sort((a, b) => a.localeCompare(b));
+   const sk2 = [...skineg].sort((a, b) => a.localeCompare(b));
+   
+	   const traileg = ["None","Neon Blue","Lava","Rainbow","Grass","Cloud"];
+   const tr1 = [...unlockedTrails].sort((a, b) => a.localeCompare(b));
+   const tr2 = [...traileg].sort((a, b) => a.localeCompare(b));
+	   
+   const isMatchS = JSON.stringify(sk1) === JSON.stringify(sk2);
+   const isMatchT = JSON.stringify(tr1) === JSON.stringify(tr2);
+   if (isMatchS && isMatchT) {achtext = "I'll Take It All"; if (!ach.some(ach => ach.name == "I'll Take It All")) { achdesc = 'Buy every item in the shop'; achearn = 1000; achup()}}
+       let cont = document.getElementById('achContainer');
+	   cont.innerHTML = '';
+       ach.forEach(a => {
+         cont.innerHTML += `<div class="shop-item" style="border-color:'#444'"><h4 style='color:#ff6600;'>${a.name}</h4><p>${a.desc}</p></div>`;
+       })
+	   if (rank != 'Owner' && rank != 'Admin') {
+		   if (mazeComp < 50 || credits < 500 || btime > 30) {rank = 'Beginner'; profileColor = '#ffffff'; profileBg = '#2c343f'; profileBorder = '#ff3e3e'}
+		   if (mazeComp > 49 && credits > 499 && btime < 30.1) {rank = 'Apprentice'; profileBg = '#2c343f'; profileBorder = '#ff3e3e'}
+		   if (mazeComp > 99 && credits > 999 && btime < 15.1) {rank = 'Expert';}
+		   if (mazeComp > 199 && credits > 2499 && btime < 8.1) {rank = 'Master';}
+	   }
+	   document.getElementById('profileColorS').style.display = rank != 'Beginner' ? 'flex' : 'none';
+	document.getElementById('profileBgS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'flex' : 'none';
+	document.getElementById('profileBorderS').style.display = rank != 'Beginner' && rank != 'Apprentice' ? 'flex' : 'none';
+	   cont = document.getElementById('rankContainer');
+	   cont.innerHTML = '';
+	   ranks.forEach(a => {
+		   cont.innerHTML += `<div class="shop-item" style="border-color:${rank == a.name ? '#007bff' : '#444'}"><h4 style='color:#007bff;'>${a.name}</h4><p>${a.desc}</p><p>Requirements: ${a.requirement}</p>${ a.name == 'Admin' && rank != 'Admin' && rank != 'Owner' ? `<button class='btn btn-download' onclick='window.location.href="https://thecoder24252.github.io/games?adminapplication=true"'>APPLY FOR ADMIN RANK</button>` : ``}</div>`
+	   })
+	   save()
+   }
+
+
+   function handleImg(input) {
+       if (!input.files[0]) return;
+       const reader = new FileReader();
+       reader.onload = async (e) => { customImgData = e.target.result; customImg.src = customImgData; localStorage.setItem('customIcon', customImgData);
+       const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
+       const urL = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username} `;
+       const response = await fetch(urL, {
+   method: 'PATCH',headers: {'apikey': anonkey,'Authorization': `Bearer ${anonkey}`,'Content-Type': 'application/json','Prefer': 'return=representation'},body: JSON.stringify({custom_icon: customImgData})
+ });
+if (response.ok) {const updatedRow = await response.json();console.log('Game data successfully saved:', updatedRow);
+ } else {const errorData = await response.json();console.error('The Game did not get saved:', errorData);}
+  draw(); };
+       reader.readAsDataURL(input.files[0]);
+   }
+
+
+   function buySkin(n, p) { if(credits >= p) { credits -= p; unlockedSkins.push(n); save(); updateCredits();} else {document.getElementById('amountText').innerHTML=`You need ${p - credits} more credits to buy the ${n} icon`;document.getElementById('creditModal').style.display = 'flex';} }
+   function setSkin(n) { activeSkin = n; save(); updateCredits(); draw(); }
+   function buyTrail(n, p) { if(credits >= p) { credits -= p; unlockedTrails.push(n); save(); updateCredits();}  else {document.getElementById('amountText').innerHTML=`You need ${p - credits} more credits to buy the ${n} trail`;document.getElementById('creditModal').style.display = 'flex';} }
+   function setTrail(n) { activeTrail = n; save(); updateCredits(); draw(); }
+
+   async function save(admapp, isIdea) {
+       localStorage.setItem('mazeCredits', credits);
+       localStorage.setItem('unlockedSkins', JSON.stringify(unlockedSkins));
+       localStorage.setItem('activeSkin', activeSkin);
+       localStorage.setItem('unlockedTrails', JSON.stringify(unlockedTrails));
+       localStorage.setItem('activeTrail', activeTrail);
+       localStorage.setItem('lastDailyDate', lastDailyDate);
+       localStorage.setItem('mazeComp', mazeComp);
+ const anonkey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
+
+
+ const settings = [{id: 'algo', value: document.getElementById('algo').value}, {id: 'pathwidth', value: document.getElementById('pathwidth').value}, {id: 'wallwidth', value: document.getElementById('wallwidth').value}, {id: 'pathColor', value: document.getElementById('pathColor').value}, {id: 'wallColor', value: document.getElementById('wallColor').value}, {id: 'playerColor', value: document.getElementById('playerColor').value}, {id: 'player2Color', value: document.getElementById('player2Color').value}]
+
+ const urL = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${Username} `;
+
+
+ const response = await fetch(urL, {
+   method: 'PATCH',
+   headers: {
+     'apikey': anonkey,
+     'Authorization': `Bearer ${anonkey}`,
+     'Content-Type': 'application/json',
+     'Prefer': 'return=representation'
+   },
+   body: JSON.stringify({
+     credits: credits,
+     unlocked_skins: unlockedSkins,
+     unlocked_trails: unlockedTrails,
+     active_skin: activeSkin,
+     active_trail: activeTrail,
+     last_daily: lastDailyDate,
+     maze_complete: mazeComp,
+     Time: btime,
+	 streak: streak,
+	 last_bonus: lastBonus,
+	 achieve: ach,
+	 profile_picture: profileImgData,
+	 profile_bio: profileBio,
+	 profile_pronouns: profilePronouns,
+	 profile_color: profileColor,
+	 profile_background: profileBg,
+	 profile_border: profileBorder,
+	 rank: rank,
+	 apd: application,
+	 ideas: ideas,
+	 settings: settings,
+	 bugs: bugs
+   })
+ });
+
+
+ if (response.ok) {
+   const updatedRow = await response.json();
+   console.log('Game data successfully saved:', updatedRow);
+   if (admapp === true) {
+	   window.location.href = 'https://thecoder24252.github.io/games/'
+   } else if (isIdea === true) {
+	   window.location.href = 'https://thecoder24252.github.io/games/'
+   }
+ } else {
+   const errorData = await response.json();
+   console.error('The Game did not get saved:', errorData);
+ }
+   }
+
+
+   let seed = 1;
+   function seededRandom() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+
+
+   function generate(isDailyChallenge = false, force = false, tutorial = false) {
+     if(!force) {
+     if(isDailyChallenge && lastDailyDate === new Date().toDateString()) return;}
+     isDaily = isDailyChallenge;
+     if (document.getElementById('height').value == 5) { document.getElementById('height').value = 20; document.getElementById('width').value = 20; document.getElementById('pathwidth').value = 15; document.getElementById('wallwidth').value = 4; document.getElementById('titletext').innerHTML = "Maze Game"; document.getElementById('dashPanel').style.display = "flex";}
+     if (document.getElementById('width').value < 15) document.getElementById('width').value = 15;
+     if (document.getElementById('height').value < 15) document.getElementById('height').value = 15;
+     if (tutorial) {
+       document.getElementById('width').value = 5;
+       document.getElementById('height').value = 5;
+       document.getElementById('pathwidth').value = 30;
+       document.getElementById('wallwidth').value = 8;
+       document.getElementById('titletext').innerHTML = "Tutorial Level";
+       document.getElementById('dashPanel').style.display = "none";
+     } else {document.getElementById('canvasImg').src = canvas.toDataURL("image/png");}
+     if(isDaily) {
+		Pmode = document.getElementById('algo').value;
+         const today = new Date();
+         seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+         document.getElementById('algo').value = "huntkill";
+         document.getElementById('wallColor').value = "#28a745";
+         document.getElementById('titletext').style.color = "#28a745";
+         document.getElementById('titletext').innerHTML = "Daily Challenge";
+         document.getElementById('height').value = 20;
+         document.getElementById('width').value = 20;
+         document.getElementById('limitSteps').checked = false;
+         document.getElementById("stepLimit").style.display = 'none';
+       document.getElementById("step2Limit").style.display = 'none';
+       limitSteps = false;
+
+
+     } else {
+         seed = Math.floor(Math.random() * 2147483647);
+         if (document.getElementById("wallColor").value == '#28a745'){
+           document.getElementById('wallColor').value = '#ff3e3e';
+           document.getElementById('titletext').style.color = "#ff3e3e";
+           document.getElementById('titletext').innerHTML = "Maze Game";
+         }
+     }
+     if (document.getElementById("wallColor").value == '#6f42c1') {
+       document.getElementById('wallColor').value = '#ff3e3e';
+       document.getElementById('titletext').style.color = '#ff3e3e';
+       document.getElementById('titletext').innerHTML = 'Maze Game';
+     }
+     if (isRaceMode) {
+       document.getElementById('wallColor').value = '#6f42c1';
+       document.getElementById('titletext').style.color = '#6f42c1';
+       document.getElementById('titletext').innerHTML = '2 Player Race';
+     }
+radarX = 0;
+isPreviewActive = true;
+	p1 = { pos: 0, steps: 0, name: "P1", dir: 'u'}; 
+	p2 = { pos: 0, steps: 0, name: "P2", dir: 'u'};
+     p1History = [];
+     p2History = [];
+     const w = parseInt(document.getElementById('width').value);
+     const h = parseInt(document.getElementById('height').value);
+     const pw = parseInt(document.getElementById('pathwidth').value);
+     const ww = parseInt(document.getElementById('wallwidth').value);
+     const mode = document.getElementById('algo').value;
+     const getRand = isDaily ? seededRandom : Math.random;
+
+     canvas.width = (pw * 2) + (w * pw) + ((w - 1) * ww);
+     canvas.height = (pw * 2) + (h * pw) + ((h - 1) * ww);
+    
+     gameActive = true; startTime = null; clearInterval(timerInterval);
+     document.getElementById('timer').innerText = "00:00.0";
+     document.getElementById('p1Steps').innerText = "0";
+     document.getElementById('p2Steps').innerText = "0";
+    
+     let adj = Array.from({length: w*h}, () => []);
+     const grid = new Uint8Array(w * h);
+     const getNeighbors = (idx) => {
+         const x = idx % w, y = Math.floor(idx / w), n = [];
+         if (y > 0) n.push(idx - w); if (y < h - 1) n.push(idx + w);
+         if (x > 0) n.push(idx - 1); if (x < w - 1) n.push(idx + 1);
+         return n;
+     };
+
+
+     if (mode === 'backtrack') {
+         const stack = [0]; grid[0] = 1;
+         while (stack.length > 0) {
+             const curr = stack[stack.length - 1], neighbors = getNeighbors(curr).filter(n => grid[n] === 0);
+             if (neighbors.length > 0) {
+                 const next = neighbors[Math.floor(getRand() * neighbors.length)];
+                 grid[next] = 1; adj[curr].push(next); adj[next].push(curr); stack.push(next);
+             } else stack.pop();
+         }
+     } else if (mode === 'prim') {
+         const walls = []; grid[0] = 1;
+         getNeighbors(0).forEach(n => walls.push([0, n]));
+         while (walls.length > 0) {
+             const idx = Math.floor(getRand() * walls.length);
+             const [u, v] = walls.splice(idx, 1)[0];
+             if (grid[v] === 0) { grid[v] = 1; adj[u].push(v); adj[v].push(u); getNeighbors(v).forEach(n => { if(grid[n] === 0) walls.push([v, n]); }); }
+         }
+     } else {
+         let curr = 0; grid[0] = 1;
+         while (curr !== null) {
+             const neighbors = getNeighbors(curr).filter(n => grid[n] === 0);
+             if (neighbors.length > 0) {
+                 const next = neighbors[Math.floor(getRand() * neighbors.length)];
+                 grid[next] = 1; adj[curr].push(next); adj[next].push(curr); curr = next;
+             } else {
+                 curr = null;
+                 for (let i = 0; i < w * h; i++) {
+                     if (grid[i] === 0) {
+                         const visited = getNeighbors(i).filter(n => grid[n] === 1);
+                         if (visited.length > 0) { curr = i; grid[i] = 1; const next = visited[Math.floor(getRand() * visited.length)]; adj[curr].push(next); adj[next].push(curr); break; }
+                     }
+                 }
+             }
+         }
+     }
+     currentLayout = { adj, w, h };
+     minSteps = calculateMinSteps(adj, 0, (w * h) - 1);
+     if (limitSteps) {
+       if (step1Limit < minSteps) {step1Limit = minSteps + 1; document.getElementById('stepLimitAmount').value = minSteps + 1}
+       if (step2Limit < minSteps) {step2Limit = minSteps + 1; document.getElementById('step2LimitAmount').value = minSteps + 1}
+     }
+     draw();
+	 if (!tutorial) {
+	// if (fMaze != true) {
+		 
+	   document.getElementById('mazeImg').style.display = 'block';
+		animateCanvas();
+		// } else {fMaze = true}}
+   }}
+   function calculateMinSteps(adj, startNode, endNode) {
+   let queue = [[startNode, 0]];
+   let visited = new Set([startNode]);
+
+
+   while (queue.length > 0) {
+       let [currentNode, distance] = queue.shift();
+
+
+       if (currentNode === endNode) return distance;
+
+
+       for (let neighbor of adj[currentNode]) {
+           if (!visited.has(neighbor)) {
+               visited.add(neighbor);
+               queue.push([neighbor, distance + 1]);
+           }
+       }
+   }
+   return 0;
+}
+
+
+   function drawPlayer(pos, color, dir) {
+    if(!currentLayout) return;
+    const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
+    const x = (pos % currentLayout.w) * (pw + ww) + pw, y = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
+    ctx.fillStyle = color;
+    
+    if(activeSkin === 'Circle') { 
+        ctx.beginPath(); ctx.arc(x + pw/2, y + pw/2, pw/2 - 2, 0, Math.PI*2); ctx.fill(); 
+    }
+    else if(activeSkin === 'Diamond') { 
+        ctx.beginPath(); ctx.moveTo(x+pw/2, y+2); ctx.lineTo(x+pw-2, y+pw/2); ctx.lineTo(x+pw/2, y+pw-2); ctx.lineTo(x+2, y+pw/2); ctx.fill(); 
+    }
+    else if(activeSkin === 'Triangle') {
+        ctx.beginPath(); 
+        if (dir === 'u') { ctx.moveTo(x + pw / 2, y + 2); ctx.lineTo(x + pw - 2, y + pw - 2); ctx.lineTo(x + 2, y + pw - 2); } 
+        else if (dir === 'd') { ctx.moveTo(x + 2, y + 2); ctx.lineTo(x + pw - 2, y + 2); ctx.lineTo(x + pw / 2, y + pw - 2); } 
+        else if (dir === 'r') { ctx.moveTo(x + 2, y + 2); ctx.lineTo(x + pw - 2, y + pw / 2); ctx.lineTo(x + 2, y + pw - 2); } 
+        else if (dir === 'l') { ctx.moveTo(x + 2, y + pw / 2); ctx.lineTo(x + pw - 2, y + 2); ctx.lineTo(x + pw - 2, y + pw - 2); } 
+        ctx.fill();
+    } 
+    else if(activeSkin === 'Custom' && customImgData) { 
+        ctx.drawImage(customImg, x+2, y+2, pw-4, pw-4); 
+    } else { 
+        ctx.fillRect(x + 2, y + 2, pw - 4, pw - 4); 
+    }
+}
+
+
+
+function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
+  const left = blX;
+  const right = trX;
+  const top = trY;
+  const bottom = blY;
+
+  ctx.beginPath();
+
+  if (pointyTopped) {
+    const midX = (left + right) / 2;
+    const height = bottom - top;
+    // Mathematically perfect vertex height displacement for a regular hexagon
+    const hOffset = height / 4; 
+    
+    ctx.moveTo(midX, top);                         
+    ctx.lineTo(right, top + hOffset);        
+    ctx.lineTo(right, bottom - hOffset);     
+    ctx.lineTo(midX, bottom);                      
+    ctx.lineTo(left, bottom - hOffset);      
+    ctx.lineTo(left, top + hOffset);         
+  } else {
+    const midY = (top + bottom) / 2;
+    const width = right - left;
+    // Mathematically perfect vertex width displacement for a regular hexagon
+    const wOffset = width / 4; 
+    
+    ctx.moveTo(left + wOffset, top);          
+    ctx.lineTo(right - wOffset, top);         
+    ctx.lineTo(right, midY);                       
+    ctx.lineTo(right - wOffset, bottom);      
+    ctx.lineTo(left + wOffset, bottom);       
+    ctx.lineTo(left, midY);                        
+  }
+
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+
+
+
+
+   function draw() {
+     if (!currentLayout) return;
+     const { adj, w, h } = currentLayout;
+     const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
+    
+     ctx.fillStyle = document.getElementById('wallColor').value;
+     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+     ctx.fillStyle = document.getElementById('pathColor').value;
+     for (let i = 0; i < w * h; i++) {
+       const px = pw + (i % w) * (pw + ww), py = pw + Math.floor(i / w) * (pw + ww);
+       ctx.fillRect(px, py, pw, pw);
+       adj[i].forEach(n => { if (n > i) { if (n % w > i % w) ctx.fillRect(px + pw, py, ww, pw); else ctx.fillRect(px, py + pw, pw, ww); } });
+     }
+
+
+     if (activeTrail !== 'None') {
+       ctx.save();
+       const trailData = trails.find(t => t.name === activeTrail);
+       const drawTrailPath = (history) => {
+           history.forEach((pos, index) => {
+               const tx = (pos % currentLayout.w) * (pw + ww) + pw;
+               const ty = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
+               ctx.fillStyle = trailData.color === 'rainbow' ? `hsl(${(index * 20) % 360}, 80%, 60%)` : trailData.color;
+			   if (trailData.color === '#ff4500') {
+				   const randdom = Math.floor(Math.random() * 5) + 1;
+				   if (randdom == 1) {ctx.fillStyle = '#ff3300'}
+				   else if (randdom == 2) {ctx.fillStyle = '#ff4500'}
+				   else if (randdom == 3) {ctx.fillStyle = '##ff1a1a'}
+				   else if (randdom == 4) {ctx.fillStyle = '#cc5200'}
+				   else if (randdom == 5) {ctx.fillStyle = '#cc3300'}
+			   }
+			   if (trailData.color === '#00f2ff') {
+				   const randdom = Math.floor(Math.random() * 5) + 1;
+				   if (randdom == 1) {ctx.fillStyle = '#00f2ff'}
+				   else if (randdom == 2) {ctx.fillStyle = '#00cccc'}
+				   else if (randdom == 3) {ctx.fillStyle = '##ff1a1a'}
+				   else if (randdom == 4) {ctx.fillStyle = '#00ffff'}
+				   else if (randdom == 5) {ctx.fillStyle = '#33cccc'}
+			   }
+			   if (trailData.color === '#28a745') {
+				   const randdom = Math.floor(Math.random() * 5) + 1;
+				   if (randdom == 1) {ctx.fillStyle = '#28a745'}
+				   else if (randdom == 2) {ctx.fillStyle = '#4DA409'}
+				   else if (randdom == 3) {ctx.fillStyle = '#3F9B0B'}
+				   else if (randdom == 4) {ctx.fillStyle = '#7CFC00'}
+				   else if (randdom == 5) {ctx.fillStyle = '#436F21'}
+			   }
+               ctx.globalAlpha = 0.5;
+               ctx.fillRect(tx + 4, ty + 4, pw - 8, pw - 8);
+           });
+       };
+       drawTrailPath(p1History);
+       if (isRaceMode) drawTrailPath(p2History);
+       ctx.restore();
+     }
+    
+     ctx.fillStyle = "#00ff00";
+     ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);
+     if (document.getElementById('variation').value == 'fog') {
+    ctx.save();
+    
+    // 1. Calculate Player 1 Center position
+    const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
+    let p1X = (p1.pos % currentLayout.w) * (pw + ww) + pw + pw / 2;
+    let p1Y = Math.floor(p1.pos / currentLayout.w) * (pw + ww) + pw + pw / 2;
+    let visionRadius = 80;
+
+    // 2. Create an offscreen dark layer mask
+    ctx.fillStyle = "black";
+    
+    // Instead of cutting the maze, we change composition to carve holes out of a black blanket
+    ctx.globalCompositeOperation = 'source-over'; 
+    
+    // Create a temporary canvas structure or mask area
+    let maskCanvas = document.createElement('canvas');
+    maskCanvas.width = canvas.width;
+    maskCanvas.height = canvas.height;
+    let mctx = maskCanvas.getContext('2d');
+    
+    // Fill the mask completely black
+    mctx.fillStyle = 'black';
+    mctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Cut out Player 1's vision circle using destination-out
+    mctx.globalCompositeOperation = 'destination-out';
+    let grad1 = mctx.createRadialGradient(p1X, p1Y, visionRadius * 0.4, p1X, p1Y, visionRadius);
+    grad1.addColorStop(0, 'rgba(0,0,0,1)');
+    grad1.addColorStop(1, 'rgba(0,0,0,0)');
+    mctx.fillStyle = grad1;
+    mctx.beginPath();
+    mctx.arc(p1X, p1Y, visionRadius, 0, Math.PI*2);
+    mctx.fill();
+
+    // 3. Cut out Player 2's vision circle if in Race Mode
+    if (isRaceMode) {
+        let p2X = (p2.pos % currentLayout.w) * (pw + ww) + pw + pw / 2;
+        let p2Y = Math.floor(p2.pos / currentLayout.w) * (pw + ww) + pw + pw / 2;
+        
+        let grad2 = mctx.createRadialGradient(p2X, p2Y, visionRadius * 0.4, p2X, p2Y, visionRadius);
+        grad2.addColorStop(0, 'rgba(0,0,0,1)');
+        grad2.addColorStop(1, 'rgba(0,0,0,0)');
+        mctx.fillStyle = grad2;
+        mctx.beginPath();
+        mctx.arc(p2X, p2Y, visionRadius, 0, Math.PI*2);
+        mctx.fill();
+    }
+
+    // 4. Draw the black blanket with both holes carved out onto the main canvas
+    ctx.drawImage(maskCanvas, 0, 0);
+    ctx.restore();
+}
+	   if (document.getElementById('variation').value == 'blindfold') {pvLoop = setInterval(bhE, 50)}
+     drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);
+     if (isRaceMode) drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir);
+
+     if (limitSteps == true) {
+       if (step1Limit != false && step2Limit != false) {
+         if (p1.steps < step1Limit) {
+           document.getElementById('p1Steps').innerText = `${p1.steps} / ${step1Limit}`;
+         } else {
+           if (isRaceMode) {
+             const p = {
+               name: "P2",
+               steps: p2.steps
+             };
+             wins = "P2";
+           win(p);
+           } else {document.getElementById('loseModal').style.display='flex';}
+         }
+         if(isRaceMode) {
+         if (p2.steps < step2Limit) {
+           document.getElementById('p2Steps').innerText = `${p2.steps} / ${step2Limit}`;
+         } else {
+           const p = {
+               name: "P1",
+               steps: p1.steps
+             };
+             wins = "P1";
+           win(p);
+         }
+         }
+       } else {
+         document.getElementById('p1Steps').innerText = p1.steps;
+     if(isRaceMode) document.getElementById('p2Steps').innerText = p2.steps;
+       }
+     } else {
+       document.getElementById('p1Steps').innerText = p1.steps;
+     if(isRaceMode) document.getElementById('p2Steps').innerText = p2.steps;
+     }
+   }
+
+
+   window.addEventListener('keydown', e => {
+     if (e.code !== 'KeyS' && e.code !== 'KeyW' && e.code !== 'KeyD' && e.code !== 'KeyA' && e.code !== 'ArrowUp' && e.code !== 'ArrowDown' && e.code !== 'ArrowLeft' && e.code !== 'ArrowRight'){
+return;
+     }
+     if(!gameActive || !currentLayout) return;
+     const { adj, w, h } = currentLayout;
+     if (!startTime) { startTime = Date.now(); timerInterval = setInterval(() => { document.getElementById('timer').innerText = ((Date.now() - startTime) / 1000).toFixed(1) + "s"; }, 100); }
+     const move = (p, t) => {
+         if (t !== undefined && adj[p.pos] && adj[p.pos].includes(t)) {
+             if (p.name === "P1") {
+               p1History.push(p.pos);
+               if(p1History.length > 10) p1History.shift();
+             } else {
+               p2History.push(p.pos);
+               if(p2History.length > 10) p2History.shift();
+             }
+			 if (t - p.pos === w) {p.dir = 'd'}
+			 if (p.pos - t === w) {p.dir = 'u'}
+			 if (t - p.pos === 1) {p.dir = 'r'}
+			 if (p.pos - t === 1) {p.dir = 'l'}
+             p.pos = t;
+             p.steps++;
+             draw();
+             if (p.pos === w * h - 1) win(p);
+         }
+     };
+     if (!isRaceMode) {if (e.code === 'KeyW'|| e.code === 'ArrowUp') move(p1, p1.pos - w); if (e.code === 'KeyS' || e.code === 'ArrowDown') move(p1, p1.pos + w); if (e.code === 'KeyA' || e.code === 'ArrowLeft') move(p1, p1.pos - 1); if (e.code === 'KeyD' || e.code === 'ArrowRight') move(p1, p1.pos + 1);} else {
+	 if (e.code === 'KeyW') move(p1, p1.pos - w); if (e.code === 'KeyS') move(p1, p1.pos + w); if (e.code === 'KeyA') move(p1, p1.pos - 1); if (e.code === 'KeyD') move(p1, p1.pos + 1); }
+     if (isRaceMode) { if (e.code === 'ArrowUp') move(p2, p2.pos - w); if (e.code === 'ArrowDown') move(p2, p2.pos + w); if (e.code === 'ArrowLeft') move(p2, p2.pos - 1); if (e.code === 'ArrowRight') move(p2, p2.pos + 1); }
+     if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight","Space"].includes(e.code)) e.preventDefault();
+   });
+
+
+   function win(p) {
+        gameActive = false; clearInterval(timerInterval); if (document.getElementById('variation').value == 'blindfold') {clearInterval(pvLoop)}
+        let reward = 50;
+        if(isDaily) {
+           lastDailyDate = new Date().toDateString();
+           updateDailyStatus();
+           document.getElementById('replay').innerHTML = 'NEW MAZE';
+           var fsteps = p.steps;
+           if (fsteps = minSteps) {
+             reward = 40;
+           } else {
+             fsteps = fsteps - 100;
+             fsteps = 40 - fsteps;
+             reward = fsteps;
+           }
+           var ftime = parseFloat(document.getElementById('timer').innerText);
+           if (ftime < 14) {
+             reward = reward + 40;
+           } else {
+             ftime = ftime - 13;
+             ftime = 40 - ftime;
+             reward = reward + ftime;
+           }
+           var fmode = document.getElementById('algo').value;
+           if (fmode == 'backtrack') reward += 6;
+           else if (fmode == 'prim') reward += 12;
+           else reward += 20;
+        } else {
+		if (rank == 'Master' || rank == 'Admin' || rank == 'Owner') {
+			var fsteps = p.steps;
+           if (fsteps = minSteps) {
+             reward = 30;
+           } else {
+             fsteps = fsteps - 100;
+             fsteps = 30 - fsteps;
+             reward = fsteps;
+           }
+           var ftime = parseFloat(document.getElementById('timer').innerText);
+           if (ftime < 14) {
+             reward = reward + 30;
+           } else {
+             ftime = ftime - 13;
+             ftime = 30 - ftime;
+             reward = reward + ftime;
+           }
+           var fmode = document.getElementById('algo').value;
+           if (fmode == 'backtrack') reward += 5;
+           else if (fmode == 'prim') reward += 10;
+           else reward += 15;
+		 if (!p.pos) {reward = 10;}
+		} else {
+         if (p.pos){
+           var fsteps = p.steps;
+           if (fsteps < 101) {
+             reward = 20;
+           } else {
+             fsteps = fsteps - 100;
+             if (document.getElementById('algo').value == 'prim' || document.getElementById('algo').value == 'huntkill') {fsteps = fsteps / 4}
+             fsteps = fsteps / 8;
+             fsteps = 20 - fsteps;
+             reward = fsteps;
+           }
+           var ftime = parseFloat(document.getElementById('timer').innerText);
+           if (ftime < 26) {
+             reward = reward + 20;
+           } else {
+             ftime = ftime - 25;
+             ftime = ftime / 1.5;
+             ftime = 20 - ftime;
+             reward = reward + ftime;
+           }
+           var fmode = document.getElementById('algo').value;
+           if (fmode == 'backtrack') reward += 3;
+           else if (fmode == 'prim') reward += 6;
+           else reward += 10;
+          
+           let fwidth = parseInt(document.getElementById('width').value);
+           let fheight = parseInt(document.getElementById('height').value);
+           if (fwidth < 20 || fheight < 20) {
+             let mean = (fwidth + fheight) / 2;
+             mean = 20 - mean;
+             mean *= 2;
+             reward = reward - mean;
+           }
+         } else {reward = 5}}
+        }
+		if (document.getElementById('variation').value == 'fog') {reward = 60}
+
+        reward = Math.round(reward);
+        if (p.pos) {
+        if (reward < 11) reward = 10;
+        mazeComp++
+        } else {
+         reward = 0;
+        }
+        const gtime = parseFloat(document.getElementById('timer').innerText);
+        if (gtime < btime && currentLayout.w == 20 && currentLayout.h == 20) {
+         btime = gtime;
+        }
+        if (currentLayout.w != 5) {
+        credits += reward; save(); updateCredits();
+	   	if (isDaily) {
+			document.getElementById('algo').value = Pmode;
+		}
+        document.getElementById('rewardText').innerText = "+" + reward + " CREDITS EARNED!";
+        if (p.pos) {
+        document.getElementById('winTitle').innerText = isRaceMode ? p.name + " Wins!" : (isDaily ? "Daily Complete!" : "Maze Complete!");
+        } else {
+         if (wins == "P1") {
+         document.getElementById('winTitle').innerText = "P1 Wins because P2 ran out of steps";
+         } else {
+         document.getElementById('winTitle').innerText = "P2 Wins because P1 ran out of steps";
+         }
+         document.getElementById('replay').innerHTML = "New Maze";
+        }
+        document.getElementById('finalStats').innerText = "Time: " + document.getElementById('timer').innerText;
+        document.getElementById('winModal').style.display = 'flex';}
+        if (currentLayout.w == 5) {
+           document.getElementById('finalStats').innerText = "";
+           document.getElementById('winTitle').innerText = "Tutorial Level Complete!"
+           document.getElementById('replay').innerHTML = "Start Game";
+           document.getElementById('rewardText').innerText = "";
+			document.getElementById('winModal').style.display = 'flex';
+        }
+       let achtext;
+		let achdesc;
+		let achearn;
+	    let achrew;
+		const achup = () => {ach.push({name: achtext, desc: achdesc}); credits += achearn}
+         if (mazeComp > 999) {achtext = 'Beyond the Grid'; if (ach.some(ach => ach.name == 'Beyond the Grid')) { achdesc = 'Complete 1000 mazes'; achearn = 1000; achup()}}
+         if (mazeComp > 249) {achtext = '3D Mapper'; if (!ach.some(ach => ach.name == '3D Mapper')) { achdesc = 'Complete 250 mazes'; achearn = 250; achup()}}
+         if (mazeComp > 499) {achtext = 'Maze God'; if (!ach.some(ach => ach.name == 'Maze God')) { achdesc = 'Complete 500 mazes'; achearn = 500; achup()}}
+	     if (mazeComp > 0) {achtext = 'First Step'; if (!ach.some(ach => ach.name == 'First Step')) { achdesc = 'Complete your first maze'; achearn = 10; achup()}}
+		 if (mazeComp > 4) { achtext = 'Novice Navigator'; if (!ach.some(ach => ach.name == 'Novice Navigator')) { achdesc = 'Complete 5 mazes'; achearn = 15; achup()}}
+         if (mazeComp > 9) {achtext = 'Maze Apprentice'; if (!ach.some(ach => ach.name == 'Maze Apprentice')) { achdesc = 'Complete 10 mazes'; achearn = 30; achup()}}
+         if (mazeComp > 24) {achtext = 'Corridoor Crawler'; if (!ach.some(ach => ach.name == 'Corridoor Crawler')) { achdesc = 'Complete 25 mazes'; achearn = 50; achup()}}
+         if (mazeComp > 49) {achtext = 'Maze Steamroller'; if (!ach.some(ach => ach.name == 'Maze Steamroller')) { achdesc = 'Complete 50 mazes'; achearn = 100; achup()}}
+         if (mazeComp > 99) {achtext = 'Maze Master'; if (!ach.some(ach => ach.name == 'Maze Master')) { achdesc = 'Complete 100 mazes'; achearn = 175; achup()}}
+	     updateCredits(); save(); if (currentLayout.w < 20 || currentLayout.h < 20) {return;}
+	     if (btime < 30.1) {achtext = 'Efficient Route'; if (!ach.some(ach => ach.name == 'Efficient Route')) { achdesc = 'Get under 30 seconds or less on a maze'; achearn = 30; achup()}}
+	     if (btime < 15.1) {achtext = 'Path Master'; if (!ach.some(ach => ach.name == 'Path Master')) { achdesc = 'Get under 15 seconds or less on a maze'; achearn = 50; achup()}}
+	    if (btime < 10.1) {achtext = 'No Time to Waste'; if (!ach.some(ach => ach.name == 'No Time to Waste')) { achdesc = 'Get under 10 seconds or less on a maze'; achearn = 100; achup()}}
+	    if (btime < 5.1) {achtext = 'Blink of an Eye'; if (!ach.some(ach => ach.name == 'Blink of an Eye')) { achdesc = 'Get under 5 seconds or less on a maze'; achearn = 100; achup()}}
+	   if (btime < 3.1) {achtext = 'Frame Perfect'; if (!ach.some(ach => ach.name == 'Frame Perfect')) { achdesc = 'Get under 3 seconds or less on a maze'; achearn = 100; achup()}}
+		updateCredits()
+		save()
+   }
+      function animateCanvas(callback) {
+    const canvasCont = document.getElementById('canvascont');
+    if (!canvasCont) return;
+
+    const keyframes = [
+        { transform: 'translateY(-100vh)' },
+        { transform: 'translateY(0)' }
+    ];
+
+    const options = {
+        duration: 800,
+        easing: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+    };
+
+    // Store the animation in a variable
+    const animation = canvasCont.animate(keyframes, options);
+
+    // Run your callback function as soon as the animation completes
+    animation.onfinish = function() {document.getElementById('mazeImg').style.display = 'none';};
+}
+   function playAgain() { document.getElementById('winModal').style.display = 'none'; generate(); 
+   }
+   document.getElementById('generate').onclick = () => { isRaceMode = false; document.getElementById('p2Stats').style.display = 'none'; generate(false); };
+   document.getElementById('raceBtn').onclick = () => { isRaceMode = true; document.getElementById('p2Stats').style.display = 'block'; generate(false); };
+   updateDailyStatus();
+   window.onload = () => {
+	   // 1. Get the query string from the current browser URL (?product=shirt&color=blue)
+const queryString = window.location.search;
+
+// 2. Pass the string into the URLSearchParams object
+const urlParams = new URLSearchParams(queryString);
+
+// 3. Extract specific parameters by their key names
+if (urlParams.get('adminapplication') === 'true') {
+	if (localStorage.Username != null && localStorage.Username != undefined) {
+		document.getElementById('howModal').style.display = 'none';
+		document.getElementById('dailyModal').style.display = 'none';
+		document.getElementById('adminModal').style.display = 'flex';
+	} else {
+		window.alert('You need to log in to create an admin application');
+		window.location.href = 'https://thecoder24252.github.io/games/'
+	}
+} else if (urlParams.get('idea') === 'true') {
+	if (localStorage.Username != null && localStorage.Username != undefined) {
+		document.getElementById('howModal').style.display = 'none';
+		document.getElementById('dailyModal').style.display = 'none';
+		document.getElementById('ideaModal').style.display = 'flex';
+	} else {
+		window.alert('You need to log in to create an update idea');
+		window.location.href = 'https://thecoder24252.github.io/games/'
+	}
+} else if (urlParams.get('bug') === 'true') {
+	if (localStorage.Username != null && localStorage.Username != undefined) {
+		document.getElementById('howModal').style.display = 'none';
+		document.getElementById('dailyModal').style.display = 'none';
+		document.getElementById('bugModal').style.display = 'flex';
+	} else {
+		window.alert('You need to log in to report a bug');
+		window.location.href = 'https://thecoder24252.github.io/games/'
+	}
+}
+
+	   }
+	function bhE() {
+    if (document.getElementById('variation').value === 'blindfold') {
+        ctx.save();
+
+        // Dynamically get the exact matching size of your main canvas layout
+        const targetWidth = canvas.width;
+        const targetHeight = canvas.height;
+
+        if (isPreviewActive) {
+            // 1. Sync the offscreen mask size perfectly
+            if (maskCanvas.width !== targetWidth || maskCanvas.height !== targetHeight) {
+                maskCanvas.width = targetWidth;
+                maskCanvas.height = targetHeight;
+            }
+
+            // 2. Clear and fill the mask layer with solid black
+            mctx.globalCompositeOperation = 'source-over';
+            mctx.fillStyle = "black";
+            mctx.fillRect(0, 0, targetWidth, targetHeight);
+
+            // 3. Carve the transparent radar slice out of the black paint
+            mctx.globalCompositeOperation = 'destination-out';
+            let beamWidth = 120; // Slightly wider makes paths easier to trace!
+            mctx.fillStyle = "white"; 
+            mctx.fillRect(radarX, 0, beamWidth, targetHeight);
+
+            // 4. Draw the finished mask perfectly over the main canvas
+            ctx.drawImage(maskCanvas, 0, 0);
+
+            // 5. Move the radar line forward relative to the maze resolution
+            radarX += 6; 
+
+            // FIX: Only stop when it completely crosses the entire targetWidth
+            if (radarX > targetWidth) {
+                isPreviewActive = false;
+            }
+        } else {
+            // The radar sweep completely finished! The maze goes pitch black.
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, targetWidth, targetHeight);
+        }
+
+        ctx.restore();
+    }
+}
+ </script>
+</body>
+</html>
