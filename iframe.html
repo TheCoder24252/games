@@ -29,7 +29,16 @@
 
     <iframe src="https://thecoder24252.github.io/games/"></iframe>
     <script>
-        
+        window.onload = () => {
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+if (urlParams.get('adminapplication') === 'true') {
+		document.querySelector('iframe').src = 'https://thecoder24252.github.io/games/iframe.html?adminapplication=true';
+} else if (urlParams.get('idea') === 'true') {
+		document.querySelector('iframe').src = 'https://thecoder24252.github.io/games/iframe.html?idea=true'
+} else if (urlParams.get('bug') === 'true') {
+		document.querySelector('iframe').src = 'https://thecoder24252.github.io/games/iframe.html?bug=true'
+}}
     </script>
 </body>
 </html>
