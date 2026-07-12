@@ -1176,9 +1176,16 @@ function updateDiscordPresence() {
 		if (algo == 'huntkill') {rpcDetails = `Playing a maze on hard difficulty`}
 	}
 	if (document.getElementById('winModal').style.display == 'flex') {
-		rpcDetails = `Finished a maze`;
-		rpcState = `${document.getElementById('finalStats')} | ${document.getElementById('rewardText')}`
-	}
+    rpcDetails = `Finished a maze`;
+    let statsText = document.getElementById('finalStats').innerText.trim();
+    let rewardText = document.getElementById('rewardText').innerText.trim();
+    if (statsText === "" && rewardText === "") {
+        rpcState = "Viewing Finish Screen";
+    } else {
+        rpcState = `${statsText} | ${rewardText}`;
+    }
+}
+
     if (window.electronAPI) {
         window.electronAPI.updatePresence({
             details: rpcDetails,
