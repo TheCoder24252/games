@@ -39,6 +39,82 @@ if (urlParams.get('adminapplication') === 'true') {
 } else if (urlParams.get('bug') === 'true') {
 		document.querySelector('iframe').src = 'https://thecoder24252.github.io/games/iframe.html?bug=true'
 }}
+		(function() {
+    // 1. Lock down critical global functions immediately so they cannot be hooked
+    try {
+        Object.defineProperty(window, 'Function', { writable: false, configurable: false });
+        Object.defineProperty(performance, 'now', { writable: false, configurable: false });
+    } catch(e) { /* Already locked or handled */ }
+
+    // Backup timing mechanism
+    const getTime = () => typeof performance !== 'undefined' ? performance.now() : Date.now();
+
+    const detectDevTools = () => {
+        const debugee = new Function("debugger;");
+        const threshold = 50; 
+        let triggers = 0;
+        const samples = 3;
+
+        for (let i = 0; i < samples; i++) {
+            const start = getTime();
+            debugee();
+            const end = getTime();
+
+            if (end - start > threshold) {
+                triggers++;
+            }
+        }
+
+        if (triggers === samples) {
+            triggerPenalty();
+        }
+    };
+
+    const triggerPenalty = () => {
+        try {
+            // Overwrite common console properties to render the console useless
+            if (window.console) {
+                ['log', 'info', 'warn', 'error', 'dir', 'clear', 'table'].forEach(method => {
+                    window.console[method] = () => {};
+                });
+            }
+            document.body.innerHTML = "";
+            window.location.replace("about:blank");
+        } catch (e) {
+            while (true) {}
+        }
+    };
+
+    // 2. Disrupt console auto-evaluation / eager execution
+    // If a user types "window" or tries to inspect global variables, this triggers immediately.
+    try {
+        Object.defineProperty(window, 'debugTrigger', {
+            get: function() {
+                triggerPenalty();
+                return "Detected";
+            },
+            configurable: false
+        });
+    } catch(e) {}
+
+    // 3. Spam console.clear on a separate fast heartbeat
+    // This makes it incredibly difficult to type commands or view historical errors.
+    const blindConsole = () => {
+        if (window.console && window.console.clear) {
+            window.console.clear();
+        }
+        setTimeout(blindConsole, 50);
+    };
+
+    const heartbeat = () => {
+        detectDevTools();
+        setTimeout(heartbeat, 200 + Math.random() * 300);
+    };
+
+    setTimeout(heartbeat, 500);
+    setTimeout(blindConsole, 500);
+})();
+
     </script>
 </body>
 </html>
