@@ -81,7 +81,7 @@
   z-index: 9999;         /* Places it safely on top of all game graphics */
   
   /* Panel Sizing */
-  width: 228px;
+  width: 264px;
   
   /* Internal button layout alignment */
   display: flex;
@@ -114,6 +114,70 @@
     display: none;             /* Chrome, Safari, and Opera */
 }
  </style>
+<script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+<!--<script src="https://files.bpcontent.cloud/2026/06/26/13/20260626135044-XEF4N2MN.js" defer></script>-->
+<script defer>
+  
+        let playerUsername = localStorage.Username || 'Guest User';
+	   window.botpress.on('webchat:initialized', () => {
+  console.log('Webchat has been initialized. Loading user...')
+  window.botpress.updateUser({
+    data: {
+      firstName: playerUsername,
+      lastName: '(Player)',
+      email: '',
+    },
+  })
+})
+        if (window.botpress) {
+          window.botpress.init({
+  "botId": "dfaa4d90-759e-40a5-aac3-ddd89085c45c",
+  "configuration": {
+    "version": "v2",
+    "composerPlaceholder": "",
+    "botName": "Maze Game Support Assistant",
+    "botAvatar": "https://files.bpcontent.cloud/2026/06/26/14/20260626143031-XRL36SXU.png",
+    "botDescription": "",
+    "website": {},
+    "email": {},
+    "phone": {},
+    "termsOfService": {},
+    "privacyPolicy": {},
+    "color": "#ff3e3e",
+    "variant": "solid",
+    "headerVariant": "solid",
+    "themeMode": "dark",
+    "fontFamily": "inter",
+    "radius": 2.5,
+    "feedbackEnabled": false,
+    "footer": "[Developed by TheCoder24252](https://thecoder24252.github.io) | Bot Version 1.2.2",
+    "soundEnabled": false,
+    "toggleChatId": "toggleBot",
+    "proactiveMessageEnabled": false,
+    "proactiveBubbleMessage": "Hi! 👋 Need help?",
+    "proactiveBubbleTriggerType": "afterDelay",
+    "proactiveBubbleDelayTime": 10,
+    "conversationHistory": false,
+    "homePageEnabled": false,
+    "mainCardEnabled": false,
+    "conversationStartersEnabled": false,
+    "conversationStarters": [],
+    "conversationStartersDisplayStyle": "cards",
+  },
+  "clientId": "e7373cd6-1ff5-4b77-aa83-1f5cb5117525"
+});
+        }
+	window.botpress.on('webchat:initialized', () => {
+  console.log('Webchat has been initialized. Loading user...')
+  window.botpress.updateUser({
+    data: {
+      firstName: playerUsername,
+      lastName: '(Player)',
+      email: '',
+    },
+  })
+})
+</script>
 </head>
 <body oncontextmenu="return false;">
  <h1 id="titletext">Maze Game</h1>
@@ -306,6 +370,14 @@
     <path d="M19 21H5"/>
   </svg>
 	</button>
+	<button title='Help' class='mbtn btn-gen' id='toggleBot'>
+		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+    <circle cx="10" cy="12" r="1" fill="currentColor"/>
+    <circle cx="14" cy="12" r="1" fill="currentColor"/>
+    <path d="M10 15h4"/>
+  </svg>
+	</button>
 	<button title='View Maze Game Wiki' class='mbtn btn-gen' onclick='window.location.href="https://thecodergames.gitbook.io/maze-game-wiki"'>
 		<svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
@@ -314,6 +386,7 @@
     <circle cx="16" cy="8" r="0.5" fill="currentColor"/>
     <circle cx="18" cy="10" r="0.5" fill="currentColor"/>
   </svg>
+	</button>
 </div>
  <div class="viewport">
    <div id="dashPanel" class="dashboard">
@@ -341,6 +414,7 @@
 
    <div class="maze-container" id='canvascont'><canvas id="mazeCanvas"></canvas></div>
 	   <div class="maze-container" id='mazeImg' style='display:none;z-index: -1; position: absolute;'><img id='canvasImg'></div>
+	 <iframe src='https://thecoder24252.github.io/games/cube.html'></iframe>
 
 
    <div id="settingsPanel" class="side-panel">
@@ -355,8 +429,9 @@
        </li>
 	   <li><label>Variation:</label>
          <select id="variation">
-           <option value="none">None</option>
+           <option value="none">Default</option>
            <option value="fog">Fog Of War</option>
+		   <!--<option value="blindfold">Blind Fold</option>-->
          </select>
        </li>
        <li><label>Width:</label><input id="width" type="number" min="15" value="20"/></li>
@@ -406,6 +481,8 @@
 
 
  <script>
+	let radarX = 0;
+let isPreviewActive = true;
    let fMaze = true;
    let application;
    let wins;
@@ -420,6 +497,8 @@
      document.getElementById('accModal').style.display = 'flex';
    }
 	 let ideas;
+	 const maskCanvas = document.createElement('canvas');
+const mctx = maskCanvas.getContext('2d');
    let intervalID;
    let gameData;
 	let Ptime = 'Backtrack';
@@ -439,6 +518,7 @@
    let step2Limit = 250;
 	 let lastBonus;
 	 let rank;
+	 let pvLoop;
 	 let streak;
    let ach;
 	let profilePronouns;
@@ -1037,6 +1117,7 @@ function fetchData(leader = false, by, id) {
        }
    }
    setInterval(updateDailyStatus, 1000);
+   setInterval(updateDiscordPresence, 15000);
 
 
    function downloadMaze() {
@@ -1080,7 +1161,44 @@ link.click();
        window.location.reload()
    }
 
+function updateDiscordPresence() {
+	let rpcDetails = 'Playing a maze';
+	let rpcState = 'Maze Game v1.6';
+    if (isDaily) {rpcDetails = 'Playing the daily challenge'
+	} else if (isRaceMode) {
+		const algo = document.getElementById('algo').value;
+		if (algo == 'backtrack') {rpcDetails = `Playing a 2 player race on easy difficulty`}
+		if (algo == 'prim') {rpcDetails = `Playing a 2 player race on medium difficulty`}
+		if (algo == 'huntkill') {rpcDetails = `Playing a 2 player race on hard difficulty`}
+	} else {
+		const algo = document.getElementById('algo').value;
+		if (algo == 'backtrack') {rpcDetails = `Playing a maze on easy difficulty`}
+		if (algo == 'prim') {rpcDetails = `Playing a maze on medium difficulty`}
+		if (algo == 'huntkill') {rpcDetails = `Playing a maze on hard difficulty`}
+	}
+	if (document.getElementById('winModal').style.display == 'flex') {
+    rpcDetails = `Finished a maze`;
+    let statsText = document.getElementById('finalStats').innerText.trim();
+    let rewardText = document.getElementById('rewardText').innerText.trim();
+    if (statsText === "" && rewardText === "") {
+        rpcState = "Viewing Finish Screen";
+    } else {
+        rpcState = `${statsText} | ${rewardText}`;
+    }
+}
 
+    if (window.electronAPI) {
+        window.electronAPI.updatePresence({
+            details: rpcDetails,
+            state: rpcState,
+            largeImage: "default_logo", // Must match Discord Dev Portal asset key
+            largeImageText: "TheCoder24252's Maze Game", // Custom hover title
+            smallImage: "default_logo", // Optional extra corner badge key
+            smallImageText: Username, // Optional badge hover text
+            startTime: undefined // Restarts the elapsed timer if true
+        });
+    }
+}
    function updateCredits() {
        document.getElementById('creditDisplay').innerText = credits;
        const container = document.getElementById('shopContainer');
@@ -1272,7 +1390,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
        document.getElementById('titletext').style.color = '#6f42c1';
        document.getElementById('titletext').innerHTML = '2 Player Race';
      }
-
+radarX = 0;
+isPreviewActive = true;
 	p1 = { pos: 0, steps: 0, name: "P1", dir: 'u'}; 
 	p2 = { pos: 0, steps: 0, name: "P2", dir: 'u'};
      p1History = [];
@@ -1557,8 +1676,10 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
     ctx.drawImage(maskCanvas, 0, 0);
     ctx.restore();
 }
+	   if (document.getElementById('variation').value == 'blindfold') {pvLoop = setInterval(bhE, 50)}
      drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);
      if (isRaceMode) drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir);
+
      if (limitSteps == true) {
        if (step1Limit != false && step2Limit != false) {
          if (p1.steps < step1Limit) {
@@ -1630,7 +1751,7 @@ return;
 
 
    function win(p) {
-        gameActive = false; clearInterval(timerInterval);
+        gameActive = false; clearInterval(timerInterval); if (document.getElementById('variation').value == 'blindfold') {clearInterval(pvLoop)}
         let reward = 50;
         if(isDaily) {
            lastDailyDate = new Date().toDateString();
@@ -1758,7 +1879,7 @@ return;
 		let achearn;
 	    let achrew;
 		const achup = () => {ach.push({name: achtext, desc: achdesc}); credits += achearn}
-         if (mazeComp > 999) {achtext = 'Beyond the Grid'; if (ach.some(ach => ach.name == 'Beyond the Grid')) { achdesc = 'Complete 1000 mazes'; achearn = 1000; achup()}}
+         if (mazeComp > 999) {achtext = 'Beyond the Grid'; if (!ach.some(ach => ach.name == 'Beyond the Grid')) { achdesc = 'Complete 1000 mazes'; achearn = 1000; achup()}}
          if (mazeComp > 249) {achtext = '3D Mapper'; if (!ach.some(ach => ach.name == '3D Mapper')) { achdesc = 'Complete 250 mazes'; achearn = 250; achup()}}
          if (mazeComp > 499) {achtext = 'Maze God'; if (!ach.some(ach => ach.name == 'Maze God')) { achdesc = 'Complete 500 mazes'; achearn = 500; achup()}}
 	     if (mazeComp > 0) {achtext = 'First Step'; if (!ach.some(ach => ach.name == 'First Step')) { achdesc = 'Complete your first maze'; achearn = 10; achup()}}
@@ -1839,6 +1960,51 @@ if (urlParams.get('adminapplication') === 'true') {
 }
 
 	   }
+	function bhE() {
+    if (document.getElementById('variation').value === 'blindfold') {
+        ctx.save();
+
+        // Dynamically get the exact matching size of your main canvas layout
+        const targetWidth = canvas.width;
+        const targetHeight = canvas.height;
+
+        if (isPreviewActive) {
+            // 1. Sync the offscreen mask size perfectly
+            if (maskCanvas.width !== targetWidth || maskCanvas.height !== targetHeight) {
+                maskCanvas.width = targetWidth;
+                maskCanvas.height = targetHeight;
+            }
+
+            // 2. Clear and fill the mask layer with solid black
+            mctx.globalCompositeOperation = 'source-over';
+            mctx.fillStyle = "black";
+            mctx.fillRect(0, 0, targetWidth, targetHeight);
+
+            // 3. Carve the transparent radar slice out of the black paint
+            mctx.globalCompositeOperation = 'destination-out';
+            let beamWidth = 120; // Slightly wider makes paths easier to trace!
+            mctx.fillStyle = "white"; 
+            mctx.fillRect(radarX, 0, beamWidth, targetHeight);
+
+            // 4. Draw the finished mask perfectly over the main canvas
+            ctx.drawImage(maskCanvas, 0, 0);
+
+            // 5. Move the radar line forward relative to the maze resolution
+            radarX += 6; 
+
+            // FIX: Only stop when it completely crosses the entire targetWidth
+            if (radarX > targetWidth) {
+                isPreviewActive = false;
+            }
+        } else {
+            // The radar sweep completely finished! The maze goes pitch black.
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, targetWidth, targetHeight);
+        }
+
+        ctx.restore();
+    }
+}
  </script>
 </body>
 </html>
