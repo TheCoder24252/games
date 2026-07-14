@@ -1916,7 +1916,8 @@ return;
    }
       function animateCanvas(callback) {
     let canvasCont = document.getElementById('canvascont');
-	if (document.getElementById('variation').value === '3d_cube') {document.getElementById('maze3D')}
+	document.getElementById('maze3D').style.display = 'none'; document.getElementById('canvascont').style.display = 'block'
+	if (document.getElementById('variation').value === '3d_cube') {canvasCont = document.getElementById('maze3D'); document.getElementById('maze3D').style.display = 'block'; document.getElementById('canvascont').style.display = 'none'}
     if (!canvasCont) return;
 
     const keyframes = [
