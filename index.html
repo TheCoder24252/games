@@ -1878,7 +1878,7 @@ return;
 		let achearn;
 	    let achrew;
 		const achup = () => {ach.push({name: achtext, desc: achdesc}); credits += achearn}
-         if (mazeComp > 999) {achtext = 'Beyond the Grid'; if (ach.some(ach => ach.name == 'Beyond the Grid')) { achdesc = 'Complete 1000 mazes'; achearn = 1000; achup()}}
+         if (mazeComp > 999) {achtext = 'Beyond the Grid'; if (!ach.some(ach => ach.name == 'Beyond the Grid')) { achdesc = 'Complete 1000 mazes'; achearn = 1000; achup()}}
          if (mazeComp > 249) {achtext = '3D Mapper'; if (!ach.some(ach => ach.name == '3D Mapper')) { achdesc = 'Complete 250 mazes'; achearn = 250; achup()}}
          if (mazeComp > 499) {achtext = 'Maze God'; if (!ach.some(ach => ach.name == 'Maze God')) { achdesc = 'Complete 500 mazes'; achearn = 500; achup()}}
 	     if (mazeComp > 0) {achtext = 'First Step'; if (!ach.some(ach => ach.name == 'First Step')) { achdesc = 'Complete your first maze'; achearn = 10; achup()}}
