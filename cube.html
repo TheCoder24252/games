@@ -7,28 +7,31 @@
   <style>
     body { margin: 0; overflow: hidden; background-color: #1a1a1a; }
     canvas { display: block; }
-    /* Hidden source 2D canvas used for the texture */
-    #textureCanvas { display: none; }
   </style>
 </head>
 <body>
-  <!-- 1. Import Map configuration for Three.js via jsDelivr CDN -->
-  <script type="importmap"> { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/" } } </script>
+  <script type="importmap"> { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js" } } </script>
+
+  <!-- Create a hidden offscreen image tag to process incoming canvas frames safely -->
+  <img id="mirrorImage" style="display:none;" />
 
   <script type="module">
     import * as THREE from 'three';
 
-    // --- SETUP 2D CANVAS TEXTURE ---
-    const textCanvas = window.parent.document.getElementById('mazeCanvas');
+    // 1. Create a placeholder offscreen canvas for Three.js initialization
+    const dummyCanvas = document.createElement('canvas');
+    dummyCanvas.width = 512;
+    dummyCanvas.height = 512;
+    const dummyCtx = dummyCanvas.getContext('2d');
+    dummyCtx.fillStyle = '#222';
+    dummyCtx.fillRect(0, 0, 512, 512);
 
     // --- THREE.JS SCENE SETUP ---
     const scene = new THREE.Scene();
-
-    // Camera setup for static view
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
     
-    // Position camera diagonally (X=Y=Z) to view exactly 3 faces at once
-    camera.position.set(5, 5, 5);
+    // Position camera perfectly to view 3 faces at once (Top, Front, Right)
+    camera.position.set(4, 4, 4);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -36,47 +39,54 @@
     document.body.appendChild(renderer.domElement);
 
     // --- TEXTURE & MATERIAL SETUP ---
-    // Convert your DOM canvas element into a dynamic Three.js texture
-    const canvasTexture = new THREE.CanvasTexture(textCanvas);
+    // Initialize our texture using the stable dummy canvas
+    const canvasTexture = new THREE.CanvasTexture(dummyCanvas);
 
-    // Create an array of 6 materials (one for each face of the box geometry)
-    // Order: [pos-x, neg-x, pos-y, neg-y, pos-z, neg-z]
+    // Map your custom maze texture onto the 3 visible faces (+X, +Y, +Z)
     const materials = [
-      new THREE.MeshStandardMaterial({ color: 0x22a6b3 }), // Right side (+X)
-      new THREE.MeshStandardMaterial({ color: 0xbe2edd }), // Left side (-X)
-      new THREE.MeshStandardMaterial({ color: 0x4834d4 }), // Top side (+Y)
-      new THREE.MeshStandardMaterial({ color: 0x130cb7 }), // Bottom side (-Y)
-      new THREE.MeshStandardMaterial({ map: canvasTexture }),// Front side (+Z) -> YOUR CANVAS
-      new THREE.MeshStandardMaterial({ color: 0x6ab04c })  // Back side (-Z)
+      new THREE.MeshStandardMaterial({ map: canvasTexture }), // Right side (+X) -> MAZE
+      new THREE.MeshStandardMaterial({ color: 0x222222 }),    // Left side (-X)
+      new THREE.MeshStandardMaterial({ map: canvasTexture }), // Top side (+Y) -> MAZE
+      new THREE.MeshStandardMaterial({ color: 0x111111 }),    // Bottom side (-Y)
+      new THREE.MeshStandardMaterial({ map: canvasTexture }), // Front side (+Z) -> MAZE
+      new THREE.MeshStandardMaterial({ color: 0x333333 })     // Back side (-Z)
     ];
 
-    // --- MESH GENERATION ---
     const geometry = new THREE.BoxGeometry(2, 2, 2);
     const cube = new THREE.Mesh(geometry, materials);
     scene.add(cube);
 
     // --- LIGHTING ---
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    directionalLight.position.set(5, 10, 7);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    directionalLight.position.set(5, 8, 5);
     scene.add(directionalLight);
 
     // --- ANIMATION LOOP ---
     function animate() {
       requestAnimationFrame(animate);
-
-      // 1. Alert Three.js that the source canvas changed so it pushes a fresh texture frame to the GPU
-      canvasTexture.needsUpdate = true;
-
-      // 2. Render the static scene
       renderer.render(scene, camera);
     }
-
     animate();
 
-    // Handle responsiveness
+    // 🚀 THE BRIDGE: Listen for canvas frame snapshots sent from your main index.html file
+    const imgElement = document.getElementById('mirrorImage');
+    
+    window.addEventListener('message', (event) => {
+      // Security Check: Only process messages containing image data streams
+      if (event.data && event.data.type === 'MAZE_FRAME') {
+        imgElement.src = event.data.base64;
+        
+        // Wait for the image string to render, then draw it onto the texture canvas
+        imgElement.onload = () => {
+          dummyCtx.drawImage(imgElement, 0, 0, 512, 512);
+          canvasTexture.needsUpdate = true; // Alerts GPU to refresh the 3D surface
+        };
+      }
+    });
+
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
