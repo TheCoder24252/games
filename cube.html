@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maze Game 3D</title>
+  <title>Maze Game 3D Cube View</title>
   <style>
     body { margin: 0; overflow: hidden; background-color: #1a1a1a; }
     canvas { display: block; }
   </style>
 </head>
 <body>
-  <script type="importmap"> { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js" } } </script>
+  <!-- 1. Configure the modern Import Map to point to the correct build engine -->
+  <script type="importmap"> { "imports": { "three": "https://jsdelivr.net" } } </script>
 
   <!-- Create a hidden offscreen image tag to process incoming canvas frames safely -->
   <img id="mirrorImage" style="display:none;" />
@@ -18,12 +19,12 @@
   <script type="module">
     import * as THREE from 'three';
 
-    // 1. Create a placeholder offscreen canvas for Three.js initialization
+    // 2. Create a placeholder offscreen canvas for Three.js initialization
     const dummyCanvas = document.createElement('canvas');
     dummyCanvas.width = 512;
     dummyCanvas.height = 512;
     const dummyCtx = dummyCanvas.getContext('2d');
-    dummyCtx.fillStyle = '#222';
+    dummyCtx.fillStyle = '#1a1a1a';
     dummyCtx.fillRect(0, 0, 512, 512);
 
     // --- THREE.JS SCENE SETUP ---
@@ -42,31 +43,33 @@
     // Initialize our texture using the stable dummy canvas
     const canvasTexture = new THREE.CanvasTexture(dummyCanvas);
 
-    // Map your custom maze texture onto the 3 visible faces (+X, +Y, +Z)
+    // 🎯 FIX 1: Turn off pixel blurring! 
+    // This forces Three.js to use "Nearest Neighbor" scaling, keeping your canvas lines razor-sharp.
+    canvasTexture.minFilter = THREE.NearestFilter;
+    canvasTexture.magFilter = THREE.NearestFilter;
+
+    // 🎯 FIX 2: Switch to MeshBasicMaterial
+    // This completely ignores lights and reflections, keeping your maze black pitch black 
+    // and your skin colors perfectly vibrant without being lightened or bleached.
     const materials = [
-      new THREE.MeshStandardMaterial({ map: canvasTexture }), // Right side (+X) -> MAZE
-      new THREE.MeshStandardMaterial({ color: 0x222222 }),    // Left side (-X)
-      new THREE.MeshStandardMaterial({ map: canvasTexture }), // Top side (+Y) -> MAZE
-      new THREE.MeshStandardMaterial({ color: 0x111111 }),    // Bottom side (-Y)
-      new THREE.MeshStandardMaterial({ map: canvasTexture }), // Front side (+Z) -> MAZE
-      new THREE.MeshStandardMaterial({ color: 0x333333 })     // Back side (-Z)
+      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Right side (+X) -> SHARP MAZE
+      new THREE.MeshBasicMaterial({ color: 0x111111 }),    // Left side (-X) -> Dark fill
+      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Top side (+Y) -> SHARP MAZE
+      new THREE.MeshBasicMaterial({ color: 0x111111 }),    // Bottom side (-Y) -> Dark fill
+      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Front side (+Z) -> SHARP MAZE
+      new THREE.MeshBasicMaterial({ color: 0x111111 })     // Back side (-Z) -> Dark fill
     ];
 
     const geometry = new THREE.BoxGeometry(2, 2, 2);
     const cube = new THREE.Mesh(geometry, materials);
     scene.add(cube);
 
-    // --- LIGHTING ---
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-    scene.add(ambientLight);
-
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
-    directionalLight.position.set(5, 8, 5);
-    scene.add(directionalLight);
-
     // --- ANIMATION LOOP ---
     function animate() {
       requestAnimationFrame(animate);
+      
+      // (Optional: You can add cube.rotation.y += 0.002 here if you want it to slowly turn!)
+      
       renderer.render(scene, camera);
     }
     animate();
@@ -87,6 +90,7 @@
       }
     });
 
+    // Handle responsiveness
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
