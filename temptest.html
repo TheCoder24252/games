@@ -431,6 +431,7 @@
          <select id="variation">
            <option value="none">Default</option>
            <option value="fog">Fog Of War</option>
+		  <option value="3d_cube">3D Cube</option>
 		   <!--<option value="blindfold">Blind Fold</option>-->
          </select>
        </li>
@@ -1714,6 +1715,22 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
        document.getElementById('p1Steps').innerText = p1.steps;
      if(isRaceMode) document.getElementById('p2Steps').innerText = p2.steps;
      }
+const iframeWindow = document.querySelector('iframe')?.contentWindow;
+
+if (iframeWindow && document.getElementById('variation').value === '3d_cube') {
+    // 📸 Grab a compact, compressed image data string of your current maze canvas layout
+    const mazeCanvasElement = document.getElementById('mazeCanvas'); // Match your exact canvas ID
+    if (mazeCanvasElement) {
+        const frameData = mazeCanvasElement.toDataURL('image/jpeg', 0.5); // 0.5 compression prevents lag!
+
+        // Safely shoot the pixels through the window security layer into your cube app
+        iframeWindow.postMessage({
+            type: 'MAZE_FRAME',
+            base64: frameData
+        }, '*');
+    }
+}
+
    }
 
 
