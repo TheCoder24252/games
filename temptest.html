@@ -414,7 +414,7 @@
 
    <div class="maze-container" id='canvascont'><canvas id="mazeCanvas"></canvas></div>
 	   <div class="maze-container" id='mazeImg' style='display:none;z-index: -1; position: absolute;'><img id='canvasImg'></div>
-	 <iframe style='width:406px;height:406px;' src='https://thecoder24252.github.io/games/cube.html'></iframe>
+	 <iframe class="maze-container" id='maze3D' style='width:406px;height:406px;display:none;' src='https://thecoder24252.github.io/games/cube.html'></iframe>
 
 
    <div id="settingsPanel" class="side-panel">
@@ -1915,7 +1915,8 @@ return;
 		save()
    }
       function animateCanvas(callback) {
-    const canvasCont = document.getElementById('canvascont');
+    let canvasCont = document.getElementById('canvascont');
+	if (document.getElementById('variation').value === '3d_cube') {document.getElementById('maze3D')}
     if (!canvasCont) return;
 
     const keyframes = [
