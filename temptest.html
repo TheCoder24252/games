@@ -1721,7 +1721,7 @@ if (iframeWindow && document.getElementById('variation').value === '3d_cube') {
     // 📸 Grab a compact, compressed image data string of your current maze canvas layout
     const mazeCanvasElement = document.getElementById('mazeCanvas'); // Match your exact canvas ID
     if (mazeCanvasElement) {
-        const frameData = mazeCanvasElement.toDataURL('image/jpeg', 0.5); // 0.5 compression prevents lag!
+        const frameData = mazeCanvasElement.toDataURL('image/png'); // 0.5 compression prevents lag!
 
         // Safely shoot the pixels through the window security layer into your cube app
         iframeWindow.postMessage({
