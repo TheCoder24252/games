@@ -6,15 +6,15 @@
   <title>Maze Game 3D Cube View</title>
   <style>
     body { margin: 0; overflow: hidden; background-color: #1a1a1a; user-select: none; }
-    canvas { display: block; width: 100vw; height: 100vh; }
+    canvas { display: block; width: 100vw; height: 100vh; cursor: grab; }
+    canvas:active { cursor: grabbing; }
   </style>
 </head>
 <body>
-  <!-- 1. Include OrbitControls in the Import Map -->
+  <!-- Only 1 single, stable link to the core library is needed -->
   <script type="importmap"> { 
     "imports": { 
-      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
-      "three/addons/controls/OrbitControls.js": "https://unpkg.com/three-orbit-controls@82.1.0/index.js"
+      "three": "https://jsdelivr.net"
     } 
   } </script>
 
@@ -22,9 +22,8 @@
 
   <script type="module">
     import * as THREE from 'three';
-    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-    // 🎯 SHARPNESS FIX: Scale texture canvas size up to 2048x2048 for high-density grids
+    // --- SETUP HIGH-RES TEXTURE SURFACE ---
     const dummyCanvas = document.createElement('canvas');
     dummyCanvas.width = 2048;
     dummyCanvas.height = 2048;
@@ -35,30 +34,19 @@
     // --- THREE.JS SCENE SETUP ---
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(4, 4, 4);
+    camera.position.set(0, 0, 5); // Position camera straight in front of the cube face
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    // Sharpness Boost: Match device screen scaling for clear displays
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
     document.body.appendChild(renderer.domElement);
 
-    // 🕹️ SWIPE TO ROTATE: Initialize interactive camera controls
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;   // Adds weight/inertia so it glides smoothly when thrown
-    controls.dampingFactor = 0.05;
-    controls.enableZoom = false;     // Stops players scrolling the cube closer/further away
-    controls.enablePan = false;      // Stops players accidentally dragging the cube off-screen
-
     // --- TEXTURE & MATERIAL SETUP ---
     const canvasTexture = new THREE.CanvasTexture(dummyCanvas);
-
-    // Nearest Neighbor filtering keeps pixel edges razor-sharp
     canvasTexture.minFilter = THREE.NearestFilter;
     canvasTexture.magFilter = THREE.NearestFilter;
-    canvasTexture.generateMipmaps = false; // Saves processing memory on large textures
+    canvasTexture.generateMipmaps = false; 
 
-    // Wrap the texture around all 6 sides of the cube box mesh
     const materials = [
       new THREE.MeshBasicMaterial({ map: canvasTexture }), // Right side (+X)
       new THREE.MeshBasicMaterial({ map: canvasTexture }), // Left side (-X)
@@ -72,18 +60,75 @@
     const cube = new THREE.Mesh(geometry, materials);
     scene.add(cube);
 
+    // 🕹️ CUSTOM SWIPE & ROTATION TRACKER VARIABLES
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+    
+    // Physics targets for inertia rotation
+    let targetRotationX = 0;
+    let targetRotationY = 0;
+
+    // --- MOUSE & SWIPE LISTENERS (0% ADDFILE/CDN NEEDED) ---
+    const canvasElement = renderer.domElement;
+
+    canvasElement.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      previousMousePosition = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+
+      const deltaX = e.clientX - previousMousePosition.x;
+      const deltaY = e.clientY - previousMousePosition.y;
+
+      // Adjust these dividers to make swiping faster or slower!
+      targetRotationY += deltaX * 0.007;
+      targetRotationX += deltaY * 0.007;
+
+      previousMousePosition = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    // Support for Mobile/Touch swipes
+    canvasElement.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        isDragging = true;
+        previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isDragging || e.touches.length !== 1) return;
+      const deltaX = e.touches[0].clientX - previousMousePosition.x;
+      const deltaY = e.touches[0].clientY - previousMousePosition.y;
+
+      targetRotationY += deltaX * 0.01;
+      targetRotationX += deltaY * 0.01;
+
+      previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    });
+
+    window.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+
     // --- ANIMATION LOOP ---
     function animate() {
       requestAnimationFrame(animate);
       
-      // Update OrbitControls calculations every single frame
-      controls.update();
+      // Apply a smooth easing/damping physics transition manually
+      cube.rotation.y += (targetRotationY - cube.rotation.y) * 0.1;
+      cube.rotation.x += (targetRotationX - cube.rotation.x) * 0.1;
       
       renderer.render(scene, camera);
     }
     animate();
 
-    // 🚀 THE BRIDGE: Handle frame packets arriving from your main index.html file
+    // --- THE BRIDGE INTERFACE LOOP ---
     const imgElement = document.getElementById('mirrorImage');
     
     window.addEventListener('message', (event) => {
@@ -91,9 +136,7 @@
         imgElement.src = event.data.base64;
         
         imgElement.onload = () => {
-          // Clear previous canvas data frame
           dummyCtx.clearRect(0, 0, 2048, 2048);
-          // Stretch incoming 2D vector data grid smoothly over 2048 resolution
           dummyCtx.drawImage(imgElement, 0, 0, 2048, 2048);
           canvasTexture.needsUpdate = true; 
         };
