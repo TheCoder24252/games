@@ -5,59 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maze Game 3D Cube View</title>
   <style>
-    body { margin: 0; overflow: hidden; background-color: #1a1a1a; }
-    canvas { display: block; }
+    body { margin: 0; overflow: hidden; background-color: #1a1a1a; user-select: none; }
+    canvas { display: block; width: 100vw; height: 100vh; }
   </style>
 </head>
 <body>
-  <!-- 1. Configure the modern Import Map to point to the correct build engine -->
-  <script type="importmap"> { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js" } } </script>
+  <!-- 1. Include OrbitControls in the Import Map -->
+  <script type="importmap"> { 
+    "imports": { 
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+      "three/addons/": "https://jsdelivr.net"
+    } 
+  } </script>
 
-  <!-- Create a hidden offscreen image tag to process incoming canvas frames safely -->
   <img id="mirrorImage" style="display:none;" />
 
   <script type="module">
     import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-    // 2. Create a placeholder offscreen canvas for Three.js initialization
+    // 🎯 SHARPNESS FIX: Scale texture canvas size up to 2048x2048 for high-density grids
     const dummyCanvas = document.createElement('canvas');
-    dummyCanvas.width = 512;
-    dummyCanvas.height = 512;
+    dummyCanvas.width = 2048;
+    dummyCanvas.height = 2048;
     const dummyCtx = dummyCanvas.getContext('2d');
     dummyCtx.fillStyle = '#1a1a1a';
-    dummyCtx.fillRect(0, 0, 512, 512);
+    dummyCtx.fillRect(0, 0, 2048, 2048);
 
     // --- THREE.JS SCENE SETUP ---
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-    
-    // Position camera perfectly to view 3 faces at once (Top, Front, Right)
     camera.position.set(4, 4, 4);
-    camera.lookAt(0, 0, 0);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    // Sharpness Boost: Match device screen scaling for clear displays
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
     document.body.appendChild(renderer.domElement);
 
+    // 🕹️ SWIPE TO ROTATE: Initialize interactive camera controls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;   // Adds weight/inertia so it glides smoothly when thrown
+    controls.dampingFactor = 0.05;
+    controls.enableZoom = false;     // Stops players scrolling the cube closer/further away
+    controls.enablePan = false;      // Stops players accidentally dragging the cube off-screen
+
     // --- TEXTURE & MATERIAL SETUP ---
-    // Initialize our texture using the stable dummy canvas
     const canvasTexture = new THREE.CanvasTexture(dummyCanvas);
 
-    // 🎯 FIX 1: Turn off pixel blurring! 
-    // This forces Three.js to use "Nearest Neighbor" scaling, keeping your canvas lines razor-sharp.
+    // Nearest Neighbor filtering keeps pixel edges razor-sharp
     canvasTexture.minFilter = THREE.NearestFilter;
     canvasTexture.magFilter = THREE.NearestFilter;
+    canvasTexture.generateMipmaps = false; // Saves processing memory on large textures
 
-    // 🎯 FIX 2: Switch to MeshBasicMaterial
-    // This completely ignores lights and reflections, keeping your maze black pitch black 
-    // and your skin colors perfectly vibrant without being lightened or bleached.
+    // Wrap the texture around all 6 sides of the cube box mesh
     const materials = [
-      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Right side (+X) -> SHARP MAZE
-      new THREE.MeshBasicMaterial({ color: 0x111111 }),    // Left side (-X) -> Dark fill
-      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Top side (+Y) -> SHARP MAZE
-      new THREE.MeshBasicMaterial({ color: 0x111111 }),    // Bottom side (-Y) -> Dark fill
-      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Front side (+Z) -> SHARP MAZE
-      new THREE.MeshBasicMaterial({ color: 0x111111 })     // Back side (-Z) -> Dark fill
+      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Right side (+X)
+      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Left side (-X)
+      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Top side (+Y)
+      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Bottom side (-Y)
+      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Front side (+Z)
+      new THREE.MeshBasicMaterial({ map: canvasTexture })  // Back side (-Z)
     ];
 
     const geometry = new THREE.BoxGeometry(2, 2, 2);
@@ -68,29 +76,30 @@
     function animate() {
       requestAnimationFrame(animate);
       
-      // (Optional: You can add cube.rotation.y += 0.002 here if you want it to slowly turn!)
+      // Update OrbitControls calculations every single frame
+      controls.update();
       
       renderer.render(scene, camera);
     }
     animate();
 
-    // 🚀 THE BRIDGE: Listen for canvas frame snapshots sent from your main index.html file
+    // 🚀 THE BRIDGE: Handle frame packets arriving from your main index.html file
     const imgElement = document.getElementById('mirrorImage');
     
     window.addEventListener('message', (event) => {
-      // Security Check: Only process messages containing image data streams
       if (event.data && event.data.type === 'MAZE_FRAME') {
         imgElement.src = event.data.base64;
         
-        // Wait for the image string to render, then draw it onto the texture canvas
         imgElement.onload = () => {
-          dummyCtx.drawImage(imgElement, 0, 0, 512, 512);
-          canvasTexture.needsUpdate = true; // Alerts GPU to refresh the 3D surface
+          // Clear previous canvas data frame
+          dummyCtx.clearRect(0, 0, 2048, 2048);
+          // Stretch incoming 2D vector data grid smoothly over 2048 resolution
+          dummyCtx.drawImage(imgElement, 0, 0, 2048, 2048);
+          canvasTexture.needsUpdate = true; 
         };
       }
     });
 
-    // Handle responsiveness
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
