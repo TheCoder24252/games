@@ -41,19 +41,26 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
     document.body.appendChild(renderer.domElement);
 
-    // --- TEXTURE & MATERIAL SETUP ---
+const textureLoader = new THREE.TextureLoader();
+const imgA = textureLoader.load('https://thecoder24252.github.io/games/temp/Right');
+const imgB = textureLoader.load('https://thecoder24252.github.io/games/temp/Left');
+const imgC = textureLoader.load('https://thecoder24252.github.io/games/temp/Top');
+const imgD = textureLoader.load('https://thecoder24252.github.io/games/temp/Bottom');
+const imgE = textureLoader.load('https://thecoder24252.github.io/games/temp/Front');
+const imgF = textureLoader.load('https://thecoder24252.github.io/games/temp/Back');
+
     const canvasTexture = new THREE.CanvasTexture(dummyCanvas);
     canvasTexture.minFilter = THREE.NearestFilter;
     canvasTexture.magFilter = THREE.NearestFilter;
     canvasTexture.generateMipmaps = false; 
 
     const materials = [
-      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Right side (+X)
-      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Left side (-X)
-      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Top side (+Y)
-      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Bottom side (-Y)
-      new THREE.MeshBasicMaterial({ map: canvasTexture }), // Front side (+Z)
-      new THREE.MeshBasicMaterial({ map: canvasTexture })  // Back side (-Z)
+      new THREE.MeshBasicMaterial({ map: imgA }), // Right side (+X)
+      new THREE.MeshBasicMaterial({ map: imgB }), // Left side (-X)
+      new THREE.MeshBasicMaterial({ map: imgC }), // Top side (+Y)
+      new THREE.MeshBasicMaterial({ map: imgD }), // Bottom side (-Y)
+      new THREE.MeshBasicMaterial({ map: imgE }), // Front side (+Z)
+      new THREE.MeshBasicMaterial({ map: imgF })  // Back side (-Z)
     ];
 
     const geometry = new THREE.BoxGeometry(2, 2, 2);
