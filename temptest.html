@@ -411,7 +411,13 @@
      <button onclick="openAccountModal()" class="btn btn-danger">ACCOUNT</button>
    </div>
 
-
+   <div style='display:none'>
+	   <canvas id="cu1"></canvas>
+	   <canvas id="cu2"></canvas>
+	   <canvas id="cu3"></canvas>
+	   <canvas id="cu4"></canvas>
+	   <canvas id="cu5"></canvas>
+   </div>
    <div class="maze-container" id='canvascont'><canvas id="mazeCanvas"></canvas></div>
 	   <div class="maze-container" id='mazeImg' style='display:none;z-index: -1; position: absolute;'><img id='canvasImg'></div>
 	 <iframe class="maze-container" id='maze3D' style='width:406px;height:406px;display:none;' src='https://thecoder24252.github.io/games/cube.html'></iframe>
@@ -1508,7 +1514,7 @@ isPreviewActive = true;
      }
 		 return adj;
 	 }
-     if (document.getElementById('variation').value == '3d_cube') {for (let i = 0; i < 6; i++) {cubeLayout.push({adj: cubeadj(), w: w, h: h})}}
+     if (document.getElementById('variation').value == '3d_cube') {for (let i = 0; i < 5; i++) {cubeLayout.push({adj: cubeadj(), w: w, h: h})}}
      currentLayout = { adj, w, h };
      minSteps = calculateMinSteps(adj, 0, (w * h) - 1);
      if (limitSteps) {
@@ -1613,11 +1619,24 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
 }
 
 
-
-
-   function draw() {
+	function draw() {
+		drawFun();
+		if (document.getElementById('variation').value == '3d_cube') {
+			for (let i = 0; i < 5; i++) {
+				drawFun(true, i)
+   			}
+		}
+	}
+   
+   function drawFun(cube, num) {
      if (!currentLayout) return;
-     const { adj, w, h } = currentLayout;
+	 if (cube) {
+		 let { adj, w, h } = cubeLayout[num];
+		 let canvas = document.getElementById(`cu${num + 1}`);
+		 let ctx = canvas.getContext('2d');
+	 } else {
+		 let { adj, w, h } = currentLayout;
+	 }
      const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
     
      ctx.fillStyle = document.getElementById('wallColor').value;
