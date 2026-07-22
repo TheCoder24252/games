@@ -1457,6 +1457,57 @@ isPreviewActive = true;
              }
          }
      }
+
+	 const cubeadj = () => {
+		  let adj = Array.from({length: w*h}, () => []);
+     const grid = new Uint8Array(w * h);
+     const getNeighbors = (idx) => {
+         const x = idx % w, y = Math.floor(idx / w), n = [];
+         if (y > 0) n.push(idx - w); if (y < h - 1) n.push(idx + w);
+         if (x > 0) n.push(idx - 1); if (x < w - 1) n.push(idx + 1);
+         return n;
+     };
+
+
+     if (mode === 'backtrack') {
+         const stack = [0]; grid[0] = 1;
+         while (stack.length > 0) {
+             const curr = stack[stack.length - 1], neighbors = getNeighbors(curr).filter(n => grid[n] === 0);
+             if (neighbors.length > 0) {
+                 const next = neighbors[Math.floor(getRand() * neighbors.length)];
+                 grid[next] = 1; adj[curr].push(next); adj[next].push(curr); stack.push(next);
+             } else stack.pop();
+         }
+     } else if (mode === 'prim') {
+         const walls = []; grid[0] = 1;
+         getNeighbors(0).forEach(n => walls.push([0, n]));
+         while (walls.length > 0) {
+             const idx = Math.floor(getRand() * walls.length);
+             const [u, v] = walls.splice(idx, 1)[0];
+             if (grid[v] === 0) { grid[v] = 1; adj[u].push(v); adj[v].push(u); getNeighbors(v).forEach(n => { if(grid[n] === 0) walls.push([v, n]); }); }
+         }
+     } else {
+         let curr = 0; grid[0] = 1;
+         while (curr !== null) {
+             const neighbors = getNeighbors(curr).filter(n => grid[n] === 0);
+             if (neighbors.length > 0) {
+                 const next = neighbors[Math.floor(getRand() * neighbors.length)];
+                 grid[next] = 1; adj[curr].push(next); adj[next].push(curr); curr = next;
+             } else {
+                 curr = null;
+                 for (let i = 0; i < w * h; i++) {
+                     if (grid[i] === 0) {
+                         const visited = getNeighbors(i).filter(n => grid[n] === 1);
+                         if (visited.length > 0) { curr = i; grid[i] = 1; const next = visited[Math.floor(getRand() * visited.length)]; adj[curr].push(next); adj[next].push(curr); break; }
+                     }
+                 }
+             }
+         }
+     }
+		 return adj;
+	 }
+	 cubeLayout = [];
+     if (document.getElementById('variation').value == '3dcube') {for (let i = 0; i < 6; i++) {cubeLayout.push({adj: cubeadj(), w: w, h: h})}}
      currentLayout = { adj, w, h };
      minSteps = calculateMinSteps(adj, 0, (w * h) - 1);
      if (limitSteps) {
