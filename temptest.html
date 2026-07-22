@@ -528,6 +528,7 @@ const mctx = maskCanvas.getContext('2d');
 	 let profileBorder;
 	 let profileColor;
 	 let bugs;
+	 let cubeLayout = [];
 	let customImg = new Image();
    const canvas = document.getElementById('mazeCanvas');
    const ctx = canvas.getContext('2d', { alpha: false });
@@ -1346,6 +1347,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
      if(!force) {
      if(isDailyChallenge && lastDailyDate === new Date().toDateString()) return;}
      isDaily = isDailyChallenge;
+	 cubeLayout = [];
      if (document.getElementById('height').value == 5) { document.getElementById('height').value = 20; document.getElementById('width').value = 20; document.getElementById('pathwidth').value = 15; document.getElementById('wallwidth').value = 4; document.getElementById('titletext').innerHTML = "Maze Game"; document.getElementById('dashPanel').style.display = "flex";}
      if (document.getElementById('width').value < 15) document.getElementById('width').value = 15;
      if (document.getElementById('height').value < 15) document.getElementById('height').value = 15;
@@ -1506,7 +1508,6 @@ isPreviewActive = true;
      }
 		 return adj;
 	 }
-	 cubeLayout = [];
      if (document.getElementById('variation').value == '3dcube') {for (let i = 0; i < 6; i++) {cubeLayout.push({adj: cubeadj(), w: w, h: h})}}
      currentLayout = { adj, w, h };
      minSteps = calculateMinSteps(adj, 0, (w * h) - 1);
