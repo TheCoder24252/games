@@ -150,7 +150,7 @@
     "fontFamily": "inter",
     "radius": 2.5,
     "feedbackEnabled": false,
-    "footer": "[Developed by TheCoder24252](https://thecoder24252.github.io) | Bot Version 1.2.2",
+    "footer": "[Developed by TheCoder24252](https://thecoder24252.github.io) | Bot Version 1.5.7",
     "soundEnabled": false,
     "toggleChatId": "toggleBot",
     "proactiveMessageEnabled": false,
@@ -161,7 +161,7 @@
     "homePageEnabled": false,
     "mainCardEnabled": false,
     "conversationStartersEnabled": false,
-    "conversationStarters": [],
+    "conversationStarters": ['How to play Maze Game?', 'List all shop items', 'List all game features'],
     "conversationStartersDisplayStyle": "cards",
   },
   "clientId": "e7373cd6-1ff5-4b77-aa83-1f5cb5117525"
@@ -1634,8 +1634,8 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
 	 if (document.getElementById('variation').value == '3d_cube') {
 		 if (typeof num !== "undefined") {
 		 adj = cubeLayout[num].adj; w = cubeLayout[num].w; h = cubeLayout[num].h;
-		 let canvas = document.getElementById(`cu${num + 1}`);
-		 let ctx = canvas.getContext('2d');}
+		 var canvas = document.getElementById(`cu${num + 1}`);
+		 var ctx = canvas.getContext('2d');}
 	 } else {
 		 adj = currentLayout.adj; w = currentLayout.w; h  = currentLayout.h;
 	 }
