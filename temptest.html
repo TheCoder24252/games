@@ -1632,9 +1632,10 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
      if (!currentLayout) return;
 	 let adj = currentLayout.adj, w = currentLayout.w, h = currentLayout.h;
 	 if (document.getElementById('variation').value == '3d_cube') {
+		 if (typeof myVariable !== "undefined") {
 		 adj = cubeLayout[num].adj; w = cubeLayout[num].w; h = cubeLayout[num].h;
 		 let canvas = document.getElementById(`cu${num + 1}`);
-		 let ctx = canvas.getContext('2d');
+		 let ctx = canvas.getContext('2d');}
 	 } else {
 		 adj = currentLayout.adj; w = currentLayout.w; h  = currentLayout.h;
 	 }
