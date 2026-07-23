@@ -1752,10 +1752,10 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
 	   const idToSide = (id) => {if (id == 'mazeCanvas') {return 'f'} if (id == 'cu1') {return 'b'} if (id == 'cu2') {return 'r'} if (id == 'cu3') {return 'l'} if (id == 'cu4') {return 't'} if (id == 'cu5') {return 'bo'}}
 	   if (document.getElementById('variation').value == 'blindfold') {pvLoop = setInterval(bhE, 50)}
 	if (document.getElementById('variation').value == '3d_cube') {
-     if (idToSide() == p1.side) {drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);}} else {drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);}
+     if (idToSide(canvas.id) == p1.side) {drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);}} else {drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);}
      if (isRaceMode) {
 		 if (document.getElementById('variation').value == '3d_cube') {
-     if (idToSide() == p2.side) {drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir);}} else {drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir)}}
+     if (idToSide(canvas.id) == p2.side) {drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir);}} else {drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir)}}
 
      if (limitSteps == true) {
        if (step1Limit != false && step2Limit != false) {
