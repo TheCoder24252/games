@@ -540,7 +540,7 @@ const mctx = maskCanvas.getContext('2d');
    let ctx = canvas.getContext('2d', { alpha: false });
    let currentLayout = null, gameActive = false, startTime = null, timerInterval = null;
    let isRaceMode = false, isDaily = false;
-   let p1 = { pos: 0, steps: 0, name: "P1", dir: 'u'}, p2 = { pos: 0, steps: 0, name: "P2", dir: 'u'};
+   let p1 = { pos: 0, steps: 0, name: "P1", dir: 'u', side: 'f'}, p2 = { pos: 0, steps: 0, name: "P2", dir: 'u', side: 'f'};
    console.log('STOP TRYING TO BREAK MY GAME');
    fetchData().then(res => {gameData = res[0];
 	document.getElementById('loader').style.display = 'none';
@@ -1401,8 +1401,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
      }
 radarX = 0;
 isPreviewActive = true;
-	p1 = { pos: 0, steps: 0, name: "P1", dir: 'u'}; 
-	p2 = { pos: 0, steps: 0, name: "P2", dir: 'u'};
+	p1 = { pos: 0, steps: 0, name: "P1", dir: 'u', side: 'f'}; 
+	p2 = { pos: 0, steps: 0, name: "P2", dir: 'u', side: 'f'};
      p1History = [];
      p2History = [];
      const w = parseInt(document.getElementById('width').value);
@@ -1622,7 +1622,7 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
 	function draw() {
 		drawFun();
 		if (document.getElementById('variation').value == '3d_cube') {
-			for (let i = 0; i < 5; i++) {
+			for (let i = 1; i < 6; i++) {
 				drawFun(true, i)
    			} 
 		}
@@ -1635,7 +1635,7 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
 	 if (document.getElementById('variation').value == '3d_cube') {
 		 if (typeof num !== "undefined") {
 		 adj = cubeLayout[num].adj; w = cubeLayout[num].w; h = cubeLayout[num].h;
-		 canvas = document.getElementById(`cu${num + 1}`);
+		 canvas = document.getElementById(`cu${num}`);
 		 ctx = canvas.getContext('2d');
 		 canvas.width = (pw * 2) + (w * pw) + ((w - 1) * ww);
      canvas.height = (pw * 2) + (h * pw) + ((h - 1) * ww);}
@@ -1749,9 +1749,13 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
     ctx.drawImage(maskCanvas, 0, 0);
     ctx.restore();
 }
+	   const idToSide = (id) => {if (id == 'mazeCanvas') {return 'f'} if (id == 'cu1') {return 'b'} if (id == 'cu2') {return 'r'} if (id == 'cu3') {return 'l'} if (id == 'cu4') {return 't'} if (id == 'cu5') {return 'bo'}}
 	   if (document.getElementById('variation').value == 'blindfold') {pvLoop = setInterval(bhE, 50)}
-     drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);
-     if (isRaceMode) drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir);
+	if (document.getElementById('variation').value == '3d_cube') {
+     if (idToSide() == p1.side) {drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);}} else {drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);}
+     if (isRaceMode) {
+		 if (document.getElementById('variation').value == '3d_cube') {
+     if (idToSide() == p2.side) {drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir);}} else {drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir)}}
 
      if (limitSteps == true) {
        if (step1Limit != false && step2Limit != false) {
