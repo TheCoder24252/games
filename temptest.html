@@ -1748,8 +1748,6 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
     // 4. Draw the black blanket with both holes carved out onto the main canvas
     ctx.drawImage(maskCanvas, 0, 0);
     ctx.restore();
-		  canvas = document.getElementById('mazeCanvas');
-    ctx = canvas.getContext('2d', { alpha: false });
 }
 	   if (document.getElementById('variation').value == 'blindfold') {pvLoop = setInterval(bhE, 50)}
      drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);
@@ -1789,6 +1787,8 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
        document.getElementById('p1Steps').innerText = p1.steps;
      if(isRaceMode) document.getElementById('p2Steps').innerText = p2.steps;
      }
+	    canvas = document.getElementById('mazeCanvas');
+    ctx = canvas.getContext('2d', { alpha: false });
 const iframeWindow = document.querySelector('iframe')?.contentWindow;
 
 if (iframeWindow && document.getElementById('variation').value === '3d_cube') {
