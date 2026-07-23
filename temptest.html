@@ -536,8 +536,8 @@ const mctx = maskCanvas.getContext('2d');
 	 let bugs;
 	 let cubeLayout = [];
 	let customImg = new Image();
-   const canvas = document.getElementById('mazeCanvas');
-   const ctx = canvas.getContext('2d', { alpha: false });
+   let canvas = document.getElementById('mazeCanvas');
+   let ctx = canvas.getContext('2d', { alpha: false });
    let currentLayout = null, gameActive = false, startTime = null, timerInterval = null;
    let isRaceMode = false, isDaily = false;
    let p1 = { pos: 0, steps: 0, name: "P1", dir: 'u'}, p2 = { pos: 0, steps: 0, name: "P2", dir: 'u'};
@@ -1634,8 +1634,8 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
 	 if (document.getElementById('variation').value == '3d_cube') {
 		 if (typeof num !== "undefined") {
 		 adj = cubeLayout[num].adj; w = cubeLayout[num].w; h = cubeLayout[num].h;
-		 var canvas = document.getElementById(`cu${num + 1}`);
-		 var ctx = canvas.getContext('2d');}
+		 canvas = document.getElementById(`cu${num + 1}`);
+		 ctx = canvas.getContext('2d');}
 	 } else {
 		 adj = currentLayout.adj; w = currentLayout.w; h  = currentLayout.h;
 	 }
@@ -1747,6 +1747,8 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
     // 4. Draw the black blanket with both holes carved out onto the main canvas
     ctx.drawImage(maskCanvas, 0, 0);
     ctx.restore();
+		  canvas = document.getElementById('mazeCanvas');
+    ctx = canvas.getContext('2d', { alpha: false });
 }
 	   if (document.getElementById('variation').value == 'blindfold') {pvLoop = setInterval(bhE, 50)}
      drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);
