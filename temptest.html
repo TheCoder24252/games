@@ -1635,7 +1635,9 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
 		 if (typeof num !== "undefined") {
 		 adj = cubeLayout[num].adj; w = cubeLayout[num].w; h = cubeLayout[num].h;
 		 canvas = document.getElementById(`cu${num + 1}`);
-		 ctx = canvas.getContext('2d');}
+		 ctx = canvas.getContext('2d');
+		 canvas.width = (pw * 2) + (w * pw) + ((w - 1) * ww);
+     canvas.height = (pw * 2) + (h * pw) + ((h - 1) * ww);}
 	 } else {
 		 adj = currentLayout.adj; w = currentLayout.w; h  = currentLayout.h;
 	 }
