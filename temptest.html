@@ -1630,12 +1630,13 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
    
    function drawFun(cube, num) {
      if (!currentLayout) return;
+	 let adj = currentLayout.adj, w = currentLayout.w, h: currentLayout.h;
 	 if (cube) {
-		 let { adj, w, h } = cubeLayout[num];
+		 adj = cubeLayout[num].adj; w = cubeLayout[num].w; h: cubeLayout[num].h;
 		 let canvas = document.getElementById(`cu${num + 1}`);
 		 let ctx = canvas.getContext('2d');
 	 } else {
-		 let { adj, w, h } = currentLayout;
+		 adj = currentLayout.adj; w = currentLayout.w; h  = currentLayout.h;
 	 }
      const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
     
