@@ -1820,6 +1820,7 @@ return;
      const { adj, w, h } = currentLayout;
      if (!startTime) { startTime = Date.now(); timerInterval = setInterval(() => { document.getElementById('timer').innerText = ((Date.now() - startTime) / 1000).toFixed(1) + "s"; }, 100); }
      const move = (p, t) => {
+		  if (document.getElementById('variation').value == '3d_cube') {if (sideToId(p.side) != 0) {adj = cubeLayout[sideToId(p.side)].adj; w = cubeLayout[sideToId(p.side)].w; h = cubeLayout[sideToId(p.side)].h}}
 		 if (document.getElementById('variation').value != '3d_cube') {
          if (t !== undefined && adj[p.pos] && adj[p.pos].includes(t)) {
              if (p.name === "P1") {
@@ -1864,6 +1865,9 @@ return;
 			 }
 		 }
      };
+
+	const sideToId = (id) => {if (id == 'f') {return '0'} if (id == 'b') {return 1} if (id == 2) {return 3} if (id == 'l') {return 3} if (id == 't') {return 4} if (id == 'bo') {return 5}}
+	   
      if (!isRaceMode) {if (e.code === 'KeyW'|| e.code === 'ArrowUp') move(p1, p1.pos - w); if (e.code === 'KeyS' || e.code === 'ArrowDown') move(p1, p1.pos + w); if (e.code === 'KeyA' || e.code === 'ArrowLeft') move(p1, p1.pos - 1); if (e.code === 'KeyD' || e.code === 'ArrowRight') move(p1, p1.pos + 1);} else {
 	 if (e.code === 'KeyW') move(p1, p1.pos - w); if (e.code === 'KeyS') move(p1, p1.pos + w); if (e.code === 'KeyA') move(p1, p1.pos - 1); if (e.code === 'KeyD') move(p1, p1.pos + 1); }
      if (isRaceMode) { if (e.code === 'ArrowUp') move(p2, p2.pos - w); if (e.code === 'ArrowDown') move(p2, p2.pos + w); if (e.code === 'ArrowLeft') move(p2, p2.pos - 1); if (e.code === 'ArrowRight') move(p2, p2.pos + 1); }
