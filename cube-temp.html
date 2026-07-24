@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maze Game 3D Cube View</title>
+  <style>
+    body { margin: 0; overflow: hidden; background-color: #1a1e23; user-select: none; }
+    canvas { display: block; width: 100vw; height: 100vh; cursor: grab; }
+    canvas:active { cursor: grabbing; }
+  </style>
+</head>
+<body>
+  <!-- Only 1 single, stable link to the core library is needed -->
+  <script type="importmap"> { 
+    "imports": { 
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
+    } 
+  } </script>
+
+  <img id="mirrorImage" style="display:none;" />
+
+  <script type="module">
+    import * as THREE from 'three';
+
+    // --- SETUP HIGH-RES TEXTURE SURFACE ---
+    const dummyCanvas = document.createElement('canvas');
+    dummyCanvas.width = 2048;
+    dummyCanvas.height = 2048;
+    const dummyCtx = dummyCanvas.getContext('2d');
+    dummyCtx.fillStyle = '#1a1a1a';
+    dummyCtx.fillRect(0, 0, 2048, 2048);
+
+    // --- THREE.JS SCENE SETUP ---
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 0, 5); // Position camera straight in front of the cube face
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
+    document.body.appendChild(renderer.domElement);
+
+const textureLoader = new THREE.TextureLoader();
+const imgA = textureLoader.load('https://thecoder24252.github.io/games/temp/Right.jpg');
+const imgB = textureLoader.load('https://thecoder24252.github.io/games/temp/Left.jpg');
+const imgC = textureLoader.load('https://thecoder24252.github.io/games/temp/Top.jpg');
+const imgD = textureLoader.load('https://thecoder24252.github.io/games/temp/Bottom.jpg');
+const imgE = textureLoader.load('https://thecoder24252.github.io/games/temp/Front.jpg');
+const imgF = textureLoader.load('https://thecoder24252.github.io/games/temp/Back.jpg');
+
+    const canvasTexture = new THREE.CanvasTexture(dummyCanvas);
+    canvasTexture.minFilter = THREE.NearestFilter;
+    canvasTexture.magFilter = THREE.NearestFilter;
+    canvasTexture.generateMipmaps = false; 
+
+    const materials = [
+      new THREE.MeshBasicMaterial({ map: imgA }), // Right side (+X)
+      new THREE.MeshBasicMaterial({ map: imgB }), // Left side (-X)
+      new THREE.MeshBasicMaterial({ map: imgC }), // Top side (+Y)
+      new THREE.MeshBasicMaterial({ map: imgD }), // Bottom side (-Y)
+      new THREE.MeshBasicMaterial({ map: imgE }), // Front side (+Z)
+      new THREE.MeshBasicMaterial({ map: imgF })  // Back side (-Z)
+    ];
+
+    const geometry = new THREE.BoxGeometry(2, 2, 2);
+    const cube = new THREE.Mesh(geometry, materials);
+    scene.add(cube);
+
+    // 🕹️ CUSTOM SWIPE & ROTATION TRACKER VARIABLES
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+    
+    // Physics targets for inertia rotation
+    let targetRotationX = 0;
+    let targetRotationY = 0;
+
+    // --- MOUSE & SWIPE LISTENERS (0% ADDFILE/CDN NEEDED) ---
+    const canvasElement = renderer.domElement;
+
+    canvasElement.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      previousMousePosition = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+
+      const deltaX = e.clientX - previousMousePosition.x;
+      const deltaY = e.clientY - previousMousePosition.y;
+
+      // Adjust these dividers to make swiping faster or slower!
+      targetRotationY += deltaX * 0.007;
+      targetRotationX += deltaY * 0.007;
+
+      previousMousePosition = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    // Support for Mobile/Touch swipes
+    canvasElement.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        isDragging = true;
+        previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isDragging || e.touches.length !== 1) return;
+      const deltaX = e.touches[0].clientX - previousMousePosition.x;
+      const deltaY = e.touches[0].clientY - previousMousePosition.y;
+
+      targetRotationY += deltaX * 0.01;
+      targetRotationX += deltaY * 0.01;
+
+      previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    });
+
+    window.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+
+    // --- ANIMATION LOOP ---
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      // Apply a smooth easing/damping physics transition manually
+      cube.rotation.y += (targetRotationY - cube.rotation.y) * 0.1;
+      cube.rotation.x += (targetRotationX - cube.rotation.x) * 0.1;
+      
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // --- THE BRIDGE INTERFACE LOOP ---
+    const imgElement = document.getElementById('mirrorImage');
+    
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'MAZE_FRAME') {
+        imgElement.src = event.data.base64;
+        
+        imgElement.onload = () => {
+          dummyCtx.clearRect(0, 0, 2048, 2048);
+          dummyCtx.drawImage(imgElement, 0, 0, 2048, 2048);
+          canvasTexture.needsUpdate = true; 
+        };
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
