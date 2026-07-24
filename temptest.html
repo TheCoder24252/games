@@ -628,7 +628,15 @@ let isDown = false, startX, startY, scrollLeft, scrollTop;
 let isDownn = false, startXr, startYr, scrollLeftr, scrollTopr;
 const profileUpload = document.getElementById('profileImgUpload');
   const profileInput = document.getElementById('profileInput');
+	window.addEventListener('blur', () => {
 
+		
+    const cubeIframe = document.querySelector('iframe');
+    
+    if (document.activeElement === cubeIframe) {
+        window.focus();
+    }
+});
   const bgMusic = new Audio('music.mp3');
 bgMusic.loop = true;
 
