@@ -1625,8 +1625,18 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
 			for (let i = 1; i < 6; i++) {
 				drawFun(true, i)
    			} 
+			const iframeWindow = document.querySelector('iframe')?.contentWindow;
+
+if (iframeWindow && document.getElementById('variation').value === '3d_cube') { 
+        iframeWindow.postMessage({type: 'SIDEFRONT',base64: document.getElementById('mazeCanvas');.toDataURL('image/png');}, '*');
+	    iframeWindow.postMessage({type: 'SIDEBACK',base64: document.getElementById('cu1');.toDataURL('image/png');}, '*');
+	    iframeWindow.postMessage({type: 'SIDERIGHT',base64: document.getElementById('cu2');.toDataURL('image/png');}, '*');
+	    iframeWindow.postMessage({type: 'SIDELEFT',base64: document.getElementById('cu3');.toDataURL('image/png');}, '*');
+	    iframeWindow.postMessage({type: 'SIDETOP',base64: document.getElementById('cu4');.toDataURL('image/png');}, '*');
+		iframeWindow.postMessage({type: 'SIDEBOTTOM',base64: document.getElementById('cu5');.toDataURL('image/png');}, '*');
+}
 		}
-	}
+	    }
    
    function drawFun(cube, num) {
      if (!currentLayout) return;
@@ -1797,21 +1807,7 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
      }
 	    canvas = document.getElementById('mazeCanvas');
     ctx = canvas.getContext('2d', { alpha: false });
-const iframeWindow = document.querySelector('iframe')?.contentWindow;
 
-if (iframeWindow && document.getElementById('variation').value === '3d_cube') {
-    // 📸 Grab a compact, compressed image data string of your current maze canvas layout
-    const mazeCanvasElement = document.getElementById('mazeCanvas'); // Match your exact canvas ID
-    if (mazeCanvasElement) {
-        const frameData = mazeCanvasElement.toDataURL('image/png'); // 0.5 compression prevents lag!
-
-        // Safely shoot the pixels through the window security layer into your cube app
-        iframeWindow.postMessage({
-            type: 'MAZE_FRAME',
-            base64: frameData
-        }, '*');
-    }
-}
 
    }
 
