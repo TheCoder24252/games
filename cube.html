@@ -29,12 +29,51 @@
     import * as THREE from 'three';
 
     // --- SETUP HIGH-RES TEXTURE SURFACE ---
-    const dummyCanvas = document.createElement('canvas');
-    dummyCanvas.width = 2048;
-    dummyCanvas.height = 2048;
-    const dummyCtx = dummyCanvas.getContext('2d');
-    dummyCtx.fillStyle = '#1a1a1a';
-    dummyCtx.fillRect(0, 0, 2048, 2048);
+   const frontCanvas = document.createElement('canvas');
+    frontCanvas.width = 2048;
+    frontCanvas.height = 2048;
+    const frontCtx = frontCanvas.getContext('2d');
+    frontCtx.fillStyle = '#1a1a1a';
+    frontCtx.fillRect(0, 0, 2048, 2048);
+
+    const backCanvas = document.createElement('canvas');
+    backCanvas.width = 2048;
+    backCanvas.height = 2048;
+    const backCtx = backCanvas.getContext('2d');
+    backCtx.fillStyle = '#1a1a1a';
+    backCtx.fillRect(0, 0, 2048, 2048);
+
+
+const rightCanvas = document.createElement('canvas');
+    rightCanvas.width = 2048;
+    rightCanvas.height = 2048;
+    const rightCtx = rightCanvas.getContext('2d');
+    rightCtx.fillStyle = '#1a1a1a';
+    rightCtx.fillRect(0, 0, 2048, 2048);
+
+
+const leftCanvas = document.createElement('canvas');
+    leftCanvas.width = 2048;
+    leftCanvas.height = 2048;
+    const leftCtx = leftCanvas.getContext('2d');
+    leftCtx.fillStyle = '#1a1a1a';
+    leftCtx.fillRect(0, 0, 2048, 2048);
+
+    const topCanvas = document.createElement('canvas');
+    topCanvas.width = 2048;
+    topCanvas.height = 2048;
+    const topCtx = topCanvas.getContext('2d');
+    topCtx.fillStyle = '#1a1a1a';
+    topCtx.fillRect(0, 0, 2048, 2048);
+    
+const bottomCanvas = document.createElement('canvas');
+    bottomCanvas.width = 2048;
+    bottomCanvas.height = 2048;
+    const bottomCtx = bottomCanvas.getContext('2d');
+    bottomCtx.fillStyle = '#1a1a1a';
+    bottomCtx.fillRect(0, 0, 2048, 2048);
+
+
 
     // --- THREE.JS SCENE SETUP ---
     const scene = new THREE.Scene();
@@ -173,8 +212,8 @@ const imgF = textureLoader.load('https://thecoder24252.github.io/games/temp/Back
         frontside.src = event.data.base64;
         
         frontside.onload = () => {
-          dummyCtx.clearRect(0, 0, 2048, 2048);
-          dummyCtx.drawImage(frontside, 0, 0, 2048, 2048);
+          frontCtx.clearRect(0, 0, 2048, 2048);
+          frontCtx.drawImage(frontside, 0, 0, 2048, 2048);
           front.needsUpdate = true; 
         };
       }
@@ -187,8 +226,8 @@ const imgF = textureLoader.load('https://thecoder24252.github.io/games/temp/Back
         backside.src = event.data.base64;
         
         backside.onload = () => {
-          dummyCtx.clearRect(0, 0, 2048, 2048);
-          dummyCtx.drawImage(backside, 0, 0, 2048, 2048);
+          backCtx.clearRect(0, 0, 2048, 2048);
+          backCtx.drawImage(backside, 0, 0, 2048, 2048);
           back.needsUpdate = true; 
         };
       }
@@ -201,8 +240,8 @@ const imgF = textureLoader.load('https://thecoder24252.github.io/games/temp/Back
         rightside.src = event.data.base64;
         
         rightside.onload = () => {
-          dummyCtx.clearRect(0, 0, 2048, 2048);
-          dummyCtx.drawImage(rightside, 0, 0, 2048, 2048);
+          rightCtx.clearRect(0, 0, 2048, 2048);
+          rightCtx.drawImage(rightside, 0, 0, 2048, 2048);
           right.needsUpdate = true; 
         };
       }
@@ -215,8 +254,8 @@ const imgF = textureLoader.load('https://thecoder24252.github.io/games/temp/Back
         leftside.src = event.data.base64;
         
         leftside.onload = () => {
-          dummyCtx.clearRect(0, 0, 2048, 2048);
-          dummyCtx.drawImage(leftside, 0, 0, 2048, 2048);
+          leftCtx.clearRect(0, 0, 2048, 2048);
+          leftCtx.drawImage(leftside, 0, 0, 2048, 2048);
           left.needsUpdate = true; 
         };
       }
@@ -229,8 +268,8 @@ const imgF = textureLoader.load('https://thecoder24252.github.io/games/temp/Back
         topside.src = event.data.base64;
         
         topside.onload = () => {
-          dummyCtx.clearRect(0, 0, 2048, 2048);
-          dummyCtx.drawImage(topside, 0, 0, 2048, 2048);
+          topCtx.clearRect(0, 0, 2048, 2048);
+          topCtx.drawImage(topside, 0, 0, 2048, 2048);
           top.needsUpdate = true; 
         };
       }
@@ -243,8 +282,8 @@ const imgF = textureLoader.load('https://thecoder24252.github.io/games/temp/Back
         bottomside.src = event.data.base64;
         
         bottomside.onload = () => {
-          dummyCtx.clearRect(0, 0, 2048, 2048);
-          dummyCtx.drawImage(bottomside, 0, 0, 2048, 2048);
+          bottomCtx.clearRect(0, 0, 2048, 2048);
+          bottomCtx.drawImage(bottomside, 0, 0, 2048, 2048);
           bottom.needsUpdate = true; 
         };
       }
