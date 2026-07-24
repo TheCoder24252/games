@@ -1817,7 +1817,7 @@ if (iframeWindow && document.getElementById('variation').value === '3d_cube') {
 return;
      }
      if(!gameActive || !currentLayout) return;
-     const { adj, w, h } = currentLayout;
+     let { adj, w, h } = currentLayout;
      if (!startTime) { startTime = Date.now(); timerInterval = setInterval(() => { document.getElementById('timer').innerText = ((Date.now() - startTime) / 1000).toFixed(1) + "s"; }, 100); }
      const move = (p, t) => {
 		  if (document.getElementById('variation').value == '3d_cube') {if (sideToId(p.side) != 0) {adj = cubeLayout[sideToId(p.side)].adj; w = cubeLayout[sideToId(p.side)].w; h = cubeLayout[sideToId(p.side)].h}}
