@@ -1706,7 +1706,7 @@ if (iframeWindow && document.getElementById('variation').value === '3d_cube') {
      }
 	const idToSide = (id) => {if (id == 'mazeCanvas') {return 'f'} if (id == 'cu1') {return 'b'} if (id == 'cu2') {return 'r'} if (id == 'cu3') {return 'l'} if (id == 'cu4') {return 't'} if (id == 'cu5') {return 'bo'}}
     if (document.getElementById('variation').value == '3d_cube') {
-		if (canvas.id() == '3d_cube') {ctx.fillStyle = "#00ff00";
+		if (idToSide(canvas.id) == 'b') {ctx.fillStyle = "#00ff00";
      ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);}
 	} else {
      ctx.fillStyle = "#00ff00";
