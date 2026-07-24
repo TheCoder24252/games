@@ -1652,11 +1652,12 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
        adj[i].forEach(n => { if (n > i) { if (n % w > i % w) ctx.fillRect(px + pw, py, ww, pw); else ctx.fillRect(px, py + pw, pw, ww); } });
      }
 
-
      if (activeTrail !== 'None') {
        ctx.save();
        const trailData = trails.find(t => t.name === activeTrail);
-       const drawTrailPath = (history) => {
+       const drawTrailPath = (history, side) => {
+		   const idToSide = (id) => {if (id == 'mazeCanvas') {return 'f'} if (id == 'cu1') {return 'b'} if (id == 'cu2') {return 'r'} if (id == 'cu3') {return 'l'} if (id == 'cu4') {return 't'} if (id == 'cu5') {return 'bo'}}
+		   if (document.getElementById('variation').value == '3d_cube') {if (idToSide(canvas.id) != side) {return}}
            history.forEach((pos, index) => {
                const tx = (pos % currentLayout.w) * (pw + ww) + pw;
                const ty = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
@@ -1689,8 +1690,8 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
                ctx.fillRect(tx + 4, ty + 4, pw - 8, pw - 8);
            });
        };
-       drawTrailPath(p1History);
-       if (isRaceMode) drawTrailPath(p2History);
+       drawTrailPath(p1History, p1.side);
+       if (isRaceMode) drawTrailPath(p2History, p2.side);
        ctx.restore();
      }
     
