@@ -1628,12 +1628,12 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
 			const iframeWindow = document.querySelector('iframe')?.contentWindow;
 
 if (iframeWindow && document.getElementById('variation').value === '3d_cube') { 
-        iframeWindow.postMessage({type: 'SIDEFRONT',base64: document.getElementById('mazeCanvas').toDataURL('image/png'), '*'});
-	    iframeWindow.postMessage({type: 'SIDEBACK',base64: document.getElementById('cu1').toDataURL('image/png'), '*'});
-	    iframeWindow.postMessage({type: 'SIDERIGHT',base64: document.getElementById('cu2').toDataURL('image/png'), '*'});
-	    iframeWindow.postMessage({type: 'SIDELEFT',base64: document.getElementById('cu3').toDataURL('image/png'), '*'});
-	    iframeWindow.postMessage({type: 'SIDETOP',base64: document.getElementById('cu4').toDataURL('image/png'), '*'});
-		iframeWindow.postMessage({type: 'SIDEBOTTOM',base64: document.getElementById('cu5').toDataURL('image/png'), '*'});
+    iframeWindow.postMessage({type: 'SIDEFRONT', base64: document.getElementById('mazeCanvas').toDataURL('image/png')}, '*'); 
+    iframeWindow.postMessage({type: 'SIDEBACK', base64: document.getElementById('cu1').toDataURL('image/png')}, '*'); 
+    iframeWindow.postMessage({type: 'SIDERIGHT', base64: document.getElementById('cu2').toDataURL('image/png')}, '*'); 
+    iframeWindow.postMessage({type: 'SIDELEFT', base64: document.getElementById('cu3').toDataURL('image/png')}, '*'); 
+    iframeWindow.postMessage({type: 'SIDETOP', base64: document.getElementById('cu4').toDataURL('image/png')}, '*'); 
+    iframeWindow.postMessage({type: 'SIDEBOTTOM', base64: document.getElementById('cu5').toDataURL('image/png')}, '*'); 
 }
 		}
 	    }
