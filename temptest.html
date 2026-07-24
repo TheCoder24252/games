@@ -1856,7 +1856,7 @@ return;
              if (p.pos === w * h - 1) win(p);
 			 } else {
 				 if (p.side == 'f') {
-					 if (p.pos < w && t == p.pos - w) {p.dir = 'u'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = t; p.side = 't'; p.steps++; draw()}
+					 if (p.pos < w && t == p.pos - w) {p.dir = 'u'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = w * h - w + p.pos; p.side = 't'; p.steps++; draw()}
 				 } 
 
 
