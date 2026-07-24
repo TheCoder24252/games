@@ -1858,7 +1858,7 @@ return;
 			 } else {
 				 if (p.side == 'f') {
 					 if (p.pos < w && t == p.pos - w) {p.dir = 'u'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = w * h - w + p.pos; p.side = 't'; p.steps++; draw()}
-					 if (p1.pos % w === w - 1 && t - p.pos === 1) {p.dir = 'r'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos * w; p.side = 'r'; p.steps++; draw()}
+					 if (p1.pos % w === w - 1 && t - p.pos === 1) {p.dir = 'r'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos + 1 - 20; p.side = 'r'; p.steps++; draw()}
 				 } 
 
 
