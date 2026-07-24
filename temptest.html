@@ -1694,9 +1694,13 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
        if (isRaceMode) drawTrailPath(p2History, p2.side);
        ctx.restore();
      }
-    
+	const idToSide = (id) => {if (id == 'mazeCanvas') {return 'f'} if (id == 'cu1') {return 'b'} if (id == 'cu2') {return 'r'} if (id == 'cu3') {return 'l'} if (id == 'cu4') {return 't'} if (id == 'cu5') {return 'bo'}}
+    if (document.getElementById('variation').value == '3d_cube') {
+		if (canvas.id() == '3d_cube') {ctx.fillStyle = "#00ff00";
+     ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);}
+	} else {
      ctx.fillStyle = "#00ff00";
-     ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);
+     ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);}
      if (document.getElementById('variation').value == 'fog') {
     ctx.save();
     
@@ -1750,7 +1754,6 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
     ctx.drawImage(maskCanvas, 0, 0);
     ctx.restore();
 }
-	   const idToSide = (id) => {if (id == 'mazeCanvas') {return 'f'} if (id == 'cu1') {return 'b'} if (id == 'cu2') {return 'r'} if (id == 'cu3') {return 'l'} if (id == 'cu4') {return 't'} if (id == 'cu5') {return 'bo'}}
 	   if (document.getElementById('variation').value == 'blindfold') {pvLoop = setInterval(bhE, 50)}
 	if (document.getElementById('variation').value == '3d_cube') {
      if (idToSide(canvas.id) == p1.side) {drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);}} else {drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);}
