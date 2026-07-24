@@ -85,14 +85,6 @@ const bottomCanvas = document.createElement('canvas');
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
     document.body.appendChild(renderer.domElement);
 
-const textureLoader = new THREE.TextureLoader();
-const imgA = textureLoader.load('https://thecoder24252.github.io/games/temp/Right.jpg');
-const imgB = textureLoader.load('https://thecoder24252.github.io/games/temp/Left.jpg');
-const imgC = textureLoader.load('https://thecoder24252.github.io/games/temp/Top.jpg');
-const imgD = textureLoader.load('https://thecoder24252.github.io/games/temp/Bottom.jpg');
-const imgE = textureLoader.load('https://thecoder24252.github.io/games/temp/Front.jpg');
-const imgF = textureLoader.load('https://thecoder24252.github.io/games/temp/Back.jpg');
-
     const front = new THREE.CanvasTexture(frontCanvas);
     front.minFilter = THREE.NearestFilter;
     front.magFilter = THREE.NearestFilter;
@@ -145,6 +137,9 @@ const imgF = textureLoader.load('https://thecoder24252.github.io/games/temp/Back
     let targetRotationY = 0;
 
     // --- MOUSE & SWIPE LISTENERS (0% ADDFILE/CDN NEEDED) ---
+
+    const MAX_TILT_LIMIT = 0.8; 
+
     const canvasElement = renderer.domElement;
 
     canvasElement.addEventListener('mousedown', (e) => {
@@ -157,10 +152,10 @@ const imgF = textureLoader.load('https://thecoder24252.github.io/games/temp/Back
 
       const deltaX = e.clientX - previousMousePosition.x;
       const deltaY = e.clientY - previousMousePosition.y;
+targetRotationY += deltaX * 0.007;
+targetRotationX += deltaY * 0.007;
+targetRotationX = Math.max(-MAX_TILT_LIMIT, Math.min(MAX_TILT_LIMIT, targetRotationX));
 
-      // Adjust these dividers to make swiping faster or slower!
-      targetRotationY += deltaX * 0.007;
-      targetRotationX += deltaY * 0.007;
 
       previousMousePosition = { x: e.clientX, y: e.clientY };
     });
