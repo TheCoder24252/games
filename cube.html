@@ -18,8 +18,13 @@
     } 
   } </script>
 
-  <img id="mirrorImage" style="display:none;" />
-
+  <img id="frontside" style="display:none;" />
+  <img id="backside" style="display:none;" />
+   <img id="rightside" style="display:none;" />
+   <img id="leftside" style="display:none;" />
+   <img id="topside" style="display:none;" />
+   <img id="bottomside" style="display:none;" />
+  
   <script type="module">
     import * as THREE from 'three';
 
@@ -49,18 +54,43 @@ const imgD = textureLoader.load('https://thecoder24252.github.io/games/temp/Bott
 const imgE = textureLoader.load('https://thecoder24252.github.io/games/temp/Front.jpg');
 const imgF = textureLoader.load('https://thecoder24252.github.io/games/temp/Back.jpg');
 
-    const canvasTexture = new THREE.CanvasTexture(dummyCanvas);
-    canvasTexture.minFilter = THREE.NearestFilter;
-    canvasTexture.magFilter = THREE.NearestFilter;
-    canvasTexture.generateMipmaps = false; 
+    const front = new THREE.CanvasTexture(dummyCanvas);
+    front.minFilter = THREE.NearestFilter;
+    front.magFilter = THREE.NearestFilter;
+    front.generateMipmaps = false; 
+
+    const left = new THREE.CanvasTexture(dummyCanvas);
+    left.minFilter = THREE.NearestFilter;
+    left.magFilter = THREE.NearestFilter;
+    left.generateMipmaps = false; 
+
+    const right = new THREE.CanvasTexture(dummyCanvas);
+    right.minFilter = THREE.NearestFilter;
+    right.magFilter = THREE.NearestFilter;
+    right.generateMipmaps = false; 
+
+    const back = new THREE.CanvasTexture(dummyCanvas);
+    back.minFilter = THREE.NearestFilter;
+    back.magFilter = THREE.NearestFilter;
+    back.generateMipmaps = false; 
+
+    const top = new THREE.CanvasTexture(dummyCanvas);
+    top.minFilter = THREE.NearestFilter;
+    top.magFilter = THREE.NearestFilter;
+    top.generateMipmaps = false; 
+
+    const bottom = new THREE.CanvasTexture(dummyCanvas);
+    bottom.minFilter = THREE.NearestFilter;
+    bottom.magFilter = THREE.NearestFilter;
+    bottom.generateMipmaps = false; 
 
     const materials = [
-      new THREE.MeshBasicMaterial({ map: imgA }), // Right side (+X)
-      new THREE.MeshBasicMaterial({ map: imgB }), // Left side (-X)
-      new THREE.MeshBasicMaterial({ map: imgC }), // Top side (+Y)
-      new THREE.MeshBasicMaterial({ map: imgD }), // Bottom side (-Y)
-      new THREE.MeshBasicMaterial({ map: imgE }), // Front side (+Z)
-      new THREE.MeshBasicMaterial({ map: imgF })  // Back side (-Z)
+      new THREE.MeshBasicMaterial({ map: right }), // Right side (+X)
+      new THREE.MeshBasicMaterial({ map: left }), // Left side (-X)
+      new THREE.MeshBasicMaterial({ map: top }), // Top side (+Y)
+      new THREE.MeshBasicMaterial({ map: bottom }), // Bottom side (-Y)
+      new THREE.MeshBasicMaterial({ map: front }), // Front side (+Z)
+      new THREE.MeshBasicMaterial({ map: back })  // Back side (-Z)
     ];
 
     const geometry = new THREE.BoxGeometry(2, 2, 2);
@@ -136,20 +166,91 @@ const imgF = textureLoader.load('https://thecoder24252.github.io/games/temp/Back
     animate();
 
     // --- THE BRIDGE INTERFACE LOOP ---
-    const imgElement = document.getElementById('mirrorImage');
+    const frontside = document.getElementById('frontside');
     
     window.addEventListener('message', (event) => {
-      if (event.data && event.data.type === 'MAZE_FRAME') {
-        imgElement.src = event.data.base64;
+      if (event.data && event.data.type === 'SIDEFRONT') {
+        frontside.src = event.data.base64;
         
-        imgElement.onload = () => {
+        frontside.onload = () => {
           dummyCtx.clearRect(0, 0, 2048, 2048);
-          dummyCtx.drawImage(imgElement, 0, 0, 2048, 2048);
-          canvasTexture.needsUpdate = true; 
+          dummyCtx.drawImage(frontside, 0, 0, 2048, 2048);
+          front.needsUpdate = true; 
         };
       }
     });
 
+    const backside = document.getElementById('backside');
+    
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'SIDEBACK') {
+        backside.src = event.data.base64;
+        
+        backside.onload = () => {
+          dummyCtx.clearRect(0, 0, 2048, 2048);
+          dummyCtx.drawImage(backside, 0, 0, 2048, 2048);
+          back.needsUpdate = true; 
+        };
+      }
+    });
+
+    const rightside = document.getElementById('rightside');
+    
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'SIDERIGHT') {
+        rightside.src = event.data.base64;
+        
+        rightside.onload = () => {
+          dummyCtx.clearRect(0, 0, 2048, 2048);
+          dummyCtx.drawImage(rightside, 0, 0, 2048, 2048);
+          right.needsUpdate = true; 
+        };
+      }
+    });
+
+    const leftside = document.getElementById('leftside');
+    
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'SIDELEFT') {
+        leftside.src = event.data.base64;
+        
+        leftside.onload = () => {
+          dummyCtx.clearRect(0, 0, 2048, 2048);
+          dummyCtx.drawImage(leftside, 0, 0, 2048, 2048);
+          left.needsUpdate = true; 
+        };
+      }
+    });
+
+    const topside = document.getElementById('topside');
+    
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'SIDETOP') {
+        topside.src = event.data.base64;
+        
+        topside.onload = () => {
+          dummyCtx.clearRect(0, 0, 2048, 2048);
+          dummyCtx.drawImage(topside, 0, 0, 2048, 2048);
+          top.needsUpdate = true; 
+        };
+      }
+    });
+
+    const bottomside = document.getElementById('bottomside');
+    
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'SIDEBOTTOM') {
+        bottomside.src = event.data.base64;
+        
+        bottomside.onload = () => {
+          dummyCtx.clearRect(0, 0, 2048, 2048);
+          dummyCtx.drawImage(bottomside, 0, 0, 2048, 2048);
+          bottom.needsUpdate = true; 
+        };
+      }
+    });
+
+    
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
