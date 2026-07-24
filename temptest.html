@@ -1858,7 +1858,8 @@ return;
 			 } else {
 				 if (p.side == 'f') {
 					 if (p.pos < w && t == p.pos - w) {p.dir = 'u'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = w * h - w + p.pos; p.side = 't'; p.steps++; draw()}
-					 if (p1.pos % w === w - 1 && t - p.pos === 1) {p.dir = 'r'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos + 1 - 20; p.side = 'r'; p.steps++; draw()}
+					 if (p.pos % w === w - 1 && t - p.pos === 1) {p.dir = 'r'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos - 19; p.side = 'r'; p.steps++; draw()}
+					 if (p.pos % w === 0) < w && p.pos - t == 1) {p.dir = 'l'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos + 19; p.side = 'l'; p.steps++; draw()}
 				 } 
 
 
@@ -1867,7 +1868,7 @@ return;
 		 }
      };
 
-	const sideToId = (id) => {if (id == 'f') {return '0'} if (id == 'b') {return 1} if (id == 2) {return 3} if (id == 'l') {return 3} if (id == 't') {return 4} if (id == 'bo') {return 5}}
+	const sideToId = (id) => {if (id == 'f') {return '0'} if (id == 'b') {return 1} if (id == 'r') {return 3} if (id == 'l') {return 3} if (id == 't') {return 4} if (id == 'bo') {return 5}}
 	   
      if (!isRaceMode) {if (e.code === 'KeyW'|| e.code === 'ArrowUp') move(p1, p1.pos - w); if (e.code === 'KeyS' || e.code === 'ArrowDown') move(p1, p1.pos + w); if (e.code === 'KeyA' || e.code === 'ArrowLeft') move(p1, p1.pos - 1); if (e.code === 'KeyD' || e.code === 'ArrowRight') move(p1, p1.pos + 1);} else {
 	 if (e.code === 'KeyW') move(p1, p1.pos - w); if (e.code === 'KeyS') move(p1, p1.pos + w); if (e.code === 'KeyA') move(p1, p1.pos - 1); if (e.code === 'KeyD') move(p1, p1.pos + 1); }
