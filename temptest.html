@@ -1413,12 +1413,14 @@ isPreviewActive = true;
      p1History = [];
      p2History = [];
      const w = parseInt(document.getElementById('width').value);
-     const h = parseInt(document.getElementById('height').value);
+     let h = parseInt(document.getElementById('height').value);
      const pw = parseInt(document.getElementById('pathwidth').value);
      const ww = parseInt(document.getElementById('wallwidth').value);
      const mode = document.getElementById('algo').value;
      const getRand = isDaily ? seededRandom : Math.random;
-
+	   
+	 if (document.getElementById('variation').value == '3d_cube') {h = w}
+	   
      canvas.width = (pw * 2) + (w * pw) + ((w - 1) * ww);
      canvas.height = (pw * 2) + (h * pw) + ((h - 1) * ww);
     
@@ -1521,7 +1523,7 @@ isPreviewActive = true;
      }
 		 return adj;
 	 }
-     if (document.getElementById('variation').value == '3d_cube') {cubeLayout.push([]); for (let i = 0; i < 5; i++) {cubeLayout.push({adj: cubeadj(), w: w, h: h})}}
+     if (document.getElementById('variation').value == '3d_cube') {;cubeLayout.push([]); for (let i = 0; i < 5; i++) {cubeLayout.push({adj: cubeadj(), w: w, h: h})}}
      currentLayout = { adj, w, h };
      minSteps = calculateMinSteps(adj, 0, (w * h) - 1);
      if (limitSteps) {
@@ -1865,17 +1867,24 @@ return;
 			 } else {
 				 if (p.side == 'f') {
 					 if (p.pos < w && t == p.pos - w) {p.dir = 'u'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = w * h - w + p.pos; p.side = 't'; p.steps++; draw()}
-					 if (p.pos % w === w - 1 && t - p.pos === 1) {p.dir = 'r'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos - 19; p.side = 'r'; p.steps++; draw()}
-					 if (p.pos % w === 0 && p.pos - t == 1) {p.dir = 'l'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos + 19; p.side = 'l'; p.steps++; draw()}
+					 if (p.pos % w === w - 1 && t - p.pos === 1) {p.dir = 'r'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos - (w - 1); p.side = 'r'; p.steps++; draw()}
+					 if (p.pos % w === 0 && p.pos - t == 1) {p.dir = 'l'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos + (w - 1); p.side = 'l'; p.steps++; draw()}
 					 if (p.pos >= w * (h - 1) && t - p.pos === w) {p.dir = 'd'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos - (h - 1) * w; p.side = 'bo'; p.steps++; draw()}
 				 } 
 				if (p.side == 't') {
 					 if (p.pos < w && t == p.pos - w) {p.dir = 'u'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = (w - 1) - p.pos; p.side = 'b'; p.steps++; draw()}
-					 if (p.pos % w === w - 1 && t - p.pos === 1) {p.dir = 'r'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = 19 - ((p.pos + 1) / 20 - 1); p.side = 'r'; p.steps++; draw()}
-					 if (p.pos % w === 0 && p.pos - t == 1) {p.dir = 'l'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos / 20; p.side = 'l'; p.steps++; draw()}
+					 if (p.pos % w === w - 1 && t - p.pos === 1) {p.dir = 'r'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = (w - 1) - ((p.pos + 1) / w - 1); p.side = 'r'; p.steps++; draw()}
+					 if (p.pos % w === 0 && p.pos - t == 1) {p.dir = 'l'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos / w; p.side = 'l'; p.steps++; draw()}
 					 if (p.pos >= w * (h - 1) && t - p.pos === w) {p.dir = 'd'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos - (h - 1) * w; p.side = 'f'; p.steps++; draw()}
 				 } 
 
+				 if (p.side == 'r') {
+					 if (p.pos < w && t == p.pos - w) {p.dir = 'u'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = (w * h - 1) - (p.pos * w); p.side = 't'; p.steps++; draw()}
+					 if (p.pos % w === w - 1 && t - p.pos === 1) {p.dir = 'r'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos - (w - 1); p.side = 'b'; p.steps++; draw()}
+					 if (p.pos % w === 0 && p.pos - t == 1) {p.dir = 'l'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos + (w - 1); p.side = 'f'; p.steps++; draw()}
+					 if (p.pos >= w * (h - 1) && t - p.pos === w) {p.dir = 'd'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = (p.pos - w * (w - 1) + 1) * w - 1; p.side = 'bo'; p.steps++; draw()}
+				 } 
+				 
 				 if (p.pos === w * h - 1 && p.side == 'b') win(p);
 			 }
 		 }
