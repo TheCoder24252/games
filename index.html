@@ -963,7 +963,7 @@ async function logIn(username, password) {
       // Pass parameters exactly matching the p_username and p_passcode SQL arguments
       body: JSON.stringify({
         p_username: username,
-        p_passcode: passcode
+        p_passcode: password
       })
     });
 
