@@ -23,6 +23,12 @@
       })
     });
 
+    // Check if Supabase rejected the request (e.g., status 400)
+    if (!response.ok) {
+      const errorDetails = await response.json();
+      console.error("Supabase Error Details:", errorDetails);
+      return;
+    }
     // The endpoint directly returns the raw boolean layout (true or false)
     const isValid = await response.json();
     
