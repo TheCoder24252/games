@@ -3,11 +3,10 @@
 <body>
 <script>
   async function verifyCredentials(username, passcode) {
-  const PROJECT_REF = 'your-project-reference';
-  const ANON_KEY = 'your-anon-public-key';
+  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
   
   // Notice the /rpc/check_user_credentials path layout
-  const url = `https://${PROJECT_REF}.supabase.co/rest/v1/rpc/check_user_credentials`;
+  const url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/rpc/check_user_credentials`;
 
   try {
     const response = await fetch(url, {
