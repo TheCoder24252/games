@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+  async function verifyCredentials(username, passcode) {
+  const PROJECT_REF = 'your-project-reference';
+  const ANON_KEY = 'your-anon-public-key';
+  
+  // Notice the /rpc/check_user_credentials path layout
+  const url = `https://${PROJECT_REF}.supabase.co/rest/v1/rpc/check_user_credentials`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': ANON_KEY,
+        'Authorization': `Bearer ${ANON_KEY}`
+      },
+      // Pass parameters exactly matching the p_username and p_passcode SQL arguments
+      body: JSON.stringify({
+        p_username: username,
+        p_passcode: passcode
+      })
+    });
+
+    // The endpoint directly returns the raw boolean layout (true or false)
+    const isValid = await response.json();
+    
+    if (isValid) {
+      console.log("Access granted!");
+    } else {
+      console.log("Invalid credentials.");
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+  }
+}
+  //verifyCredentials('john_doe', 'secret123');
+</script>
+</body>
+</html
