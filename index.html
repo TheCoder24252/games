@@ -946,7 +946,7 @@ function logPrep() {
  document.getElementById('logInTitle').innerHTML = "Log In";
  document.getElementById('accModal').style.display = "none";
 }
-function logIn(username, password) {
+async function logIn(username, password) {
   const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
   
   // Notice the /rpc/check_user_credentials path layout
