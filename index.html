@@ -858,6 +858,44 @@ function openProfile(id) {
 		document.getElementById('prModal').style.display = 'flex';
 	})
 }
+ async function verifyCredentials(username, passcode) {
+  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
+  const url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/rpc/check_user_credentials`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': ANON_KEY,
+        'Authorization': `Bearer ${ANON_KEY}`
+      },
+      // Pass parameters exactly matching the p_username and p_passcode SQL arguments
+      body: JSON.stringify({
+        p_username: username,
+        p_passcode: passcode
+      })
+    });
+
+    // Check if Supabase rejected the request (e.g., status 400)
+    if (!response.ok) {
+      const errorDetails = await response.json();
+      console.error("Supabase Error Details:", errorDetails);
+      return;
+    }
+    // The endpoint directly returns the raw boolean layout (true or false)
+    const isValid = await response.json();
+    
+    if (isValid) {
+      console.log("Access granted!");
+    } else {
+      console.log("Invalid credentials.");
+    }
+  } catch (error) {
+    console.error("Fetch error:", error);
+  }
+}
+  //verifyCredentials('john_doe', 'secret123');
 function showLeaderboard(by, force = false) {
  if (by == 'maze') {
    fetchData(false, by).then(res => {
@@ -908,36 +946,46 @@ function logPrep() {
  document.getElementById('logInTitle').innerHTML = "Log In";
  document.getElementById('accModal').style.display = "none";
 }
-function logIn(AccountUser, password) {
- const url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/accounts?Usernames=eq.${AccountUser}&select=Usernames,passcode`;
- const options = {
-   method: 'GET',
-   headers: {
-     'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ',
-     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'
-   }
- };
+function logIn(username, password) {
+  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
+  
+  // Notice the /rpc/check_user_credentials path layout
+  const url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/rpc/check_user_credentials`;
 
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': ANON_KEY,
+        'Authorization': `Bearer ${ANON_KEY}`
+      },
+      // Pass parameters exactly matching the p_username and p_passcode SQL arguments
+      body: JSON.stringify({
+        p_username: username,
+        p_passcode: passcode
+      })
+    });
 
- return fetch(url, options)
-   .then(response => {
-     if (!response.ok) {
-       throw new Error(`HTTP error! status: ${response.status}`);
-     }
-     return response.json();
-   })
-   .then(data => {
-     if (data[0].passcode == password) {
-     localStorage.setItem("Username", AccountUser);
+    // Check if Supabase rejected the request (e.g., status 400)
+    if (!response.ok) {
+      const errorDetails = await response.json();
+      console.error("Supabase Error Details:", errorDetails);
+      return;
+    }
+    // The endpoint directly returns the raw boolean layout (true or false)
+    const isValid = await response.json();
+    
+    if (isValid) {
+      console.log("Access granted!");
+	localStorage.setItem("Username", username);
      window.location.reload();
-     } else {
-       document.getElementById('invalidText').innerHTML = "Passcode incorrect";
-     }
-   })
-   .catch(error => {
-     console.error('Error:', error);
-     document.getElementById('invalidText').innerHTML = "This account does not exist";
-   });
+    } else {
+      console.log("Invalid credentials.");
+    }
+  } catch (error) {
+    console.error("Log In:", error);
+  }
 }
 async function deleteRow(idValue) {
  const supabaseUrl = 'https://oqapjpayxyrlwmatreep.supabase.co';
