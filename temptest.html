@@ -544,7 +544,7 @@ const mctx = maskCanvas.getContext('2d');
    console.log('STOP TRYING TO BREAK MY GAME');
    fetchData().then(res => {gameData = res[0];
 	document.getElementById('loader').style.display = 'none';
-	if (!localStorage.getItem('tb')) {document.getElementById('tb').style.display = 'flex'}
+	if (!localStorage.getItem('tb')) {document.getElementById('tb').style.display = 'flex'} else {document.getElementById('tb').style.display = 'none'}
     ach = gameData.achieve;
 	lastBonus = gameData.last_bonus;
 	btime = gameData.Time;
