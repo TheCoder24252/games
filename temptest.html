@@ -181,6 +181,7 @@
 <body oncontextmenu="return false;">
  <h1 id="titletext">Maze Game</h1>
   <div id='loader' class='loader-overlay'><img src='https://thecoder24252.github.io/games/loader.gif'></div>
+  <div id='tb' class='loader-overlay'><img src='https://thecoder24252.github.io/games/tb.png' onclick='localstorage.setItem("tb", true); window.location.reload()'></div>
   <div id="winModal" class="modal-overlay">
    <div class="modal-content">
      <h2 id="winTitle">Maze Complete!</h2>
@@ -543,6 +544,7 @@ const mctx = maskCanvas.getContext('2d');
    console.log('STOP TRYING TO BREAK MY GAME');
    fetchData().then(res => {gameData = res[0];
 	document.getElementById('loader').style.display = 'none';
+	if (!localStorage.getItem('tb')) {document.getElementById('tb').style.display = 'flex'}
     ach = gameData.achieve;
 	lastBonus = gameData.last_bonus;
 	btime = gameData.Time;
