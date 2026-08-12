@@ -1,0 +1,15 @@
+Copyright (c) 2026 TheCoder24252
+
+All Rights Reserved.
+
+Permission is hereby DENIED to copy, modify, blend, publish, distribute, or host 
+this JavaScript code, or any portions of it, for any purpose. This prohibition 
+applies to all redistribution, whether public or private, shared or unshared.
+
+Permission is strictly GRANTED to execute, run, and view this JavaScript code 
+solely through official deployments authorized by the copyright holder (TheCoder24252), 
+including viewing the source code on GitHub or interacting with it on authorized 
+GitHub Pages domains.
+
+Any unauthorized duplication, modification, creation of separate forks, or external 
+hosting/deployment of this script constitutes a direct violation of copyright law.
