@@ -1,7 +1,9 @@
 <p align="center">
-  <a href="https://thecoder24252.github.io/games">
-    <img src="https://thecoder24252.github.io/games/Maze-Logo.png" alt="Maze Game logo" width="100px" height="100px">
-  </a>
+  <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://thecoder24252.github.io/games/Maze-Logo-Text-Dark" />
+      <source media="(prefers-color-scheme: light)" srcset="https://thecoder24252.github.io/games/Maze-Logo-Text-Light" />
+      <img src="https://thecoder24252.github.io/games/Maze-Logo-Text-Dark" alt="Maze Game logo" width="312px" />
+  </picture>
 </p>
 
 <h1 align="center">Maze Game</h1>
