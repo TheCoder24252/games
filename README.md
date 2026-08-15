@@ -1,10 +1,10 @@
-<p align="center">
+<a href='https://thecoder24252.github.io/games'>
   <picture>
       <source media="(prefers-color-scheme: dark)" srcset="https://thecoder24252.github.io/games/Maze-Logo-Text-Dark.png" />
       <source media="(prefers-color-scheme: light)" srcset="https://thecoder24252.github.io/games/Maze-Logo-Text-Light.png" />
       <img src="https://thecoder24252.github.io/games/Maze-Logo-Text-Dark.png" alt="Maze Game logo" width="312px" />
   </picture>
-</p>
+</a>
 
 <p align="center">
   <a href="https://thecoder24252.github.io/games/">
