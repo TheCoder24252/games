@@ -13,17 +13,11 @@
 <h1 align="center">Maze Game</h1>
 
 <p align="center">
-  <a href="https://thecodergames.gitbook.io/maze-game-wiki">
+  <a href="https://thecoder24252.github.io/games/">
+    <img src="https://thecoder24252.github.io/games/Play.svg" alt="Play Maze Game">
+  </a>
+  <a href="https://thecodergames.gitbook.io/maze-game-wiki/">
     <img src="https://shields.io" alt="Maze Game Wiki">
-  </a>
-  <a href="https://npmjs.com">
-    <img src="https://shields.io" alt="Current NPM version">
-  </a>
-  <a href="https://npmjs.com">
-    <img src="https://shields.io" alt="Monthly downloads from NPM">
-  </a>
-  <a href="https://jsdelivr.com">
-    <img src="https://shields.io" alt="Monthly downloads from jsDelivr">
   </a>
 </p>
 FingerprintJS is an open-source, client-side, browser fingerprinting library that queries browser attributes and computes a hashed visitor identifier from them. Unlike cookies and local storage, a fingerprint stays the same in incognito/private mode and even when browser data is purged.
