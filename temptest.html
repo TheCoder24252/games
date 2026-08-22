@@ -180,6 +180,24 @@
 </head>
 <body oncontextmenu="return false;">
  <h1 id="titletext">Maze Game</h1>
+<div id="customContextMenu" style="
+    display: none; 
+    position: absolute; 
+    background-color: #222; 
+    color: #fff; 
+    border: 1px solid #444; 
+    border-radius: 6px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
+    font-family: sans-serif; 
+    font-size: 14px; 
+    z-index: 10000; 
+    width: 160px;
+	flex-direction: column;
+">
+    <div class="menu-item" onclick="generate()" style="padding: 10px; cursor: pointer;">Generate Maze</div>
+    <hr style="border-color: #444; margin: 0;">
+    <div class="menu-item" style="padding: 10px; cursor: pointer; color: #ff5555;" onclick='document.getElementById("customContextMenu").style.display="none"'>Close Menu</div>
+</div>
   <div id='loader' class='loader-overlay'><img src='https://thecoder24252.github.io/games/loader.gif'></div>
   <div id='tb' class='loader-overlay'><img style='display:none;width: 100%; height: 100vh' src='https://thecoder24252.github.io/games/tb.png' onclick='localStorage.setItem("tb", true); window.location.reload()'></div>
   <div id="winModal" class="modal-overlay">
@@ -629,6 +647,26 @@ let isDown = false, startX, startY, scrollLeft, scrollTop;
 let isDownn = false, startXr, startYr, scrollLeftr, scrollTopr;
 const profileUpload = document.getElementById('profileImgUpload');
   const profileInput = document.getElementById('profileInput');
+	 const menu = document.getElementById('customContextMenu');
+
+// 🎧 1. Listen for the global right-click event
+window.addEventListener('contextmenu', (event) => {
+    // 🛑 Block the standard boring browser right-click menu
+    event.preventDefault();
+
+    // 📍 Position the custom menu exactly where the mouse is clicking
+    menu.style.left = event.pageX + 'px';
+    menu.style.top = event.pageY + 'px';
+
+    // ✨ Make it visible on screen
+    menu.style.display = 'flex';
+});
+
+// 🎧 2. Hide the menu if the user left-clicks anywhere else on the screen
+window.addEventListener('click', () => {
+    menu.style.display = 'none';
+});
+
 	window.addEventListener('blur', () => {
 
 		
