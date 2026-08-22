@@ -105,6 +105,9 @@
   background: #111;
   color: #fff;
 }
+	 .menu-item:hover {
+        background-color: #333;
+    }
 	.no-scrollbar {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;     /* Firefox */
@@ -659,6 +662,23 @@ let isDownn = false, startXr, startYr, scrollLeftr, scrollTopr;
 const profileUpload = document.getElementById('profileImgUpload');
   const profileInput = document.getElementById('profileInput');
 
+window.addEventListener('contextmenu', (event) => {
+    // 🛑 Block the standard boring browser right-click menu
+    event.preventDefault();
+
+    // 📍 Position the custom menu exactly where the mouse is clicking
+    menu.style.left = event.pageX + 'px';
+    menu.style.top = event.pageY + 'px';
+
+    // ✨ Make it visible on screen
+    menu.style.display = 'flex';
+});
+
+// 🎧 2. Hide the menu if the user left-clicks anywhere else on the screen
+window.addEventListener('click', () => {
+    menu.style.display = 'none';
+});
+	 
   const bgMusic = new Audio('music.mp3');
 bgMusic.loop = true;
 
@@ -1228,6 +1248,13 @@ link.click();
        ['settingsPanel', 'shopPanel', 'leaderPanel', 'achPanel', 'rankPanel'].forEach(p => {
            const el = document.getElementById(p);
            if(p === id) el.classList.toggle('open');
+           else el.classList.remove('open');
+       });
+   }
+	function showPanel(id) {
+       ['settingsPanel', 'shopPanel', 'leaderPanel', 'achPanel', 'rankPanel'].forEach(p => {
+           const el = document.getElementById(p);
+           if(p === id) el.classList.add('open');
            else el.classList.remove('open');
        });
    }
