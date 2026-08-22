@@ -112,6 +112,9 @@
 .no-scrollbar::-webkit-scrollbar {
     display: none;             /* Chrome, Safari, and Opera */
 }
+	 .menu-item:hover {
+        background-color: #333;
+    }
  </style>
 <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
 <!--<script src="https://files.bpcontent.cloud/2026/06/26/13/20260626135044-XEF4N2MN.js" defer></script>-->
@@ -196,6 +199,12 @@
 ">
     <div class="menu-item" onclick="generate()" style="padding: 10px; cursor: pointer;">Generate Maze</div>
     <hr style="border-color: #444; margin: 0;">
+	<div class="menu-item" onclick="showPanel('leaderPanel')" style="padding: 10px; cursor: pointer;">Leaderboard</div>
+	<hr style="border-color: #444; margin: 0;">
+	<div class="menu-item" onclick="showPanel('shopPanel')" style="padding: 10px; cursor: pointer;">Shop</div>
+	<hr style="border-color: #444; margin: 0;">
+	<div class="menu-item" onclick="showPanel('settingsPanel')" style="padding: 10px; cursor: pointer;">Settings</div>
+	<hr style="border-color: #444; margin: 0;">
     <div class="menu-item" style="padding: 10px; cursor: pointer; color: #ff5555;" onclick='document.getElementById("customContextMenu").style.display="none"'>Close Menu</div>
 </div>
   <div id='loader' class='loader-overlay'><img src='https://thecoder24252.github.io/games/loader.gif'></div>
@@ -562,7 +571,6 @@ const mctx = maskCanvas.getContext('2d');
    console.log('STOP TRYING TO BREAK MY GAME');
    fetchData().then(res => {gameData = res[0];
 	document.getElementById('loader').style.display = 'none';
-	if (!localStorage.getItem('tb')) {document.getElementById('tb').style.display = 'flex'} else {document.getElementById('tb').style.display = 'none'}
     ach = gameData.achieve;
 	lastBonus = gameData.last_bonus;
 	btime = gameData.Time;
@@ -1206,6 +1214,13 @@ link.click();
        ['settingsPanel', 'shopPanel', 'leaderPanel', 'achPanel', 'rankPanel'].forEach(p => {
            const el = document.getElementById(p);
            if(p === id) el.classList.toggle('open');
+           else el.classList.remove('open');
+       });
+   }
+   function showPanel(id) {
+       ['settingsPanel', 'shopPanel', 'leaderPanel', 'achPanel', 'rankPanel'].forEach(p => {
+           const el = document.getElementById(p);
+           if(p === id) el.classList.add('open');
            else el.classList.remove('open');
        });
    }
