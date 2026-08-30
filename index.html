@@ -6,14 +6,13 @@
 	
 	
 	
-	
 	STOP TRYING TO BREAK MY GAME
 	
 	
 	
 	
 
-	
+
 	
 	
 	
@@ -105,17 +104,19 @@
   background: #111;
   color: #fff;
 }
-	 .menu-item:hover {
-        background-color: #333;
-    }
 	.no-scrollbar {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;     /* Firefox */
 }
-
+ .menu-item:hover {
+        background-color: #333;
+    }
 .no-scrollbar::-webkit-scrollbar {
     display: none;             /* Chrome, Safari, and Opera */
 }
+	 .menu-item:hover {
+        background-color: #333;
+    }
  </style>
 <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
 <!--<script src="https://files.bpcontent.cloud/2026/06/26/13/20260626135044-XEF4N2MN.js" defer></script>-->
@@ -153,7 +154,7 @@
     "fontFamily": "inter",
     "radius": 2.5,
     "feedbackEnabled": false,
-    "footer": "[Developed by TheCoder24252](https://thecoder24252.github.io) | Bot Version 1.2.2",
+    "footer": "[Developed by TheCoder24252](https://thecoder24252.github.io) | Bot Version 1.5.7",
     "soundEnabled": false,
     "toggleChatId": "toggleBot",
     "proactiveMessageEnabled": false,
@@ -163,8 +164,8 @@
     "conversationHistory": false,
     "homePageEnabled": false,
     "mainCardEnabled": false,
-    "conversationStartersEnabled": false,
-    "conversationStarters": [],
+    "conversationStartersEnabled": true,
+    "conversationStarters": ['How to play Maze Game?', 'List all shop items', 'List all game features'],
     "conversationStartersDisplayStyle": "cards",
   },
   "clientId": "e7373cd6-1ff5-4b77-aa83-1f5cb5117525"
@@ -184,7 +185,7 @@
 </head>
 <body oncontextmenu="return false;">
  <h1 id="titletext">Maze Game</h1>
-  <div id="customContextMenu" style="
+<div id="customContextMenu" style="
     display: none; 
     position: absolute; 
     background-color: #222; 
@@ -209,7 +210,7 @@
     <div class="menu-item" style="padding: 10px; cursor: pointer; color: #ff5555;" onclick='document.getElementById("customContextMenu").style.display="none"'>Close Menu</div>
 </div>
   <div id='loader' class='loader-overlay'><img src='https://thecoder24252.github.io/games/loader.gif'></div>
-  <div id="winModal" class="modal-overlay">
+   <div id="winModal" class="modal-overlay">
    <div class="modal-content">
      <h2 id="winTitle">Maze Complete!</h2>
      <p id="finalStats" style="font-family: monospace; color: #00ffcc;"></p>
@@ -371,20 +372,6 @@
    </div>
  </div>
 <div class="game-panel">
-	    <!--<button title='Daily Bonus' class='mbtn btn-gen gift-button' onclick='dailyBonus()'>
-	<style>.gift-button:hover .gift-lid {transform: translateY(-2px) rotate(-3deg);} .gift-lid {transform-origin: 12px 7px;transition: transform 0.2s ease-in-out;}<style> 
-  <svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block; overflow: visible;">
-    <rect x="4" y="10" width="16" height="11" rx="1" />
-    <line x1="4" y1="15" x2="20" y2="15" />
-    <line x1="12" y1="10" x2="12" y2="21" />
-    <g class="gift-lid">
-      <rect x="3" y="7" width="18" height="3" rx="0.5" />
-      <line x1="12" y1="7" x2="12" y2="10" />
-
-      <path d="M12 7c-1.5-2.5-4.5-2.5-4.5 0S10.5 7 12 7z" />
-      <path d="M12 7c1.5-2.5 4.5-2.5 4.5 0S13.5 7 12 7z" />
-    </g>
-  </svg></button>-->
     <button title='Fullscreen' class='mbtn btn-gen' onclick='toggleFullscreen()'><svg xmlns="http://w3.org" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; display: inline-block;">
     <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
   </svg> </button>
@@ -452,9 +439,16 @@
      <button onclick="openAccountModal()" class="btn btn-danger">ACCOUNT</button>
    </div>
 
-
+   <div style='display:none'>
+	   <canvas id="cu1"></canvas>
+	   <canvas id="cu2"></canvas>
+	   <canvas id="cu3"></canvas>
+	   <canvas id="cu4"></canvas>
+	   <canvas id="cu5"></canvas>
+   </div>
    <div class="maze-container" id='canvascont'><canvas id="mazeCanvas"></canvas></div>
 	   <div class="maze-container" id='mazeImg' style='display:none;z-index: -1; position: absolute;'><img id='canvasImg'></div>
+	 <iframe class="maze-container" id='maze3D' style='width:406px;height:406px;display:none;' src='https://thecoder24252.github.io/games/cube.html'></iframe>
 
 
    <div id="settingsPanel" class="side-panel">
@@ -471,7 +465,7 @@
          <select id="variation">
            <option value="none">Default</option>
            <option value="fog">Fog Of War</option>
-		   <!--<option value="blindfold">Blind Fold</option>-->
+		 <!-- <option value="3d_cube">3D Cube</option>-->
          </select>
        </li>
        <li><label>Width:</label><input id="width" type="number" min="15" value="20"/></li>
@@ -567,12 +561,13 @@ const mctx = maskCanvas.getContext('2d');
 	 let profileBorder;
 	 let profileColor;
 	 let bugs;
+	 let cubeLayout = [];
 	let customImg = new Image();
-   const canvas = document.getElementById('mazeCanvas');
-   const ctx = canvas.getContext('2d', { alpha: false });
+   let canvas = document.getElementById('mazeCanvas');
+   let ctx = canvas.getContext('2d', { alpha: false });
    let currentLayout = null, gameActive = false, startTime = null, timerInterval = null;
    let isRaceMode = false, isDaily = false;
-   let p1 = { pos: 0, steps: 0, name: "P1", dir: 'u'}, p2 = { pos: 0, steps: 0, name: "P2", dir: 'u'};
+   let p1 = { pos: 0, steps: 0, name: "P1", dir: 'u', side: 'f'}, p2 = { pos: 0, steps: 0, name: "P2", dir: 'u', side: 'f'};
    console.log('STOP TRYING TO BREAK MY GAME');
    fetchData().then(res => {gameData = res[0];
 	document.getElementById('loader').style.display = 'none';
@@ -612,7 +607,6 @@ console.log(yesterday.toDateString());
 		}
 		let bonus = streak * 5;
 		bonus += 5;
-		bonus = bonus > 100 ? 100: bonus;
 		document.getElementById("streakText").innerHTML = "Online streak: " + streak;
 		document.getElementById("bonusText").innerHTML = `+${bonus} credits`;
 		document.getElementById("dailyModal").style.display = "flex";
@@ -661,7 +655,9 @@ let isDown = false, startX, startY, scrollLeft, scrollTop;
 let isDownn = false, startXr, startYr, scrollLeftr, scrollTopr;
 const profileUpload = document.getElementById('profileImgUpload');
   const profileInput = document.getElementById('profileInput');
-const menu = document.getElementById('customContextMenu');
+	 const menu = document.getElementById('customContextMenu');
+
+// 🎧 1. Listen for the global right-click event
 window.addEventListener('contextmenu', (event) => {
     // 🛑 Block the standard boring browser right-click menu
     event.preventDefault();
@@ -678,7 +674,16 @@ window.addEventListener('contextmenu', (event) => {
 window.addEventListener('click', () => {
     menu.style.display = 'none';
 });
-	 
+
+	window.addEventListener('blur', () => {
+
+		
+    const cubeIframe = document.querySelector('iframe');
+    
+    if (document.activeElement === cubeIframe) {
+        window.focus();
+    }
+});
   const bgMusic = new Audio('music.mp3');
 bgMusic.loop = true;
 
@@ -843,7 +848,6 @@ document.getElementById("stepLimit").addEventListener('change', (event) => {
 document.getElementById("step2Limit").addEventListener('change', (event) => {
        step2Limit = parseInt(document.getElementById('step2LimitAmount').value) || false;
 });
-
 function logOut() {
  localStorage.clear()
  localStorage.setItem('Tutorial', true);
@@ -918,44 +922,6 @@ function openProfile(id) {
 		document.getElementById('prModal').style.display = 'flex';
 	})
 }
- async function verifyCredentials(username, passcode) {
-  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
-  const url = `https://oqapjpayxyrlwmatreep.supabase.co/rest/v1/rpc/check_user_credentials`;
-
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': ANON_KEY,
-        'Authorization': `Bearer ${ANON_KEY}`
-      },
-      // Pass parameters exactly matching the p_username and p_passcode SQL arguments
-      body: JSON.stringify({
-        p_username: username,
-        p_passcode: passcode
-      })
-    });
-
-    // Check if Supabase rejected the request (e.g., status 400)
-    if (!response.ok) {
-      const errorDetails = await response.json();
-      console.error("Supabase Error Details:", errorDetails);
-      return;
-    }
-    // The endpoint directly returns the raw boolean layout (true or false)
-    const isValid = await response.json();
-    
-    if (isValid) {
-      console.log("Access granted!");
-    } else {
-      console.log("Invalid credentials.");
-    }
-  } catch (error) {
-    console.error("Fetch error:", error);
-  }
-}
-  //verifyCredentials('john_doe', 'secret123');
 function showLeaderboard(by, force = false) {
  if (by == 'maze') {
    fetchData(false, by).then(res => {
@@ -1251,7 +1217,7 @@ link.click();
            else el.classList.remove('open');
        });
    }
-	function showPanel(id) {
+   function showPanel(id) {
        ['settingsPanel', 'shopPanel', 'leaderPanel', 'achPanel', 'rankPanel'].forEach(p => {
            const el = document.getElementById(p);
            if(p === id) el.classList.add('open');
@@ -1459,6 +1425,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
      if(!force) {
      if(isDailyChallenge && lastDailyDate === new Date().toDateString()) return;}
      isDaily = isDailyChallenge;
+	 cubeLayout = [];
      if (document.getElementById('height').value == 5) { document.getElementById('height').value = 20; document.getElementById('width').value = 20; document.getElementById('pathwidth').value = 15; document.getElementById('wallwidth').value = 4; document.getElementById('titletext').innerHTML = "Maze Game"; document.getElementById('dashPanel').style.display = "flex";}
      if (document.getElementById('width').value < 15) document.getElementById('width').value = 15;
      if (document.getElementById('height').value < 15) document.getElementById('height').value = 15;
@@ -1506,17 +1473,19 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
      }
 radarX = 0;
 isPreviewActive = true;
-	p1 = { pos: 0, steps: 0, name: "P1", dir: 'u'}; 
-	p2 = { pos: 0, steps: 0, name: "P2", dir: 'u'};
+	p1 = { pos: 0, steps: 0, name: "P1", dir: 'u', side: 'f'}; 
+	p2 = { pos: 0, steps: 0, name: "P2", dir: 'u', side: 'f'};
      p1History = [];
      p2History = [];
      const w = parseInt(document.getElementById('width').value);
-     const h = parseInt(document.getElementById('height').value);
+     let h = parseInt(document.getElementById('height').value);
      const pw = parseInt(document.getElementById('pathwidth').value);
      const ww = parseInt(document.getElementById('wallwidth').value);
      const mode = document.getElementById('algo').value;
      const getRand = isDaily ? seededRandom : Math.random;
-
+	   
+	 if (document.getElementById('variation').value == '3d_cube') {h = w}
+	   
      canvas.width = (pw * 2) + (w * pw) + ((w - 1) * ww);
      canvas.height = (pw * 2) + (h * pw) + ((h - 1) * ww);
     
@@ -1570,6 +1539,56 @@ isPreviewActive = true;
              }
          }
      }
+
+	 const cubeadj = () => {
+		  let adj = Array.from({length: w*h}, () => []);
+     const grid = new Uint8Array(w * h);
+     const getNeighbors = (idx) => {
+         const x = idx % w, y = Math.floor(idx / w), n = [];
+         if (y > 0) n.push(idx - w); if (y < h - 1) n.push(idx + w);
+         if (x > 0) n.push(idx - 1); if (x < w - 1) n.push(idx + 1);
+         return n;
+     };
+
+
+     if (mode === 'backtrack') {
+         const stack = [0]; grid[0] = 1;
+         while (stack.length > 0) {
+             const curr = stack[stack.length - 1], neighbors = getNeighbors(curr).filter(n => grid[n] === 0);
+             if (neighbors.length > 0) {
+                 const next = neighbors[Math.floor(getRand() * neighbors.length)];
+                 grid[next] = 1; adj[curr].push(next); adj[next].push(curr); stack.push(next);
+             } else stack.pop();
+         }
+     } else if (mode === 'prim') {
+         const walls = []; grid[0] = 1;
+         getNeighbors(0).forEach(n => walls.push([0, n]));
+         while (walls.length > 0) {
+             const idx = Math.floor(getRand() * walls.length);
+             const [u, v] = walls.splice(idx, 1)[0];
+             if (grid[v] === 0) { grid[v] = 1; adj[u].push(v); adj[v].push(u); getNeighbors(v).forEach(n => { if(grid[n] === 0) walls.push([v, n]); }); }
+         }
+     } else {
+         let curr = 0; grid[0] = 1;
+         while (curr !== null) {
+             const neighbors = getNeighbors(curr).filter(n => grid[n] === 0);
+             if (neighbors.length > 0) {
+                 const next = neighbors[Math.floor(getRand() * neighbors.length)];
+                 grid[next] = 1; adj[curr].push(next); adj[next].push(curr); curr = next;
+             } else {
+                 curr = null;
+                 for (let i = 0; i < w * h; i++) {
+                     if (grid[i] === 0) {
+                         const visited = getNeighbors(i).filter(n => grid[n] === 1);
+                         if (visited.length > 0) { curr = i; grid[i] = 1; const next = visited[Math.floor(getRand() * visited.length)]; adj[curr].push(next); adj[next].push(curr); break; }
+                     }
+                 }
+             }
+         }
+     }
+		 return adj;
+	 }
+     if (document.getElementById('variation').value == '3d_cube') {;cubeLayout.push([]); for (let i = 0; i < 5; i++) {cubeLayout.push({adj: cubeadj(), w: w, h: h})}}
      currentLayout = { adj, w, h };
      minSteps = calculateMinSteps(adj, 0, (w * h) - 1);
      if (limitSteps) {
@@ -1578,11 +1597,9 @@ isPreviewActive = true;
      }
      draw();
 	 if (!tutorial) {
-	// if (fMaze != true) {
 		 
 	   document.getElementById('mazeImg').style.display = 'block';
 		animateCanvas();
-		// } else {fMaze = true}}
    }}
    function calculateMinSteps(adj, startNode, endNode) {
    let queue = [[startNode, 0]];
@@ -1676,13 +1693,39 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
 }
 
 
+	function draw() {
+		drawFun();
+		if (document.getElementById('variation').value == '3d_cube') {
+			for (let i = 1; i < 6; i++) {
+				drawFun(true, i)
+   			} 
+			const iframeWindow = document.querySelector('iframe')?.contentWindow;
 
-
-   function draw() {
+if (iframeWindow && document.getElementById('variation').value === '3d_cube') { 
+    iframeWindow.postMessage({type: 'SIDEFRONT', base64: document.getElementById('mazeCanvas').toDataURL('image/png')}, '*'); 
+    iframeWindow.postMessage({type: 'SIDEBACK', base64: document.getElementById('cu1').toDataURL('image/png')}, '*'); 
+    iframeWindow.postMessage({type: 'SIDERIGHT', base64: document.getElementById('cu2').toDataURL('image/png')}, '*'); 
+    iframeWindow.postMessage({type: 'SIDELEFT', base64: document.getElementById('cu3').toDataURL('image/png')}, '*'); 
+    iframeWindow.postMessage({type: 'SIDETOP', base64: document.getElementById('cu4').toDataURL('image/png')}, '*'); 
+    iframeWindow.postMessage({type: 'SIDEBOTTOM', base64: document.getElementById('cu5').toDataURL('image/png')}, '*'); 
+}
+		}
+	    }
+   
+   function drawFun(cube, num) {
      if (!currentLayout) return;
-     const { adj, w, h } = currentLayout;
-     const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
-    
+	 let adj = currentLayout.adj, w = currentLayout.w, h = currentLayout.h;
+	const pw = parseInt(document.getElementById('pathwidth').value), ww = parseInt(document.getElementById('wallwidth').value);
+	 if (document.getElementById('variation').value == '3d_cube') {
+		 if (typeof num !== "undefined") {
+		 adj = cubeLayout[num].adj; w = cubeLayout[num].w; h = cubeLayout[num].h;
+		 canvas = document.getElementById(`cu${num}`);
+		 ctx = canvas.getContext('2d');
+		 canvas.width = (pw * 2) + (w * pw) + ((w - 1) * ww);
+     canvas.height = (pw * 2) + (h * pw) + ((h - 1) * ww);}
+	 } else {
+		 adj = currentLayout.adj; w = currentLayout.w; h  = currentLayout.h;
+	 }
      ctx.fillStyle = document.getElementById('wallColor').value;
      ctx.fillRect(0, 0, canvas.width, canvas.height);
     
@@ -1693,11 +1736,12 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
        adj[i].forEach(n => { if (n > i) { if (n % w > i % w) ctx.fillRect(px + pw, py, ww, pw); else ctx.fillRect(px, py + pw, pw, ww); } });
      }
 
-
      if (activeTrail !== 'None') {
        ctx.save();
        const trailData = trails.find(t => t.name === activeTrail);
-       const drawTrailPath = (history) => {
+       const drawTrailPath = (history, side) => {
+		   const idToSide = (id) => {if (id == 'mazeCanvas') {return 'f'} if (id == 'cu1') {return 'b'} if (id == 'cu2') {return 'r'} if (id == 'cu3') {return 'l'} if (id == 'cu4') {return 't'} if (id == 'cu5') {return 'bo'}}
+		   if (document.getElementById('variation').value == '3d_cube') {if (idToSide(canvas.id) != side) {return}}
            history.forEach((pos, index) => {
                const tx = (pos % currentLayout.w) * (pw + ww) + pw;
                const ty = Math.floor(pos / currentLayout.w) * (pw + ww) + pw;
@@ -1730,13 +1774,17 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
                ctx.fillRect(tx + 4, ty + 4, pw - 8, pw - 8);
            });
        };
-       drawTrailPath(p1History);
-       if (isRaceMode) drawTrailPath(p2History);
+       drawTrailPath(p1History, p1.side);
+       if (isRaceMode) drawTrailPath(p2History, p2.side);
        ctx.restore();
      }
-    
+	const idToSide = (id) => {if (id == 'mazeCanvas') {return 'f'} if (id == 'cu1') {return 'b'} if (id == 'cu2') {return 'r'} if (id == 'cu3') {return 'l'} if (id == 'cu4') {return 't'} if (id == 'cu5') {return 'bo'}}
+    if (document.getElementById('variation').value == '3d_cube') {
+		if (idToSide(canvas.id) == 'b') {ctx.fillStyle = "#00ff00";
+     ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);}
+	} else {
      ctx.fillStyle = "#00ff00";
-     ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);
+     ctx.fillRect(pw + (w - 1) * (pw + ww), pw + (h - 1) * (pw + ww), pw, pw);}
      if (document.getElementById('variation').value == 'fog') {
     ctx.save();
     
@@ -1791,8 +1839,11 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
     ctx.restore();
 }
 	   if (document.getElementById('variation').value == 'blindfold') {pvLoop = setInterval(bhE, 50)}
-     drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);
-     if (isRaceMode) drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir);
+	if (document.getElementById('variation').value == '3d_cube') {
+     if (idToSide(canvas.id) == p1.side) {drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);}} else {drawPlayer(p1.pos, document.getElementById('playerColor').value, p1.dir);}
+     if (isRaceMode) {
+		 if (document.getElementById('variation').value == '3d_cube') {
+     if (idToSide(canvas.id) == p2.side) {drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir);}} else {drawPlayer(p2.pos, document.getElementById('player2Color').value, p2.dir)}}
 
      if (limitSteps == true) {
        if (step1Limit != false && step2Limit != false) {
@@ -1828,6 +1879,10 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
        document.getElementById('p1Steps').innerText = p1.steps;
      if(isRaceMode) document.getElementById('p2Steps').innerText = p2.steps;
      }
+	    canvas = document.getElementById('mazeCanvas');
+    ctx = canvas.getContext('2d', { alpha: false });
+
+
    }
 
 
@@ -1836,9 +1891,11 @@ function drawBoxHexagon(color, trY, trX, blY, blX, pointyTopped = true) {
 return;
      }
      if(!gameActive || !currentLayout) return;
-     const { adj, w, h } = currentLayout;
+     let { adj, w, h } = currentLayout;
      if (!startTime) { startTime = Date.now(); timerInterval = setInterval(() => { document.getElementById('timer').innerText = ((Date.now() - startTime) / 1000).toFixed(1) + "s"; }, 100); }
      const move = (p, t) => {
+		  if (document.getElementById('variation').value == '3d_cube') {if (sideToId(p.side) != 0) {adj = cubeLayout[sideToId(p.side)].adj; w = cubeLayout[sideToId(p.side)].w; h = cubeLayout[sideToId(p.side)].h}}
+		 if (document.getElementById('variation').value != '3d_cube') {
          if (t !== undefined && adj[p.pos] && adj[p.pos].includes(t)) {
              if (p.name === "P1") {
                p1History.push(p.pos);
@@ -1855,8 +1912,51 @@ return;
              p.steps++;
              draw();
              if (p.pos === w * h - 1) win(p);
-         }
+         }} else {
+			 if (t !== undefined && adj[p.pos] && adj[p.pos].includes(t)) {
+				 if (p.name === "P1") {
+               p1History.push(p.pos);
+               if(p1History.length > 10) p1History.shift();
+             } else {
+               p2History.push(p.pos);
+               if(p2History.length > 10) p2History.shift();
+             }
+			 if (t - p.pos === w) {p.dir = 'd'}
+			 if (p.pos - t === w) {p.dir = 'u'}
+			 if (t - p.pos === 1) {p.dir = 'r'}
+			 if (p.pos - t === 1) {p.dir = 'l'}
+             p.pos = t;
+             p.steps++;
+             draw();
+             if (p.pos === w * h - 1 && p.side == 'b') win(p);
+			 } else {
+				 if (p.side == 'f') {
+					 if (p.pos < w && t == p.pos - w) {p.dir = 'u'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = w * h - w + p.pos; p.side = 't'; p.steps++; draw()}
+					 if (p.pos % w === w - 1 && t - p.pos === 1) {p.dir = 'r'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos - (w - 1); p.side = 'r'; p.steps++; draw()}
+					 if (p.pos % w === 0 && p.pos - t == 1) {p.dir = 'l'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos + (w - 1); p.side = 'l'; p.steps++; draw()}
+					 if (p.pos >= w * (h - 1) && t - p.pos === w) {p.dir = 'd'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos - (h - 1) * w; p.side = 'bo'; p.steps++; draw()}
+				 } 
+				if (p.side == 't') {
+					 if (p.pos < w && t == p.pos - w) {p.dir = 'u'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = (w - 1) - p.pos; p.side = 'b'; p.steps++; draw()}
+					 if (p.pos % w === w - 1 && t - p.pos === 1) {p.dir = 'r'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = (w - 1) - ((p.pos + 1) / w - 1); p.side = 'r'; p.steps++; draw()}
+					 if (p.pos % w === 0 && p.pos - t == 1) {p.dir = 'l'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos / w; p.side = 'l'; p.steps++; draw()}
+					 if (p.pos >= w * (h - 1) && t - p.pos === w) {p.dir = 'd'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos - (h - 1) * w; p.side = 'f'; p.steps++; draw()}
+				 } 
+
+				 if (p.side == 'r') {
+					 if (p.pos < w && t == p.pos - w) {p.dir = 'u'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = (w * h - 1) - (p.pos * w); p.side = 't'; p.steps++; draw()}
+					 if (p.pos % w === w - 1 && t - p.pos === 1) {p.dir = 'r'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos - (w - 1); p.side = 'b'; p.steps++; draw()}
+					 if (p.pos % w === 0 && p.pos - t == 1) {p.dir = 'l'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = p.pos + (w - 1); p.side = 'f'; p.steps++; draw()}
+					 if (p.pos >= w * (h - 1) && t - p.pos === w) {p.dir = 'd'; if (p.name == 'P1') {p1History = []} else {p2History = []} p.pos = (p.pos - w * (w - 1) + 1) * w - 1; p.side = 'bo'; p.steps++; draw()}
+				 } 
+				 
+				 if (p.pos === w * h - 1 && p.side == 'b') win(p);
+			 }
+		 }
      };
+
+	const sideToId = (id) => {if (id == 'f') {return '0'} if (id == 'b') {return 1} if (id == 'r') {return 3} if (id == 'l') {return 3} if (id == 't') {return 4} if (id == 'bo') {return 5}}
+	   
      if (!isRaceMode) {if (e.code === 'KeyW'|| e.code === 'ArrowUp') move(p1, p1.pos - w); if (e.code === 'KeyS' || e.code === 'ArrowDown') move(p1, p1.pos + w); if (e.code === 'KeyA' || e.code === 'ArrowLeft') move(p1, p1.pos - 1); if (e.code === 'KeyD' || e.code === 'ArrowRight') move(p1, p1.pos + 1);} else {
 	 if (e.code === 'KeyW') move(p1, p1.pos - w); if (e.code === 'KeyS') move(p1, p1.pos + w); if (e.code === 'KeyA') move(p1, p1.pos - 1); if (e.code === 'KeyD') move(p1, p1.pos + 1); }
      if (isRaceMode) { if (e.code === 'ArrowUp') move(p2, p2.pos - w); if (e.code === 'ArrowDown') move(p2, p2.pos + w); if (e.code === 'ArrowLeft') move(p2, p2.pos - 1); if (e.code === 'ArrowRight') move(p2, p2.pos + 1); }
@@ -2012,7 +2112,9 @@ return;
 		save()
    }
       function animateCanvas(callback) {
-    const canvasCont = document.getElementById('canvascont');
+    let canvasCont = document.getElementById('canvascont');
+	document.getElementById('maze3D').style.display = 'none'; document.getElementById('canvascont').style.display = 'block'
+	if (document.getElementById('variation').value === '3d_cube') {canvasCont = document.getElementById('maze3D'); document.getElementById('maze3D').style.display = 'block'; document.getElementById('canvascont').style.display = 'none'}
     if (!canvasCont) return;
 
     const keyframes = [
