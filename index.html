@@ -1441,8 +1441,6 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 		Pmode = document.getElementById('algo').value;
          const today = new Date();
          seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-         document.getElementById('algo').value = "huntkill";
-         document.getElementById('wallColor').value = "#28a745";
          document.getElementById('titletext').style.color = "#28a745";
          document.getElementById('titletext').innerHTML = "Daily Challenge";
          document.getElementById('height').value = 20;
@@ -1455,11 +1453,8 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
 
      } else {
          seed = Math.floor(Math.random() * 2147483647);
-         if (document.getElementById("wallColor").value == '#28a745'){
-           document.getElementById('wallColor').value = '#ff3e3e';
            document.getElementById('titletext').style.color = "#ff3e3e";
            document.getElementById('titletext').innerHTML = "Maze Game";
-         }
      }
      if (document.getElementById("wallColor").value == '#6f42c1') {
        document.getElementById('wallColor').value = '#ff3e3e';
@@ -1467,7 +1462,6 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
        document.getElementById('titletext').innerHTML = 'Maze Game';
      }
      if (isRaceMode) {
-       document.getElementById('wallColor').value = '#6f42c1';
        document.getElementById('titletext').style.color = '#6f42c1';
        document.getElementById('titletext').innerHTML = '2 Player Race';
      }
@@ -1481,7 +1475,8 @@ isPreviewActive = true;
      let h = parseInt(document.getElementById('height').value);
      const pw = parseInt(document.getElementById('pathwidth').value);
      const ww = parseInt(document.getElementById('wallwidth').value);
-     const mode = document.getElementById('algo').value;
+     let mode = document.getElementById('algo').value;
+	 if (isDaily) {mode = "huntkill";}
      const getRand = isDaily ? seededRandom : Math.random;
 	   
 	 if (document.getElementById('variation').value == '3d_cube') {h = w}
@@ -1727,6 +1722,8 @@ if (iframeWindow && document.getElementById('variation').value === '3d_cube') {
 		 adj = currentLayout.adj; w = currentLayout.w; h  = currentLayout.h;
 	 }
      ctx.fillStyle = document.getElementById('wallColor').value;
+	 if (isRaceMode) {ctx.fillStyle = '#6f42c1'}
+	 if (isDaily) {ctx.fillStyle = '#28a745'}
      ctx.fillRect(0, 0, canvas.width, canvas.height);
     
      ctx.fillStyle = document.getElementById('pathColor').value;
