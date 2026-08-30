@@ -1443,6 +1443,7 @@ if (response.ok) {const updatedRow = await response.json();console.log('Game dat
          seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
          document.getElementById('titletext').style.color = "#28a745";
          document.getElementById('titletext').innerHTML = "Daily Challenge";
+		 document.getElementById('variation').value = "none";
          document.getElementById('height').value = 20;
          document.getElementById('width').value = 20;
          document.getElementById('limitSteps').checked = false;
