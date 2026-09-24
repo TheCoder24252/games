@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Rush</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+      
+    </style>
+  </head>
+  <body>
+    <button onclick='start()' id='startGame'>New Game</button>
+    <script>
+      const adN = () => {Math.floor(Math.random() * 25) + 1;}
+      function start() {
+        question1()
+      }
+      function question1() {
+        let n1 = adN();
+        let n2 = adN();
+        const answer = prompt(`${n1} + ${n2} = ?`, '');
+        if (answer == n1 + n2) {
+          alert('Correct');
+        } else {
+            const projectUrl = 'https://oqapjpayxyrlwmatreep.supabase.co'; 
+  const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'; 
+    try {
+    const response = await fetch(`${projectUrl}/functions/v1/secure-page?passcode=${answer}`, {
+      method: 'GET',
+      headers: {
+        'apikey': anonKey,
+        'Authorization': `Bearer ${anonKey}`
+      }
+    });
+    if (!response.ok) {
+      const errorHtml = await response.text();
+     console.log(errorHtml);
+      return;
+    }
+    const htmlContent = await response.text();
+console.log(htmlContent)
+  } catch (error) {
+    console.error('Network or Execution error:', error);
+    document.body.innerHTML = '<h1>❌ Failed to get instructions on how to do the math question</h1>';
+    alert('Wrong');
+  }
+        }
+      }
+    </script>
+  </body>
+</html>
