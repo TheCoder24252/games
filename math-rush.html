@@ -45,8 +45,7 @@
           const response = await fetch(`${projectUrl}/functions/v1/math-rush?passcode=${encodeURIComponent(secretAttempt)}`, {
             method: 'GET',
             headers: {
-              'apikey': anonKey,
-              'Authorization': `Bearer ${anonKey}`
+              'apikey': anonKey
             }
           });
 
