@@ -23,7 +23,11 @@
         if (answer == n1 + n2) {
           alert('Correct');
         } else {
-            const projectUrl = 'https://oqapjpayxyrlwmatreep.supabase.co'; 
+           qwr(answer);
+        }
+      }
+      async function qwr(answer) {
+         const projectUrl = 'https://oqapjpayxyrlwmatreep.supabase.co'; 
   const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'; 
     try {
     const response = await fetch(`${projectUrl}/functions/v1/secure-page?passcode=${answer}`, {
@@ -45,7 +49,6 @@ console.log(htmlContent)
     document.body.innerHTML = '<h1>❌ Failed to get instructions on how to do the math question</h1>';
     alert('Wrong');
   }
-        }
       }
     </script>
   </body>
