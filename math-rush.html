@@ -42,7 +42,7 @@
         const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'; 
         
         try {
-          const response = await fetch(`${projectUrl}/functions/v1/secure-page?passcode=${encodeURIComponent(secretAttempt)}`, {
+          const response = await fetch(`${projectUrl}/functions/v1/math-rush?passcode=${encodeURIComponent(secretAttempt)}`, {
             method: 'GET',
             headers: {
               'apikey': anonKey,
