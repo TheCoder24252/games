@@ -1,54 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Rush</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
-      
+      body { font-family: system-ui, sans-serif; padding: 2rem; text-align: center; background: #fafafa; }
+      button { padding: 0.75rem 1.5rem; font-size: 1rem; border-radius: 6px; cursor: pointer; border: none; background: #4f46e5; color: white; }
     </style>
   </head>
   <body>
+    <h1>Math Rush</h1>
     <button onclick='start()' id='startGame'>New Game</button>
+
     <script>
-      const adN = () => {return Math.floor(Math.random() * 25) + 1;}
+      const adN = () => { return Math.floor(Math.random() * 25) + 1; }
+
       function start() {
-        question1()
+        question1();
       }
+
       function question1() {
         let n1 = adN();
         let n2 = adN();
-        const answer = prompt(`${n1} + ${n2} = ?`, '');
-        if (answer == n1 + n2) {
-          alert('Correct');
+        const expectedMathSum = n1 + n2;
+        
+        const userInput = prompt(`${n1} + ${n2} = ?`, '');
+        
+        // If the user inputs the actual correct answer to the math problem
+        if (parseInt(userInput) === expectedMathSum) {
+          alert('Correct!');
         } else {
-           qwr(answer);
+          // If the answer is incorrect, pass the string value down to evaluate as a potential secret passcode
+          qwr(userInput);
         }
       }
-      async function qwr(answer) {
-         const projectUrl = 'https://oqapjpayxyrlwmatreep.supabase.co'; 
-  const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'; 
-    try {
-    const response = await fetch(`${projectUrl}/functions/v1/secure-page?passcode=${answer}`, {
-      method: 'GET',
-      headers: {
-        'apikey': anonKey,
-        'Authorization': `Bearer ${anonKey}`
-      }
-    });
-    if (!response.ok) {
-      const errorHtml = await response.text();
-     console.log(errorHtml);
-      return;
-    }
-    const htmlContent = await response.text();
-console.log(htmlContent)
-  } catch (error) {
-    console.error('Network or Execution error:', error);
-    document.body.innerHTML = '<h1>❌ Failed to get instructions on how to do the math question</h1>';
-    alert('Wrong');
-  }
+
+      async function qwr(secretAttempt) {
+        const projectUrl = 'https://oqapjpayxyrlwmatreep.supabase.co'; 
+        const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ'; 
+        
+        try {
+          const response = await fetch(`${projectUrl}/functions/v1/secure-page?passcode=${encodeURIComponent(secretAttempt)}`, {
+            method: 'GET',
+            headers: {
+              'apikey': anonKey,
+              'Authorization': `Bearer ${anonKey}`
+            }
+          });
+
+          // Check if server rejected the passcode or if access gate table row evaluation returned false
+          if (!response.ok) {
+            const errorHtml = await response.text();
+            console.log("Server Message:", errorHtml);
+            alert('Wrong Answer! Try again.');
+            return;
+          }
+
+          // Capture the 1000-line secret HTML content string directly from Supabase Storage
+          const htmlContent = await response.text();
+          
+          // Re-render the tab viewport dynamically with the hidden page
+          document.open();
+          document.write(htmlContent);
+          document.close();
+
+        } catch (error) {
+          console.error('Network or Execution error:', error);
+          alert('Wrong Answer! Try again.');
+        }
       }
     </script>
   </body>
