@@ -12,7 +12,7 @@
   <body>
     <button onclick='start()' id='startGame'>New Game</button>
     <script>
-      const adN = () => {Math.floor(Math.random() * 25) + 1;}
+      const adN = () => {return Math.floor(Math.random() * 25) + 1;}
       function start() {
         question1()
       }
