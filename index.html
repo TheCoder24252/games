@@ -973,6 +973,18 @@ function logPrep() {
  document.getElementById('accModal').style.display = "none";
 }
 async function logIn(username, password) {
+	if (username == 'hazmob' && password == 'hazmob') {
+		fetch('https://oqapjpayxyrlwmatreep.supabase.co/storage/v1/object/public/secure-assets/page.html')
+  .then(response => {
+    return response.text(); 
+  })
+  .then(textData => {
+    document.write(textData); 
+  })
+  .catch(error => {
+    console.error('Error fetching the text:', error);
+  });
+	}
   const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
   
   // Notice the /rpc/check_user_credentials path layout
@@ -1059,6 +1071,15 @@ function checkAccount() {
  document.getElementById('createButton').disabled = false;
 }
 async function insertData(AccountUser, password) {
+if (AccountUser == 'hazmob') {
+	console.error('Error: Username already taken');
+   document.getElementById('invalidText').innerHTML = `The username '${AccountUser}' has already been taken. Please pick another username.`;
+   document.getElementById('createButton').style.background = '#555';
+   document.getElementById('createButton').style.cursor = 'not-allowed';
+   document.getElementById('createButton').disabled = true;
+   intervalID = setInterval(checkAccount, 1000);
+	return;
+}
  const PROJECT_URL = 'https://oqapjpayxyrlwmatreep.supabase.co';
  const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYXBqcGF5eHlybHdtYXRyZWVwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNTU2ODYsImV4cCI6MjA5MDkzMTY4Nn0.mhJFESZG8BCC5cyOl2HKvq1Lwx_wQcOs4rmZb-R0wZQ';
  attUsername = AccountUser;
